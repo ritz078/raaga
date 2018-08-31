@@ -1,13 +1,9 @@
-import {css, injectGlobal} from "emotion";
-
-injectGlobal`
-* {
-	margin: 0;
-	box-sizing: border-box;
-}
-`
+import {css} from "emotion";
 
 export const pianoWrapperStyle = css({
+	display: "flex",
+	flex: 1,
+	flexDirection: "column",
 	".ReactPiano__Keyboard": {
 		position: "relative",
 		display: "flex",
@@ -19,21 +15,20 @@ export const pianoWrapperStyle = css({
 	".ReactPiano__Key--natural": {
 		height: "16em",
 		zIndex: 0,
-		borderLeft: "1px solid #bbb",
-		borderBottom: "1px solid #bbb",
+		border: "1px solid #4a4a4a",
+		borderTopWidth: 0,
 		borderRadius: "0 0 5px 5px",
-		boxShadow:
-			"-1px 0 0 rgba(255, 255, 255, 0.8) inset, 0 0 5px #ccc inset,0 0 3px rgba(0, 0, 0, 0.2)",
 		backgroundColor: "#fff",
 		flex: 1,
-		marginRight: 1,
 		cursor: "pointer",
+		borderBottom: "4px solid #90caf9",
 		"&:last-child": {
 			marginRight: 0
 		},
 		"&.ReactPiano__Key--active": {
 			height: "15.5em",
-			backgroundColor: "#e0e0e0"
+			backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
+			borderBottomColor: "#42C9FF"
 		}
 	},
 	".ReactPiano__Key--accidental": {
@@ -47,8 +42,11 @@ export const pianoWrapperStyle = css({
 		position: "absolute",
 		top: 0,
 		"&.ReactPiano__Key--active": {
-			height: "7.8em",
-			backgroundColor: "#000"
+			height: "7.9em",
+			backgroundImage: "linear-gradient(#FBD95C, #FBCF32)",
+			borderColor: "#b49b45",
+			boxShadow:
+				"-1px -1px 2px rgba(255, 255, 255, 0.2) inset,0 -5px 2px 3px rgba(0, 0, 0, 0.2) inset, 0 2px 4px rgba(0, 0, 0, 0.2)",
 		}
 	},
 	".ReactPiano__NoteLabelContainer": {

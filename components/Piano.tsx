@@ -11,24 +11,22 @@ const keyboardShortcuts = KeyboardShortcuts.create({
   keyboardConfig: KeyboardShortcuts.HOME_ROW
 });
 
-const noteRange= { first: firstNote, last: lastNote }
+const noteRange= { first: firstNote, last: lastNote };
 
-export default class extends React.PureComponent<{}> {
+export default class extends React.PureComponent {
   state = {
     notes: []
   };
 
-  handleAdd = (midiNumber: number) => {
-    const set = new Set(this.state.notes);
-    set.add(midiNumber);
+  handleAdd = (midiNumber: number, prevNotes: number[]) => {
     this.setState({
-      notes: [...set]
+      notes: [midiNumber, ...prevNotes]
     });
   };
 
   handleRemove = (midiNumber: number) => {
-    const set = new Set(this.state.notes);
-    set.delete(midiNumber);
+  	const set = new Set(this.state.notes);
+  	set.delete(midiNumber);
     this.setState({
       notes: [...set]
     });
@@ -37,13 +35,6 @@ export default class extends React.PureComponent<{}> {
   render() {
     return (
       <div className={pianoWrapperStyle}>
-        <div
-          style={{
-            height: 10,
-            backgroundColor: "#000",
-            opacity: 0.8
-          }}
-        />
         <Piano
           noteRange={noteRange}
           onPlayNote={this.handleAdd}
