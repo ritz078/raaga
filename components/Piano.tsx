@@ -4,7 +4,7 @@ import { pianoWrapperStyle } from "./styles/Piano.styles";
 import SoundPlayer from "@components/SoundPlayer";
 
 const firstNote = MidiNumbers.fromNote("c3");
-const lastNote = MidiNumbers.fromNote("f6");
+const lastNote = MidiNumbers.fromNote("c6");
 
 const keyboardShortcuts = KeyboardShortcuts.create({
   firstNote: firstNote,
@@ -15,11 +15,13 @@ const keyboardShortcuts = KeyboardShortcuts.create({
 const noteRange = { first: firstNote, last: lastNote };
 
 export default class extends React.PureComponent {
-  player: any;
-
   state = {
     notes: undefined
   };
+
+  renderNoteLabel = () => {
+		return null;
+	};
 
   render() {
     return (
@@ -33,6 +35,7 @@ export default class extends React.PureComponent {
               keyboardShortcuts={keyboardShortcuts}
               playbackNotes={this.state.notes}
 							disabled={loading}
+							renderNoteLabel={this.renderNoteLabel}
             />
           )}
         </SoundPlayer>

@@ -41,6 +41,7 @@ export const pianoWrapperStyle = css({
 		background: "#333",
 		position: "absolute",
 		top: 0,
+		cursor: "pointer",
 		"&.ReactPiano__Key--active": {
 			height: "7.9em",
 			backgroundImage: "linear-gradient(#FBD95C, #FBCF32)",
@@ -50,6 +51,7 @@ export const pianoWrapperStyle = css({
 		}
 	},
 	".ReactPiano__NoteLabelContainer": {
-		display: "none"
+		// display: "none",
+		textTransform: "uppercase"
 	}
 });
