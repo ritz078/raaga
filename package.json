@@ -6,17 +6,20 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build"
+    "build": "next build",
+    "precommit": "pretty-quick --staged"
   },
   "dependencies": {
+    "@anarock/pebble": "^0.16.4",
     "@zeit/next-typescript": "^1.1.0",
-    "color-manipulate": "^1.0.1",
+    "capitalize": "^1.0.0",
     "emotion": "^9.2.8",
     "emotion-server": "^9.2.8",
     "next": "^6.1.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-piano": "^1.1.0"
+    "react-piano": "^1.1.0",
+    "soundfont-player": "^0.10.7"
   },
   "devDependencies": {
     "@types/next": "^6.1.4",

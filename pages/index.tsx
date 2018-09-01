@@ -18,7 +18,7 @@ export default function() {
     <div className={main}>
 			<div style={{
 				backgroundColor: "#000",
-				height: 300,
+				height: "50vh",
 			}} />
 			<div style={{
 				padding: "0 100px"

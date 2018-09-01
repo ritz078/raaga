@@ -24,6 +24,7 @@ export default class MyDocument extends Document {
           <title>With Emotion</title>
 					<link rel="stylesheet" href={"/static/styles/base.css"}/>
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
+					<script src="https://cdn.polyfill.io/v2/polyfill.js?features=AudioContext"/>
         </Head>
         <body>
           <Main />
