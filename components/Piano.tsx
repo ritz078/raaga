@@ -1,7 +1,14 @@
 import * as React from "react";
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
-import { pianoWrapperStyle } from "./styles/Piano.styles";
+import {
+  loaderClass,
+  piano,
+  pianoWrapperClass,
+  wrapper
+} from "./styles/Piano.styles";
 import SoundPlayer from "@components/SoundPlayer";
+import { Loader, colors } from "@anarock/pebble";
+import { css, cx } from "emotion";
 
 const firstNote = MidiNumbers.fromNote("c3");
 const lastNote = MidiNumbers.fromNote("c6");
@@ -20,23 +27,34 @@ export default class extends React.PureComponent {
   };
 
   renderNoteLabel = () => {
-		return null;
-	};
+    return null;
+  };
 
   render() {
     return (
-      <div className={pianoWrapperStyle}>
+      <div className={wrapper}>
         <SoundPlayer>
           {({ play, stop, loading }) => (
-            <Piano
-              noteRange={noteRange}
-              onPlayNote={play}
-              onStopNote={stop}
-              keyboardShortcuts={keyboardShortcuts}
-              playbackNotes={this.state.notes}
-							disabled={loading}
-							renderNoteLabel={this.renderNoteLabel}
-            />
+            <div className={pianoWrapperClass}>
+              {loading && (
+                <Loader className={loaderClass} color={colors.white.base} />
+              )}
+              <Piano
+                noteRange={noteRange}
+                onPlayNote={play}
+                onStopNote={stop}
+                keyboardShortcuts={keyboardShortcuts}
+                playbackNotes={this.state.notes}
+                disabled={loading}
+                renderNoteLabel={this.renderNoteLabel}
+                className={cx(
+                  {
+                    [css({ opacity: 0.2 })]: loading
+                  },
+                  piano
+                )}
+              />
+            </div>
           )}
         </SoundPlayer>
       </div>

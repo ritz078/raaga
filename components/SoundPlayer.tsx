@@ -1,45 +1,39 @@
 import * as React from "react";
-import SoundFont from "soundfont-player";
 import { SoundPlayerProps, SoundPlayerState } from "./typings/SoundPlayer";
+import Settings from "@components/Settings";
 
 // @ts-ignore
 import instruments from "soundfont-player/instruments.json";
-import Settings from "@components/Settings";
+import Player from "../utilities/Player";
 
 export default class SoundPlayer extends React.PureComponent<
   SoundPlayerProps,
   SoundPlayerState
 > {
-  ac: AudioContext;
+  player: Player;
 
   state = {
-    player: undefined,
     instrument: instruments[0],
-    loading: false
+    loading: false,
+    playerLoaded: false
   };
 
-  load = () => {
+  private loadPlayer = (instrument = this.state.instrument) => {
     this.setState({ loading: true });
-    SoundFont.instrument(this.ac, this.state.instrument).then(player => {
+
+    this.player.load(instrument, () => {
       this.setState({
-        player,
+        playerLoaded: true,
+        instrument,
         loading: false
       });
     });
   };
 
   componentDidMount() {
-    this.ac = new AudioContext();
-    this.load();
+    this.player = new Player();
+    this.loadPlayer();
   }
-
-  componentWillUnmount() {
-    this.ac.close();
-  }
-
-  play = midi => this.state.player.play(midi);
-
-  stop = midi => this.state.player.stop(midi);
 
   render() {
     const { instrument, loading } = this.state;
@@ -48,14 +42,14 @@ export default class SoundPlayer extends React.PureComponent<
       <div>
         <Settings
           instrument={instrument}
-          onInstrumentChange={id => this.setState({ instrument: id })}
+          onInstrumentChange={id => this.loadPlayer(id)}
         />
 
-        {this.state.player &&
+        {this.state.playerLoaded &&
           this.props.children({
-            play: this.play,
-            stop: this.stop,
-            loading: loading
+            play: this.player.play,
+            stop: this.player.stopNote,
+            loading
           })}
       </div>
     );

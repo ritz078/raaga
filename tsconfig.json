@@ -17,7 +17,8 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@components/*": ["./components/*"],
-      "@styles/*": ["./styles/*"]
+      "@styles/*": ["./styles/*"],
+      "@utilities": ["./utilities/*"]
     },
     "lib": [
       "dom",

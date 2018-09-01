@@ -1,13 +1,27 @@
 import {css} from "emotion";
 
-export const pianoWrapperStyle = css({
+export const wrapper = css({
 	display: "flex",
 	flex: 1,
-	flexDirection: "column",
-	".ReactPiano__Keyboard": {
-		position: "relative",
-		display: "flex",
-	},
+	flexDirection: "column"
+});
+
+export const loaderClass = css({
+	position: "absolute",
+	zIndex: 10
+});
+
+export const pianoWrapperClass = css({
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center"
+});
+
+export const piano = css({
+	display: "flex",
+	flex: 1,
+	transition: "all 200ms",
+	position: "relative",
 	".ReactPiano__Key": {
 		display: "flex",
 		transition: "all 200ms"

@@ -1,7 +1,11 @@
 import { css } from "emotion";
 
 export const popperClass = css({
-  zIndex: 9
+  zIndex: 9,
+  boxShadow: "0px 7px 25px 11px rgba(0,0,0,0.1)",
+  "& > div": {
+    maxHeight: "80vh"
+  }
 });
 
 export const settingsWrapper = css({
@@ -19,7 +23,7 @@ export const labelClass = css({
   color: "white",
   cursor: "pointer",
   fontSize: 14,
-	"&:hover": {
-  	textDecoration: "underline"
-	}
+  "&:hover": {
+    textDecoration: "underline"
+  }
 });

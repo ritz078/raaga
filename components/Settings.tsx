@@ -23,7 +23,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
           label={({ toggle }) => (
             <span className={labelClass} onClick={toggle}>
               {this.clean(instrument)} &nbsp;
-              <span style={{ fontSize: 9 }}>▶</span>
+              <span style={{ fontSize: 8 }}>▶</span>
             </span>
           )}
           placement="right"

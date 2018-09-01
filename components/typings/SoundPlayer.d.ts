@@ -11,10 +11,7 @@ export interface SoundPlayerProps {
 }
 
 export interface SoundPlayerState {
-  player: {
-    play: Func;
-    stop: Func;
-  };
   instrument: string;
   loading: boolean;
+	playerLoaded: boolean;
 }
