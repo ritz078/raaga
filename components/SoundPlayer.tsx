@@ -4,7 +4,7 @@ import Settings from "@components/Settings";
 
 // @ts-ignore
 import instruments from "soundfont-player/instruments.json";
-import Player from "../utilities/Player";
+import Player from "../utils/Player";
 
 export default class SoundPlayer extends React.PureComponent<
   SoundPlayerProps,
@@ -45,12 +45,21 @@ export default class SoundPlayer extends React.PureComponent<
           onInstrumentChange={id => this.loadPlayer(id)}
         />
 
-        {this.state.playerLoaded &&
-          this.props.children({
-            play: this.player.play,
-            stop: this.player.stopNote,
-            loading
-          })}
+        {this.state.playerLoaded && (
+          <>
+						<button onClick={() => console.log(
+							this.player.getRecording())}>recording</button>
+
+						<button onClick={() => this.player.scheduleNotes(this.player.getRecording())}>Play</button>
+						<button onClick={() => this.player.stopAllNotes()}>Discard</button>
+
+						{this.props.children({
+              play: this.player.play,
+              stop: this.player.stopNote,
+              loading
+            })}
+          </>
+        )}
       </div>
     );
   }

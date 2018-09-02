@@ -18,7 +18,7 @@
       "@src/*": ["./src/*"],
       "@components/*": ["./components/*"],
       "@styles/*": ["./styles/*"],
-      "@utilities": ["./utilities/*"]
+      "@utils": ["./utils/*"]
     },
     "lib": [
       "dom",
