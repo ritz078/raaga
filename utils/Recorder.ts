@@ -13,7 +13,7 @@ export default class Recorder {
     this.resetRecorder();
   };
 
-  public stopRecording = () => {
+  public stopRecording = (): Note[] => {
     this.isRecording = false;
     const notes = this.notes;
     this.resetRecorder();
@@ -39,6 +39,4 @@ export default class Recorder {
     this.notes[index].duration =
       Date.now() / 1000 - this.baseTime - this.notes[index].time;
   };
-
-  public getRecordedNotes = () => this.notes;
 }

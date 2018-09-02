@@ -19,6 +19,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-piano": "^1.1.0",
+    "react-spring": "^5.6.12",
     "soundfont-player": "^0.10.7"
   },
   "devDependencies": {

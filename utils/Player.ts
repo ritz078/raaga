@@ -6,9 +6,13 @@ import {Note} from "./typings/Recorder";
 
 export default class Player {
   private ac = new AudioContext();
-  private recorder = new Recorder();
+  private recorder: Recorder;
   private player: PlayerInstance;
   private activeAudioNodes: ActiveAudioNotes = {};
+
+  constructor (recorder: Recorder) {
+  	this.recorder = recorder;
+	}
 
   private resumeAudio = () =>
     this.ac.state === "suspended" ? this.ac.resume() : Promise.resolve();
@@ -57,8 +61,6 @@ export default class Player {
       this.activeAudioNodes = {};
     });
   };
-
-  public getRecording = () => this.recorder.getRecordedNotes();
 
   public scheduleNotes = (notes: Note[]) => {
     this.player.schedule(this.ac.currentTime, notes);

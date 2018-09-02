@@ -8,6 +8,7 @@ import { Popper, OptionGroupRadio, Option, utils } from "@anarock/pebble";
 // @ts-ignore
 import instruments from "soundfont-player/instruments.json";
 import { SettingsProps } from "./typings/Settings";
+import Recorder from "@components/Recorder";
 
 export default class Settings extends React.PureComponent<SettingsProps> {
   clean = (str: string) => {
@@ -15,7 +16,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
   };
 
   render() {
-    const { instrument = instruments[0] } = this.props;
+    const { instrument = instruments[0], onRecordingEnd, onRecordingStart, onInstrumentChange } = this.props;
 
     return (
       <div className={settingsWrapper}>
@@ -32,7 +33,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
           {({ toggle }) => (
             <OptionGroupRadio
               onChange={id => {
-                id && this.props.onInstrumentChange(id as string);
+                id && onInstrumentChange(id as string);
                 toggle();
               }}
               selected={instrument}
@@ -43,6 +44,11 @@ export default class Settings extends React.PureComponent<SettingsProps> {
             </OptionGroupRadio>
           )}
         </Popper>
+
+				<Recorder
+					onRecordingEnd={onRecordingEnd}
+					onRecordingStart={onRecordingStart}
+				/>
       </div>
     );
   }
