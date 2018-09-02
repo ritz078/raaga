@@ -1,11 +1,11 @@
 import * as React from "react";
 import { SoundPlayerProps, SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-
 // @ts-ignore
 import instruments from "soundfont-player/instruments.json";
 import Player from "../utils/Player";
 import Recorder from "../utils/Recorder";
+import Clock, { EVENT_TYPE, EventArgs } from "../utils/Clock";
 
 export default class SoundPlayer extends React.PureComponent<
   SoundPlayerProps,
@@ -13,11 +13,13 @@ export default class SoundPlayer extends React.PureComponent<
 > {
   player: Player;
   recorder: Recorder;
+  clock: Clock;
 
   state = {
     instrument: instruments[0],
     loading: false,
-    playerLoaded: false
+    playerLoaded: false,
+    currentlyPlayingMidis: undefined
   };
 
   private loadPlayer = (instrument = this.state.instrument) => {
@@ -35,24 +37,49 @@ export default class SoundPlayer extends React.PureComponent<
   componentDidMount() {
     this.recorder = new Recorder();
     this.player = new Player(this.recorder);
+    this.clock = new Clock(this.player.audioContext());
     this.loadPlayer();
   }
 
-  private stopRecording = () => {
-  	const notes = this.recorder.stopRecording();
-  	// recorded notes
-  	console.log(notes)
+  onRecordPlay = (e: { args: EventArgs }) => {
+    const { eventType, note } = e.args;
 
-		// playing them
-		this.player.scheduleNotes(notes)
-	};
+    this.setState(prevState => {
+      const set = new Set(prevState.currentlyPlayingMidis || []);
+      if (eventType === EVENT_TYPE.NOTE_START) {
+        return { currentlyPlayingMidis: [...set.add(note)] };
+      } else if (eventType === EVENT_TYPE.NOTE_STOP) {
+        set.delete(note);
+        return { currentlyPlayingMidis: [...set] };
+      } else if (eventType === EVENT_TYPE.PLAYING_COMPLETE) {
+        return { currentlyPlayingMidis: undefined };
+      }
+    });
+  };
+
+  private stopRecording = () => {
+    const notes = this.recorder.stopRecording();
+
+    // playing them
+    this.player.scheduleNotes(notes);
+    this.clock.setCallbacks(
+      notes,
+      this.player.audioContext().currentTime,
+      this.onRecordPlay
+    );
+  };
 
   render() {
-    const { instrument, loading } = this.state;
+    const {
+      instrument,
+      loading,
+      currentlyPlayingMidis,
+      playerLoaded
+    } = this.state;
 
     return (
       <div>
-        {this.state.playerLoaded && (
+        {playerLoaded && (
           <>
             <Settings
               instrument={instrument}
@@ -63,7 +90,8 @@ export default class SoundPlayer extends React.PureComponent<
             {this.props.children({
               play: this.player.play,
               stop: this.player.stopNote,
-              loading
+              loading,
+              currentlyPlayingMidis
             })}
           </>
         )}

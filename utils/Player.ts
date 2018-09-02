@@ -62,6 +62,8 @@ export default class Player {
     });
   };
 
+  public audioContext = () => this.ac;
+
   public scheduleNotes = (notes: Note[]) => {
     this.player.schedule(this.ac.currentTime, notes);
   };

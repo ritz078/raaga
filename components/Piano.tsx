@@ -34,28 +34,30 @@ export default class extends React.PureComponent {
     return (
       <div className={wrapper}>
         <SoundPlayer>
-          {({ play, stop, loading }) => (
-            <div className={pianoWrapperClass}>
-              {loading && (
-                <Loader className={loaderClass} color={colors.white.base} />
-              )}
-              <Piano
-                noteRange={noteRange}
-                onPlayNote={play}
-                onStopNote={stop}
-                keyboardShortcuts={keyboardShortcuts}
-                playbackNotes={this.state.notes}
-                disabled={loading}
-                renderNoteLabel={this.renderNoteLabel}
-                className={cx(
-                  {
-                    [css({ opacity: 0.2 })]: loading
-                  },
-                  piano
-                )}
-              />
-            </div>
-          )}
+          {({ play, stop, loading, currentlyPlayingMidis }) => {
+						return (
+							<div className={pianoWrapperClass}>
+								{loading && (
+									<Loader className={loaderClass} color={colors.white.base}/>
+								)}
+								<Piano
+									noteRange={noteRange}
+									onPlayNote={play}
+									onStopNote={stop}
+									keyboardShortcuts={keyboardShortcuts}
+									playbackNotes={currentlyPlayingMidis}
+									disabled={loading}
+									renderNoteLabel={this.renderNoteLabel}
+									className={cx(
+										{
+											[css({opacity: 0.2})]: loading
+										},
+										piano
+									)}
+								/>
+							</div>
+						);
+					}}
         </SoundPlayer>
       </div>
     );
