@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
+import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano-fork";
 import {
   loaderClass,
   piano,

@@ -1,6 +1,6 @@
 import {Note} from "./typings/Recorder";
 
-export default class Recorder {
+export class Recorder {
   private notes: Note[] = [];
   private baseTime;
   private isRecording = false;

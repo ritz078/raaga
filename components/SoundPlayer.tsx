@@ -3,9 +3,9 @@ import { SoundPlayerProps, SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
 // @ts-ignore
 import instruments from "soundfont-player/instruments.json";
-import Player from "../utils/Player";
-import Recorder from "../utils/Recorder";
-import Clock, { EVENT_TYPE, EventArgs } from "../utils/Clock";
+import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
+import { Note } from "@utils/typings/Recorder";
+import { Player, Recorder, Clock } from "@utils";
 
 export default class SoundPlayer extends React.PureComponent<
   SoundPlayerProps,
@@ -57,16 +57,19 @@ export default class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private stopRecording = () => {
-    const notes = this.recorder.stopRecording();
-
-    // playing them
+  private playRecording = (notes: Note[]) => {
     this.player.scheduleNotes(notes);
     this.clock.setCallbacks(
       notes,
       this.player.audioContext().currentTime,
       this.onRecordPlay
     );
+  };
+
+  private stopRecording = () => {
+    const notes = this.recorder.stopRecording();
+
+    this.playRecording(notes);
   };
 
   render() {

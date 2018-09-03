@@ -18,7 +18,8 @@
       "@src/*": ["./src/*"],
       "@components/*": ["./components/*"],
       "@styles/*": ["./styles/*"],
-      "@utils": ["./utils/*"]
+      "@utils": ["./utils"],
+      "@utils/*": ["./utils/*"]
     },
     "lib": [
       "dom",

@@ -1,10 +1,10 @@
 import SoundFont from "soundfont-player";
 import values from "just-values";
-import Recorder from "./Recorder";
+import { Recorder } from "./Recorder";
 import {ActiveAudioNotes, PlayerInstance} from "./typings/Player";
 import {Note} from "./typings/Recorder";
 
-export default class Player {
+export class Player {
   private ac = new AudioContext();
   private recorder: Recorder;
   private player: PlayerInstance;
