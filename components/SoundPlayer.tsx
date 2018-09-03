@@ -1,25 +1,37 @@
 import * as React from "react";
-import { SoundPlayerProps, SoundPlayerState } from "./typings/SoundPlayer";
+import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-// @ts-ignore
-import instruments from "soundfont-player/instruments.json";
 import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
 import { Note } from "@utils/typings/Recorder";
 import { Player, Recorder, Clock } from "@utils";
+import {
+  loaderClass,
+  piano,
+  pianoWrapperClass
+} from "@components/styles/SoundPlayer.styles";
+import { colors, Loader } from "@anarock/pebble";
+import { css, cx } from "emotion";
+import { Piano } from "react-piano-fork";
+import { getPianoRangeAndShortcuts } from "@config/piano";
+
+// @ts-ignore
+import instruments from "soundfont-player/instruments.json";
+
+const { range, keyboardShortcuts } = getPianoRangeAndShortcuts("c3", "c6");
 
 export default class SoundPlayer extends React.PureComponent<
-  SoundPlayerProps,
+  {},
   SoundPlayerState
 > {
   player: Player;
   recorder: Recorder;
   clock: Clock;
 
-  state = {
+  state: SoundPlayerState = {
     instrument: instruments[0],
     loading: false,
     playerLoaded: false,
-    currentlyPlayingMidis: undefined
+    activeMidis: undefined
   };
 
   private loadPlayer = (instrument = this.state.instrument) => {
@@ -37,7 +49,7 @@ export default class SoundPlayer extends React.PureComponent<
   componentDidMount() {
     this.recorder = new Recorder();
     this.player = new Player(this.recorder);
-    this.clock = new Clock(this.player.audioContext());
+    this.clock = new Clock(this.player.audioContext);
     this.loadPlayer();
   }
 
@@ -45,14 +57,14 @@ export default class SoundPlayer extends React.PureComponent<
     const { eventType, note } = e.args;
 
     this.setState(prevState => {
-      const set = new Set(prevState.currentlyPlayingMidis || []);
+      const set = new Set(prevState.activeMidis || []);
       if (eventType === EVENT_TYPE.NOTE_START) {
-        return { currentlyPlayingMidis: [...set.add(note)] };
+        return { activeMidis: [...set.add(note)] };
       } else if (eventType === EVENT_TYPE.NOTE_STOP) {
         set.delete(note);
-        return { currentlyPlayingMidis: [...set] };
+        return { activeMidis: [...set] };
       } else if (eventType === EVENT_TYPE.PLAYING_COMPLETE) {
-        return { currentlyPlayingMidis: undefined };
+        return { activeMidis: undefined };
       }
     });
   };
@@ -61,44 +73,49 @@ export default class SoundPlayer extends React.PureComponent<
     this.player.scheduleNotes(notes);
     this.clock.setCallbacks(
       notes,
-      this.player.audioContext().currentTime,
+      this.player.audioContext.currentTime,
       this.onRecordPlay
     );
   };
 
   private stopRecording = () => {
     const notes = this.recorder.stopRecording();
-
     this.playRecording(notes);
   };
 
   render() {
-    const {
-      instrument,
-      loading,
-      currentlyPlayingMidis,
-      playerLoaded
-    } = this.state;
+    const { instrument, loading, activeMidis, playerLoaded } = this.state;
 
     return (
-      <div>
-        {playerLoaded && (
-          <>
-            <Settings
-              instrument={instrument}
-              onInstrumentChange={id => this.loadPlayer(id)}
-              onRecordingStart={this.recorder.startRecording}
-              onRecordingEnd={this.stopRecording}
+      playerLoaded && (
+        <>
+          <Settings
+            instrument={instrument}
+            onInstrumentChange={id => this.loadPlayer(id)}
+            onRecordingStart={this.recorder.startRecording}
+            onRecordingEnd={this.stopRecording}
+          />
+          <div className={pianoWrapperClass}>
+            {loading && (
+              <Loader className={loaderClass} color={colors.white.base} />
+            )}
+            <Piano
+              noteRange={range}
+              onPlayNote={this.player.playNote}
+              onStopNote={this.player.stopNote}
+              keyboardShortcuts={keyboardShortcuts}
+              playbackNotes={activeMidis}
+              disabled={loading}
+              className={cx(
+                {
+                  [css({ opacity: 0.2 })]: loading
+                },
+                piano
+              )}
             />
-            {this.props.children({
-              play: this.player.play,
-              stop: this.player.stopNote,
-              loading,
-              currentlyPlayingMidis
-            })}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )
     );
   }
 }

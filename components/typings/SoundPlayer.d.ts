@@ -1,19 +1,6 @@
-type Func = (midiNumber: number) => void;
-
-export interface SoundPlayerProps {
-  children: (
-    args: {
-      play: Func;
-      stop: Func;
-      loading: boolean;
-			currentlyPlayingMidis: number[]
-    }
-  ) => JSX.Element;
-}
-
 export interface SoundPlayerState {
   instrument: string;
   loading: boolean;
 	playerLoaded: boolean;
-	currentlyPlayingMidis: number[];
+	activeMidis: number[];
 }

@@ -1,31 +1,35 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { css } from "emotion";
+import { colors } from "@anarock/pebble";
 
 // @ts-ignore
-const Piano = dynamic(import("@components/Piano"));
+const SoundPlayer = dynamic(import("@components/SoundPlayer"));
 
 const main = css({
   height: "100vh",
-	flexDirection: "column",
+  flexDirection: "column",
   display: "flex",
   width: "100%",
-	backgroundColor: "#e91e63"
+  backgroundColor: colors.pink.base
 });
 
 export default function() {
   return (
     <div className={main}>
-			<div style={{
-				backgroundColor: "#000",
-				height: "50vh",
-			}} />
-			<div style={{
-				padding: "0 100px"
-			}}>
-				<Piano />
-
-			</div>
+      <div
+        style={{
+          backgroundColor: colors.gray.darker,
+          height: "50vh"
+        }}
+      />
+      <div
+        style={{
+          padding: "0 100px"
+        }}
+      >
+        <SoundPlayer />
+      </div>
     </div>
   );
 }

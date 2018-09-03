@@ -9,7 +9,8 @@
       "alias": {
         "@components": "./components",
         "@styles": "./styles",
-        "@utils": "./utils"
+        "@utils": "./utils",
+        "@config": "./config"
       }
     }]
   ]

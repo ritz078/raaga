@@ -1,8 +1,8 @@
 import SoundFont from "soundfont-player";
 import values from "just-values";
-import { Recorder } from "./Recorder";
-import {ActiveAudioNotes, PlayerInstance} from "./typings/Player";
-import {Note} from "./typings/Recorder";
+import { Recorder } from "@utils";
+import { _AudioNode, ActiveAudioNotes, PlayerInstance } from "./typings/Player";
+import { Note } from "./typings/Recorder";
 
 export class Player {
   private ac = new AudioContext();
@@ -10,9 +10,9 @@ export class Player {
   private player: PlayerInstance;
   private activeAudioNodes: ActiveAudioNotes = {};
 
-  constructor (recorder: Recorder) {
-  	this.recorder = recorder;
-	}
+  constructor(recorder: Recorder) {
+    this.recorder = recorder;
+  }
 
   private resumeAudio = () =>
     this.ac.state === "suspended" ? this.ac.resume() : Promise.resolve();
@@ -26,9 +26,9 @@ export class Player {
     });
   };
 
-  public play = midiNumber => {
+  public playNote = midiNumber => {
     this.resumeAudio().then(() => {
-    	this.recorder.startNote(midiNumber);
+      this.recorder.startNote(midiNumber);
       const audioNode = this.player.play(midiNumber);
       this.activeAudioNodes = {
         ...this.activeAudioNodes,
@@ -39,7 +39,7 @@ export class Player {
 
   public stopNote = midiNumber => {
     this.resumeAudio().then(() => {
-    	this.recorder.endNote(midiNumber);
+      this.recorder.endNote(midiNumber);
       if (!this.activeAudioNodes[midiNumber]) {
         return;
       }
@@ -51,8 +51,8 @@ export class Player {
 
   public stopAllNotes = () => {
     this.ac.resume().then(() => {
-    	this.recorder.resetRecorder();
-      const activeAudioNodes = values(this.activeAudioNodes);
+      this.recorder.resetRecorder();
+      const activeAudioNodes: _AudioNode[] = values(this.activeAudioNodes);
       activeAudioNodes.forEach(node => {
         if (node) {
           node.stop();
@@ -62,7 +62,9 @@ export class Player {
     });
   };
 
-  public audioContext = () => this.ac;
+  get audioContext() {
+    return this.ac;
+  }
 
   public scheduleNotes = (notes: Note[]) => {
     this.player.schedule(this.ac.currentTime, notes);
