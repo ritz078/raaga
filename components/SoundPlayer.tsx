@@ -11,7 +11,7 @@ import {
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
 import { css, cx } from "emotion";
-import { Piano } from "react-piano-fork";
+import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 
 // @ts-ignore
@@ -19,10 +19,13 @@ import instruments from "soundfont-player/instruments.json";
 
 const { range, keyboardShortcuts } = getPianoRangeAndShortcuts("c3", "c6");
 
+const worker = new Worker("/static/worker.js");
+
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
+	audioContext= new AudioContext();
   player: Player;
   recorder: Recorder;
   clock: Clock;
@@ -48,9 +51,14 @@ export default class SoundPlayer extends React.PureComponent<
 
   componentDidMount() {
     this.recorder = new Recorder();
-    this.player = new Player(this.recorder);
-    this.clock = new Clock(this.player.audioContext);
+    this.player = new Player(this.audioContext, this.recorder);
+    this.clock = new Clock(this.audioContext);
     this.loadPlayer();
+
+		worker.onmessage = (e) => {
+			console.log(e.data)
+			this.playRecording(e.data)
+		};
   }
 
   onRecordPlay = (e: { args: EventArgs }) => {
@@ -73,7 +81,7 @@ export default class SoundPlayer extends React.PureComponent<
     this.player.scheduleNotes(notes);
     this.clock.setCallbacks(
       notes,
-      this.player.audioContext.currentTime,
+      this.audioContext.currentTime,
       this.onRecordPlay
     );
   };
@@ -83,12 +91,22 @@ export default class SoundPlayer extends React.PureComponent<
     this.playRecording(notes);
   };
 
+  private loadMidiFile = async (e) => {
+  	const file = e.target.files[0];
+  	worker.postMessage(file);
+	};
+
+  private renderNoteLabel = ({ midiNumber}) => {
+  	return midiNumber
+	};
+
   render() {
     const { instrument, loading, activeMidis, playerLoaded } = this.state;
 
     return (
       playerLoaded && (
         <>
+					<input type="file" onChange={this.loadMidiFile}/>
           <Settings
             instrument={instrument}
             onInstrumentChange={id => this.loadPlayer(id)}
@@ -112,6 +130,7 @@ export default class SoundPlayer extends React.PureComponent<
                 },
                 piano
               )}
+							renderNoteLabel={this.renderNoteLabel}
             />
           </div>
         </>

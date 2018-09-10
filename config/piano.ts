@@ -1,4 +1,4 @@
-import { KeyboardShortcuts, MidiNumbers } from "react-piano-fork";
+import { KeyboardShortcuts, MidiNumbers } from "react-piano";
 
 export function getPianoRangeAndShortcuts(startNode: string, endNote: string) {
   const firstNote = MidiNumbers.fromNote(startNode);

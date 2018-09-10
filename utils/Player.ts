@@ -5,13 +5,14 @@ import { _AudioNode, ActiveAudioNotes, PlayerInstance } from "./typings/Player";
 import { Note } from "./typings/Recorder";
 
 export class Player {
-  private ac = new AudioContext();
+  private ac: AudioContext;
   private recorder: Recorder;
   private player: PlayerInstance;
   private activeAudioNodes: ActiveAudioNotes = {};
 
-  constructor(recorder: Recorder) {
+  constructor(ac: AudioContext, recorder: Recorder) {
     this.recorder = recorder;
+    this.ac = ac
   }
 
   private resumeAudio = () =>
@@ -19,7 +20,7 @@ export class Player {
 
   public load = (instrument: string, cb: any = () => {}) => {
     this.stopAllNotes();
-    this.recorder.resetRecorder();
+    this.recorder.destroy();
     SoundFont.instrument(this.ac, instrument).then(player => {
       this.player = player;
       cb(player);
@@ -51,7 +52,7 @@ export class Player {
 
   public stopAllNotes = () => {
     this.ac.resume().then(() => {
-      this.recorder.resetRecorder();
+      this.recorder.destroy();
       const activeAudioNodes: _AudioNode[] = values(this.activeAudioNodes);
       activeAudioNodes.forEach(node => {
         if (node) {
@@ -61,10 +62,6 @@ export class Player {
       this.activeAudioNodes = {};
     });
   };
-
-  get audioContext() {
-    return this.ac;
-  }
 
   public scheduleNotes = (notes: Note[]) => {
     this.player.schedule(this.ac.currentTime, notes);

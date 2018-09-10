@@ -9,8 +9,6 @@ export class Clock {
     this.clock = new WebAudioScheduler({ context: ac });
   }
 
-  public clear = () => {};
-
   public setCallbacks = (notes: Note[], currentTime, cb) => {
     this.clock.start(() => {
       notes.forEach((note, i) => {

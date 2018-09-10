@@ -10,17 +10,17 @@ export class Recorder {
 
   public startRecording = () => {
     this.isRecording = true;
-    this.resetRecorder();
+    this.destroy();
   };
 
   public stopRecording = (): Note[] => {
     this.isRecording = false;
     const notes = this.notes;
-    this.resetRecorder();
+    this.destroy();
     return notes;
   };
 
-  public resetRecorder = () => {
+  public destroy = () => {
     this.baseTime = Date.now() / 1000;
     this.notes = [];
   };
