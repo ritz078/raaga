@@ -1,17 +1,18 @@
 import WebAudioScheduler from "web-audio-scheduler";
-import { Note } from "./typings/Recorder";
 import { ClockInterface, EVENT_TYPE } from "./typings/Clock";
+import {Note} from "midiconvert";
 
 export class Clock {
   clock: ClockInterface;
+  _context: AudioContext;
 
   constructor(ac: AudioContext) {
+  	this._context = ac;
     this.clock = new WebAudioScheduler({ context: ac });
   }
 
-  public clear = () => {};
-
-  public setCallbacks = (notes: Note[], currentTime, cb) => {
+  public setCallbacks = (notes: Note[], cb) => {
+  	const currentTime = this._context.currentTime;
     this.clock.start(() => {
       notes.forEach((note, i) => {
         this.clock.insert(currentTime + note.time, cb, {
