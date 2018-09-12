@@ -20,7 +20,8 @@
       "@styles/*": ["./styles/*"],
       "@utils": ["./utils"],
       "@utils/*": ["./utils/*"],
-      "@config/*": ["./config/*"]
+      "@config/*": ["./config/*"],
+      "@workers/*": ["./workers/*"]
     },
     "lib": [
       "dom",

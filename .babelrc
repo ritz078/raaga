@@ -10,7 +10,8 @@
         "@components": "./components",
         "@styles": "./styles",
         "@utils": "./utils",
-        "@config": "./config"
+        "@config": "./config",
+        "@workers": "./workers"
       }
     }]
   ]

@@ -2,7 +2,7 @@ import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
 import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
-import { Clock } from "@utils";
+import { Player } from "@utils";
 import {
   loaderClass,
   piano,
@@ -12,22 +12,18 @@ import { colors, Loader } from "@anarock/pebble";
 import { css, cx } from "emotion";
 import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
-
-// @ts-ignore
 import instruments from "soundfont-player/instruments.json";
+import Tone from "tone";
+import Worker from "@workers/midiload.worker";
 
 const { range, keyboardShortcuts } = getPianoRangeAndShortcuts("c3", "c6");
-import Tone from "tone";
 
-const worker = new Worker("/static/worker.js");
-import { Player } from "@utils";
+const worker = new Worker();
 
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
-  audioContext = new AudioContext();
-  clock: Clock;
   player: Player;
 
   state: SoundPlayerState = {
@@ -49,8 +45,6 @@ export default class SoundPlayer extends React.PureComponent<
 	};
 
   async componentDidMount() {
-    this.clock = new Clock(this.audioContext);
-
     this.player = new Player();
     this.changeInstrument();
 
@@ -65,6 +59,7 @@ export default class SoundPlayer extends React.PureComponent<
 
     this.setState(prevState => {
       const set = new Set(prevState.activeMidis || []);
+
       if (eventType === EVENT_TYPE.NOTE_START) {
         return { activeMidis: [...set.add(midi)] };
       } else if (eventType === EVENT_TYPE.NOTE_STOP) {
