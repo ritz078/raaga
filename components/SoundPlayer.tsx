@@ -2,8 +2,7 @@ import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
 import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
-import { Note } from "@utils/typings/Recorder";
-import { Player, Recorder, Clock } from "@utils";
+import { Clock } from "@utils";
 import {
   loaderClass,
   piano,
@@ -18,17 +17,18 @@ import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 
 const { range, keyboardShortcuts } = getPianoRangeAndShortcuts("c3", "c6");
+import Tone from "tone";
 
 const worker = new Worker("/static/worker.js");
+import { Player } from "@utils";
 
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
-	audioContext= new AudioContext();
-  player: Player;
-  recorder: Recorder;
+  audioContext = new AudioContext();
   clock: Clock;
+  player: Player;
 
   state: SoundPlayerState = {
     instrument: instruments[0],
@@ -37,39 +37,38 @@ export default class SoundPlayer extends React.PureComponent<
     activeMidis: undefined
   };
 
-  private loadPlayer = (instrument = this.state.instrument) => {
-    this.setState({ loading: true });
+  private changeInstrument = async (instrument = this.state.instrument) => {
+		this.setState({ loading: true });
 
-    this.player.load(instrument, () => {
-      this.setState({
-        playerLoaded: true,
-        instrument,
-        loading: false
-      });
-    });
-  };
+		await this.player.loadSound(instrument);
+		this.setState({
+			playerLoaded: true,
+			instrument,
+			loading: false
+		});
+	};
 
-  componentDidMount() {
-    this.recorder = new Recorder();
-    this.player = new Player(this.audioContext, this.recorder);
+  async componentDidMount() {
     this.clock = new Clock(this.audioContext);
-    this.loadPlayer();
 
-		worker.onmessage = (e) => {
-			console.log(e.data)
-			this.playRecording(e.data)
-		};
+    this.player = new Player();
+    this.changeInstrument();
+
+    worker.onmessage = e => {
+      const midi = e.data;
+      this.player.playMidi(1, midi, this.onRecordPlay)
+    };
   }
 
   onRecordPlay = (e: { args: EventArgs }) => {
-    const { eventType, note } = e.args;
+    const { eventType, midi } = e.args;
 
     this.setState(prevState => {
       const set = new Set(prevState.activeMidis || []);
       if (eventType === EVENT_TYPE.NOTE_START) {
-        return { activeMidis: [...set.add(note)] };
+        return { activeMidis: [...set.add(midi)] };
       } else if (eventType === EVENT_TYPE.NOTE_STOP) {
-        set.delete(note);
+        set.delete(midi);
         return { activeMidis: [...set] };
       } else if (eventType === EVENT_TYPE.PLAYING_COMPLETE) {
         return { activeMidis: undefined };
@@ -77,28 +76,20 @@ export default class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private playRecording = (notes: Note[]) => {
-    this.player.scheduleNotes(notes);
-    this.clock.setCallbacks(
-      notes,
-      this.audioContext.currentTime,
-      this.onRecordPlay
-    );
-  };
-
   private stopRecording = () => {
-    const notes = this.recorder.stopRecording();
-    this.playRecording(notes);
+  	this.player.stopRecording();
+    this.player.playRecording(this.onRecordPlay);
   };
 
-  private loadMidiFile = async (e) => {
-  	const file = e.target.files[0];
-  	worker.postMessage(file);
-	};
+  private loadMidiFile = async e => {
+    const file = e.target.files[0];
+    worker.postMessage(file);
+  };
 
-  private renderNoteLabel = ({ midiNumber}) => {
-  	return midiNumber
-	};
+  private renderNoteLabel = ({ midiNumber }) => {
+    // @ts-ignore
+		return Tone.Frequency(midiNumber, "midi").toNote();
+  };
 
   render() {
     const { instrument, loading, activeMidis, playerLoaded } = this.state;
@@ -106,11 +97,11 @@ export default class SoundPlayer extends React.PureComponent<
     return (
       playerLoaded && (
         <>
-					<input type="file" onChange={this.loadMidiFile}/>
+          <input type="file" onChange={this.loadMidiFile} />
           <Settings
             instrument={instrument}
-            onInstrumentChange={id => this.loadPlayer(id)}
-            onRecordingStart={this.recorder.startRecording}
+            onInstrumentChange={this.changeInstrument}
+            onRecordingStart={this.player.startRecording}
             onRecordingEnd={this.stopRecording}
           />
           <div className={pianoWrapperClass}>
@@ -119,7 +110,7 @@ export default class SoundPlayer extends React.PureComponent<
             )}
             <Piano
               noteRange={range}
-              onPlayNote={this.player.playNote}
+              onPlayNote={this.player.startNote}
               onStopNote={this.player.stopNote}
               keyboardShortcuts={keyboardShortcuts}
               playbackNotes={activeMidis}
@@ -130,7 +121,7 @@ export default class SoundPlayer extends React.PureComponent<
                 },
                 piano
               )}
-							renderNoteLabel={this.renderNoteLabel}
+              renderNoteLabel={this.renderNoteLabel}
             />
           </div>
         </>

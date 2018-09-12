@@ -1,14 +1,15 @@
 import {Note} from "@utilities";
 
-type _AudioNode = GainNode & {
-	stop: () => void;
-};
-
-export interface ActiveAudioNotes {
-	[key: string]: _AudioNode
-}
-
-export interface PlayerInstance {
-	play: (midiNumber: string) => _AudioNode;
-	schedule: (time: Date | number, notes: Note[]) => any;
+export interface Sampler {
+	connect: (master: any) => void;
+	triggerAttack: (note: string) => void;
+	triggerRelease: (note: string) => void;
+	add: (key: string, buffer: ArrayBuffer) => void;
+	context: AudioContext;
+	triggerAttackRelease: (
+		note: string,
+		duration: number,
+		time: number,
+		velocity: number
+	) => void;
 }

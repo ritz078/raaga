@@ -12,6 +12,7 @@
   "dependencies": {
     "@anarock/pebble": "^0.16.4",
     "@zeit/next-typescript": "^1.1.0",
+    "audio-loader": "^1.0.3",
     "emotion": "^9.2.8",
     "emotion-server": "^9.2.8",
     "greenlet": "^1.0.1",
@@ -23,6 +24,7 @@
     "react-piano": "^2.0.1",
     "react-spring": "^5.6.12",
     "soundfont-player": "^0.10.7",
+    "tone": "^0.12.80",
     "web-audio-scheduler": "^1.4.0"
   },
   "devDependencies": {
