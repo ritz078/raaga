@@ -1,69 +1,88 @@
-import SoundFont from "soundfont-player";
-import values from "just-values";
-import { Recorder } from "@utils";
-import { _AudioNode, ActiveAudioNotes, PlayerInstance } from "./typings/Player";
-import { Note } from "./typings/Recorder";
+import Tone from "tone";
+import load from "audio-loader";
+import { create, MIDI } from "midiconvert";
+import { Clock } from "@utils";
+import { Sampler } from "./typings/Player";
+
+function nameToUrl(name, format: "mp3" | "ogg" = "mp3"): string {
+  return `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${name}-${format}.js`;
+}
 
 export class Player {
-  private ac: AudioContext;
-  private recorder: Recorder;
-  private player: PlayerInstance;
-  private activeAudioNodes: ActiveAudioNotes = {};
+  sampler: Sampler;
+  private _clock: Clock;
+  private _midi: MIDI;
+  private _activeNotes: Map<number, number>;
+  private _track: any;
+  private _recordingStartTime: number = null;
 
-  constructor(ac: AudioContext, recorder: Recorder) {
-    this.recorder = recorder;
-    this.ac = ac
+  constructor() {
+    this.sampler = new Tone.Sampler({});
+    this.sampler.connect(Tone.Master);
+    this._activeNotes = new Map();
+    this._clock = new Clock(this.sampler.context);
   }
 
-  private resumeAudio = () =>
-    this.ac.state === "suspended" ? this.ac.resume() : Promise.resolve();
+  private getRelativeTime = () => Date.now() / 1000 - this._recordingStartTime;
 
-  public load = (instrument: string, cb: any = () => {}) => {
-    this.stopAllNotes();
-    this.recorder.destroy();
-    SoundFont.instrument(this.ac, instrument).then(player => {
-      this.player = player;
-      cb(player);
-    });
+  public startRecording = () => {
+    this._midi = create();
+    // @ts-ignore
+    this._track = this._midi.track().patch(32);
+    this._recordingStartTime = Date.now() / 1000;
   };
 
-  public playNote = midiNumber => {
-    this.resumeAudio().then(() => {
-      this.recorder.startNote(midiNumber);
-      const audioNode = this.player.play(midiNumber);
-      this.activeAudioNodes = {
-        ...this.activeAudioNodes,
-        [midiNumber]: audioNode
-      };
-    });
+  public stopRecording = () => {
+    this._recordingStartTime = null;
+    this._activeNotes.clear();
   };
 
-  public stopNote = midiNumber => {
-    this.resumeAudio().then(() => {
-      this.recorder.endNote(midiNumber);
-      if (!this.activeAudioNodes[midiNumber]) {
-        return;
-      }
-      const audioNode = this.activeAudioNodes[midiNumber];
-      audioNode.stop();
-      this.activeAudioNodes = { ...this.activeAudioNodes, [midiNumber]: null };
-    });
+  public playMidi = (trackIndex, midi, cb) => {
+    // noinspection JSPrimitiveTypeWrapperUsage
+    Tone.Transport.bpm.value = midi.header.bpm;
+
+    this._clock.setCallbacks(midi.tracks[trackIndex].notes, cb);
+
+    new Tone.Part((time, note) => {
+      this.sampler.triggerAttackRelease(
+        Tone.Frequency(note.midi, "midi").toNote(),
+        note.duration,
+        time,
+        note.velocity
+      );
+    }, midi.tracks[trackIndex].notes).start();
+
+    Tone.Transport.start();
   };
 
-  public stopAllNotes = () => {
-    this.ac.resume().then(() => {
-      this.recorder.destroy();
-      const activeAudioNodes: _AudioNode[] = values(this.activeAudioNodes);
-      activeAudioNodes.forEach(node => {
-        if (node) {
-          node.stop();
-        }
-      });
-      this.activeAudioNodes = {};
-    });
+  public playRecording = cb => {
+    this.playMidi(0, this._midi, cb);
   };
 
-  public scheduleNotes = (notes: Note[]) => {
-    this.player.schedule(this.ac.currentTime, notes);
+  public loadSound = async (instrument = "accordion") => {
+    const buffers = await load(nameToUrl(instrument));
+    Object.keys(buffers).forEach(key => this.sampler.add(key, buffers[key]));
+  };
+
+  public startNote = (midiNumber: number) => {
+    if (this._recordingStartTime) {
+      this._activeNotes.set(midiNumber, this.getRelativeTime());
+    }
+
+    this.sampler.triggerAttack(Tone.Frequency(midiNumber, "midi").toNote());
+  };
+
+  public stopNote = (midiNumber: number) => {
+    if (this._recordingStartTime) {
+      this._track.note(
+        midiNumber,
+        this._activeNotes.get(midiNumber),
+        Date.now() / 1000 -
+          this._activeNotes.get(midiNumber) -
+          this._recordingStartTime
+      );
+    }
+
+    this.sampler.triggerRelease(Tone.Frequency(midiNumber, "midi").toNote());
   };
 }
