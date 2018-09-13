@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@anarock/pebble@^0.16.4":
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/@anarock/pebble/-/pebble-0.16.4.tgz#a6d243c8bfb590a673bf10aebe24a75e4e862bbc"
+"@anarock/pebble@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@anarock/pebble/-/pebble-0.17.1.tgz#0e806f5f22d63d778216dda1fa2a5c7a2855c56a"
   dependencies:
     "@types/rheostat" "^2.1.3"
     date-fns "^1.29.0"
@@ -12,12 +12,12 @@
     is-in-browser "^1.1.3"
     just-debounce-it "^1.1.0"
     mitt "^1.1.3"
-    react "^16.4.2"
-    react-calendar "^2.17.1"
-    react-dom "^16.4.2"
+    react "^16.5.0"
+    react-calendar "^2.17.2"
+    react-dom "^16.5.0"
     react-ink "^6.4.0"
     react-popper "^1.0.2"
-    react-spring "^5.6.10"
+    react-spring "^5.7.1"
     rheostat "2.2.0"
     utility-types "^2.0.0"
 
@@ -2611,9 +2611,9 @@ get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
 
-get-user-locale@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/get-user-locale/-/get-user-locale-1.1.0.tgz#55266068c2e1289c3106cf4cef14ddb11dcea928"
+get-user-locale@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/get-user-locale/-/get-user-locale-1.1.1.tgz#edff0a8bbd6aa3ed0ca30cc441e1acd111543b7f"
   dependencies:
     lodash.once "^4.1.1"
 
@@ -4692,16 +4692,16 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-calendar@^2.17.1:
-  version "2.17.2"
-  resolved "https://registry.yarnpkg.com/react-calendar/-/react-calendar-2.17.2.tgz#340f152fd8a8c44f40e9869bddad2b25dc0f32f1"
+react-calendar@^2.17.2:
+  version "2.17.3"
+  resolved "https://registry.yarnpkg.com/react-calendar/-/react-calendar-2.17.3.tgz#515bccb7cb52b8d699d3498cf3e30ca31a3ba540"
   dependencies:
-    get-user-locale "^1.1.0"
+    get-user-locale "^1.1.1"
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
-react-dom@^16.4.2:
+react-dom@^16.4.2, react-dom@^16.5.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.0.tgz#57704e5718669374b182a17ea79a6d24922cb27d"
   dependencies:
@@ -4739,13 +4739,13 @@ react-popper@^1.0.2:
     typed-styles "^0.0.5"
     warning "^3.0.0"
 
-react-spring@^5.6.10, react-spring@^5.6.12:
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-5.7.1.tgz#7816825f2aa08544476903046ca50e5057dd9212"
+react-spring@^5.7.1, react-spring@^5.7.2:
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-5.7.2.tgz#5c0fb7c726305f11bfae6fbb5dfaf08fe0ea113f"
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-react@^16.4.2:
+react@^16.4.2, react@^16.5.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
   dependencies:

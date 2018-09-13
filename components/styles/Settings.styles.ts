@@ -13,7 +13,7 @@ export const settingsWrapper = css({
   backgroundColor: "#2d2d2d",
   height: 50,
   marginTop: -50,
-  borderRadius: "20px 20px 0 0",
+  borderRadius: "4px 4px 0 0",
   alignItems: "center",
   padding: "0 26px",
 	...mixins.flexSpaceBetween

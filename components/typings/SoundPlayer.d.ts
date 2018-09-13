@@ -3,4 +3,8 @@ export interface SoundPlayerState {
   loading: boolean;
 	playerLoaded: boolean;
 	activeMidis: number[];
+	keyboardRange: {
+		first: number;
+		last: number;
+	};
 }

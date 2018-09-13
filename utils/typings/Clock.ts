@@ -17,4 +17,5 @@ export interface ClockInterface {
     args: EventArgs
   ) => void;
   start: (cb: () => void) => void;
+  stop: (clearEvents: boolean) => void;
 }

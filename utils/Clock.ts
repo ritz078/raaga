@@ -33,4 +33,8 @@ export class Clock {
       });
     });
   };
+
+  public dispose = () => {
+  	this.clock.stop(true);
+	}
 }

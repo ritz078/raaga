@@ -15,6 +15,7 @@ export class Player {
   private _activeNotes: Map<number, number>;
   private _track: any;
   private _recordingStartTime: number = null;
+  private _notesPlayer: any;
 
   constructor() {
     this.sampler = new Tone.Sampler({});
@@ -43,7 +44,7 @@ export class Player {
 
     this._clock.setCallbacks(midi.tracks[trackIndex].notes, cb);
 
-    new Tone.Part((time, note) => {
+    this._notesPlayer = new Tone.Part((time, note) => {
       this.sampler.triggerAttackRelease(
         Tone.Frequency(note.midi, "midi").toNote(),
         note.duration,
@@ -84,5 +85,12 @@ export class Player {
     }
 
     this.sampler.triggerRelease(Tone.Frequency(midiNumber, "midi").toNote());
+  };
+
+  public reset = () => {
+    this._notesPlayer && this._notesPlayer.dispose();
+    this._clock.dispose();
+    this._activeNotes.clear();
+    this._recordingStartTime = null;
   };
 }

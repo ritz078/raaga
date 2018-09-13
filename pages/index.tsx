@@ -10,8 +10,7 @@ const main = css({
   height: "100vh",
   flexDirection: "column",
   display: "flex",
-  width: "100%",
-  backgroundColor: colors.pink.base
+  width: "100%"
 });
 
 export default function() {
@@ -19,13 +18,12 @@ export default function() {
     <div className={main}>
       <div
         style={{
-          backgroundColor: colors.gray.darker,
           height: "50vh"
         }}
       />
       <div
         style={{
-          padding: "0 100px"
+          padding: "0 30px"
         }}
       >
         <SoundPlayer />

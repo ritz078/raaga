@@ -2,7 +2,7 @@ import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
 import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
-import { Player } from "@utils";
+import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
   piano,
@@ -14,11 +14,11 @@ import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
-import Worker from "@workers/midiload.worker";
+import MidiLoadWorker from "@workers/midiload.worker";
 
-const { range, keyboardShortcuts } = getPianoRangeAndShortcuts("c3", "c6");
+const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
-const worker = new Worker();
+const worker = new MidiLoadWorker();
 
 export default class SoundPlayer extends React.PureComponent<
   {},
@@ -30,27 +30,56 @@ export default class SoundPlayer extends React.PureComponent<
     instrument: instruments[0],
     loading: false,
     playerLoaded: false,
-    activeMidis: undefined
+    activeMidis: undefined,
+    keyboardRange: range
+  };
+
+  private resetPlayer = () => {
+    this.player.reset();
+    this.setState({
+      activeMidis: undefined
+    });
   };
 
   private changeInstrument = async (instrument = this.state.instrument) => {
-		this.setState({ loading: true });
+    this.setState({ loading: true });
 
-		await this.player.loadSound(instrument);
-		this.setState({
-			playerLoaded: true,
-			instrument,
-			loading: false
-		});
-	};
+    await this.player.loadSound(instrument);
+
+    this.setState({
+      playerLoaded: true,
+      instrument,
+      loading: false
+    });
+  };
+
+  private preparePlayer = (midi, trackIndex = 0, cb) => {
+    const { notes } = midi.tracks[trackIndex];
+    const requiredRange = getMidiRange(notes);
+    const currentRange = [
+      this.state.keyboardRange.first,
+      this.state.keyboardRange.last
+    ];
+    if (!isWithinRange(requiredRange, currentRange))
+      this.setState(
+        {
+          keyboardRange: getPianoRangeAndShortcuts(requiredRange).range
+        },
+        cb
+      );
+    else cb();
+  };
 
   async componentDidMount() {
     this.player = new Player();
     this.changeInstrument();
 
     worker.onmessage = e => {
+      this.resetPlayer();
       const midi = e.data;
-      this.player.playMidi(1, midi, this.onRecordPlay)
+      this.preparePlayer(midi, 1, () => {
+        this.player.playMidi(1, midi, this.onRecordPlay);
+      });
     };
   }
 
@@ -72,7 +101,7 @@ export default class SoundPlayer extends React.PureComponent<
   };
 
   private stopRecording = () => {
-  	this.player.stopRecording();
+    this.player.stopRecording();
     this.player.playRecording(this.onRecordPlay);
   };
 
@@ -81,10 +110,8 @@ export default class SoundPlayer extends React.PureComponent<
     worker.postMessage(file);
   };
 
-  private renderNoteLabel = ({ midiNumber }) => {
-    // @ts-ignore
-		return Tone.Frequency(midiNumber, "midi").toNote();
-  };
+  private renderNoteLabel = ({ midiNumber }) =>
+    null && Tone.Frequency(midiNumber, "midi").toNote();
 
   render() {
     const { instrument, loading, activeMidis, playerLoaded } = this.state;
@@ -104,7 +131,7 @@ export default class SoundPlayer extends React.PureComponent<
               <Loader className={loaderClass} color={colors.white.base} />
             )}
             <Piano
-              noteRange={range}
+              noteRange={this.state.keyboardRange}
               onPlayNote={this.player.startNote}
               onStopNote={this.player.stopNote}
               keyboardShortcuts={keyboardShortcuts}

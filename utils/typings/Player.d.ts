@@ -6,6 +6,7 @@ export interface Sampler {
 	triggerRelease: (note: string) => void;
 	add: (key: string, buffer: ArrayBuffer) => void;
 	context: AudioContext;
+	dispose: () => void;
 	triggerAttackRelease: (
 		note: string,
 		duration: number,
