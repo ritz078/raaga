@@ -6,7 +6,8 @@ import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
   piano,
-  pianoWrapperClass
+  pianoWrapperClass,
+  visualizerWrapper
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
 import { css, cx } from "emotion";
@@ -15,15 +16,19 @@ import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
 import MidiLoadWorker from "@workers/midiload.worker";
+import CanvasWorker from "@workers/canvas.worker";
+import { MIDI } from "midiconvert";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
-const worker = new MidiLoadWorker();
+const worker: Worker = new MidiLoadWorker();
+const canvasWorker: Worker = new CanvasWorker();
 
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
+  canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef();
   player: Player;
 
   state: SoundPlayerState = {
@@ -31,7 +36,8 @@ export default class SoundPlayer extends React.PureComponent<
     loading: false,
     playerLoaded: false,
     activeMidis: undefined,
-    keyboardRange: range
+    keyboardRange: range,
+    currentTrack: undefined
   };
 
   private resetPlayer = () => {
@@ -70,15 +76,40 @@ export default class SoundPlayer extends React.PureComponent<
     else cb();
   };
 
+  private onProgressChange = () => {
+    // this.setState({
+    // 	currentTrackProgress: progress
+    // })
+  };
+
   async componentDidMount() {
     this.player = new Player();
     this.changeInstrument();
 
+    // @ts-ignore
+    const offscreen = this.canvasRef.current.transferControlToOffscreen();
+
+    canvasWorker.postMessage(
+      {
+        canvas: offscreen,
+        message: "init"
+      },
+      [offscreen]
+    );
+
     worker.onmessage = e => {
       this.resetPlayer();
-      const midi = e.data;
-      this.preparePlayer(midi, 1, () => {
-        this.player.playMidi(1, midi, this.onRecordPlay);
+      const midi: MIDI = e.data;
+
+      this.preparePlayer(midi, 0, () => {
+        canvasWorker.postMessage({
+          track: midi.tracks[0],
+          range: this.state.keyboardRange
+        });
+        this.player.playMidi(0, midi, this.onRecordPlay, this.onProgressChange);
+        this.setState({
+          currentTrack: midi.tracks[0]
+        });
       });
     };
   }
@@ -102,7 +133,7 @@ export default class SoundPlayer extends React.PureComponent<
 
   private stopRecording = () => {
     this.player.stopRecording();
-    this.player.playRecording(this.onRecordPlay);
+    this.player.playRecording(this.onRecordPlay, this.onProgressChange);
   };
 
   private loadMidiFile = async e => {
@@ -117,37 +148,51 @@ export default class SoundPlayer extends React.PureComponent<
     const { instrument, loading, activeMidis, playerLoaded } = this.state;
 
     return (
-      playerLoaded && (
-        <>
-          <input type="file" onChange={this.loadMidiFile} />
-          <Settings
-            instrument={instrument}
-            onInstrumentChange={this.changeInstrument}
-            onRecordingStart={this.player.startRecording}
-            onRecordingEnd={this.stopRecording}
+      <>
+        <div className={visualizerWrapper}>
+          <canvas
+            width={1620}
+            height={400}
+            style={{ height: 400 }}
+            ref={this.canvasRef}
           />
-          <div className={pianoWrapperClass}>
-            {loading && (
-              <Loader className={loaderClass} color={colors.white.base} />
-            )}
-            <Piano
-              noteRange={this.state.keyboardRange}
-              onPlayNote={this.player.startNote}
-              onStopNote={this.player.stopNote}
-              keyboardShortcuts={keyboardShortcuts}
-              playbackNotes={activeMidis}
-              disabled={loading}
-              className={cx(
-                {
-                  [css({ opacity: 0.2 })]: loading
-                },
-                piano
-              )}
-              renderNoteLabel={this.renderNoteLabel}
+        </div>
+        {playerLoaded && (
+          <>
+            <input
+              style={{ position: "absolute" }}
+              type="file"
+              onChange={this.loadMidiFile}
             />
-          </div>
-        </>
-      )
+            <Settings
+              instrument={instrument}
+              onInstrumentChange={this.changeInstrument}
+              onRecordingStart={this.player.startRecording}
+              onRecordingEnd={this.stopRecording}
+            />
+            <div className={pianoWrapperClass}>
+              {loading && (
+                <Loader className={loaderClass} color={colors.white.base} />
+              )}
+              <Piano
+                noteRange={this.state.keyboardRange}
+                onPlayNote={this.player.startNote}
+                onStopNote={this.player.stopNote}
+                keyboardShortcuts={keyboardShortcuts}
+                playbackNotes={activeMidis}
+                disabled={loading}
+                className={cx(
+                  {
+                    [css({ opacity: 0.2 })]: loading
+                  },
+                  piano
+                )}
+                renderNoteLabel={this.renderNoteLabel}
+              />
+            </div>
+          </>
+        )}
+      </>
     );
   }
 }

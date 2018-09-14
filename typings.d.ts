@@ -10,3 +10,11 @@ declare module "@workers/midiload.worker" {
 
 	export default WebpackWorker;
 }
+
+declare module "@workers/canvas.worker" {
+	class WebpackWorker extends Worker {
+		constructor();
+	}
+
+	export default WebpackWorker;
+}

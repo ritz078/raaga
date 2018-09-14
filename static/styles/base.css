@@ -7,9 +7,3 @@
     box-sizing: border-box;
     font-family: 'Josefin Sans', sans-serif;
 }
-
-body {
-    min-width: 1024px;
-    background-image: url("/static/images/background.jpg");
-    background-size: cover;
-}

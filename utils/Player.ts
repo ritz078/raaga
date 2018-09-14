@@ -38,13 +38,14 @@ export class Player {
     this._activeNotes.clear();
   };
 
-  public playMidi = (trackIndex, midi, cb) => {
-    // noinspection JSPrimitiveTypeWrapperUsage
+  public playMidi = (trackIndex, midi, cb, progress) => {
+  	console.log(progress);
     Tone.Transport.bpm.value = midi.header.bpm;
 
     this._clock.setCallbacks(midi.tracks[trackIndex].notes, cb);
 
     this._notesPlayer = new Tone.Part((time, note) => {
+    	// setup callback here
       this.sampler.triggerAttackRelease(
         Tone.Frequency(note.midi, "midi").toNote(),
         note.duration,
@@ -54,10 +55,10 @@ export class Player {
     }, midi.tracks[trackIndex].notes).start();
 
     Tone.Transport.start();
-  };
+	};
 
-  public playRecording = cb => {
-    this.playMidi(0, this._midi, cb);
+  public playRecording = (cb, progress) => {
+    this.playMidi(0, this._midi, cb, progress);
   };
 
   public loadSound = async (instrument = "accordion") => {

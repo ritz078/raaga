@@ -29,6 +29,7 @@ export const piano = css({
     borderRadius: "0 0 5px 5px",
     backgroundColor: "#fff",
     flex: 1,
+		width: "auto !important",
     cursor: "pointer",
     borderBottom: "4px solid #90caf9",
     "&:last-child": {
@@ -76,4 +77,13 @@ export const piano = css({
 		userSelect: "none",
 		fontSize: 10
   }
+});
+
+export const visualizerWrapper = css({
+	display: "flex",
+	flexDirection: "row",
+	position: "relative",
+	flex: 1,
+	transform: "rotate(180deg) scaleX(-1)",
+	overflow: "scroll"
 });

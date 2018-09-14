@@ -7,8 +7,8 @@ module.exports = withCSS(withTypescript({
     if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin());
 
     config.module.rules.push({
-      test: /\.worker\.ts$/,
-      use: { loader: 'worker-loader', options: {inline: true} }
+      test: /\.worker\.ts/,
+      use: { loader: 'worker-loader', options: { fallback: true } }
     });
 
     return config

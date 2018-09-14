@@ -1,3 +1,5 @@
+import {Track} from "midiconvert";
+
 export interface SoundPlayerState {
   instrument: string;
   loading: boolean;
@@ -7,4 +9,5 @@ export interface SoundPlayerState {
 		first: number;
 		last: number;
 	};
+	currentTrack: Track;
 }

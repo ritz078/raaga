@@ -27,7 +27,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
               <span style={{ fontSize: 8 }}>▶</span>
             </span>
           )}
-          placement="right"
+          placement="auto"
           popperClassName={popperClass}
         >
           {({ toggle }) => (
