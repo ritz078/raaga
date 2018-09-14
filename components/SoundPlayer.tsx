@@ -6,8 +6,7 @@ import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
   piano,
-  pianoWrapperClass,
-  visualizerWrapper
+  pianoWrapperClass
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
 import { css, cx } from "emotion";
@@ -16,19 +15,18 @@ import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
 import MidiLoadWorker from "@workers/midiload.worker";
-import CanvasWorker from "@workers/canvas.worker";
 import { MIDI } from "midiconvert";
+import Visualizer from "@components/Visualizer";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
 const worker: Worker = new MidiLoadWorker();
-const canvasWorker: Worker = new CanvasWorker();
 
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
-  canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef();
+  visualizerRef: React.RefObject<Visualizer> = React.createRef();
   player: Player;
 
   state: SoundPlayerState = {
@@ -62,11 +60,7 @@ export default class SoundPlayer extends React.PureComponent<
   private preparePlayer = (midi, trackIndex = 0, cb) => {
     const { notes } = midi.tracks[trackIndex];
     const requiredRange = getMidiRange(notes);
-    const currentRange = [
-      this.state.keyboardRange.first,
-      this.state.keyboardRange.last
-    ];
-    if (!isWithinRange(requiredRange, currentRange))
+    if (!isWithinRange(requiredRange, [range.first, range.last]))
       this.setState(
         {
           keyboardRange: getPianoRangeAndShortcuts(requiredRange).range
@@ -86,29 +80,15 @@ export default class SoundPlayer extends React.PureComponent<
     this.player = new Player();
     this.changeInstrument();
 
-    // @ts-ignore
-    const offscreen = this.canvasRef.current.transferControlToOffscreen();
-
-    canvasWorker.postMessage(
-      {
-        canvas: offscreen,
-        message: "init"
-      },
-      [offscreen]
-    );
-
     worker.onmessage = e => {
       this.resetPlayer();
       const midi: MIDI = e.data;
 
-      this.preparePlayer(midi, 0, () => {
-        canvasWorker.postMessage({
-          track: midi.tracks[0],
-          range: this.state.keyboardRange
-        });
-        this.player.playMidi(0, midi, this.onRecordPlay, this.onProgressChange);
+      this.preparePlayer(midi, 1, () => {
+        this.visualizerRef.current.init(midi.tracks[1], this.state.keyboardRange)
+        this.player.playMidi(1, midi, this.onRecordPlay, this.onProgressChange);
         this.setState({
-          currentTrack: midi.tracks[0]
+          currentTrack: midi.tracks[1]
         });
       });
     };
@@ -145,18 +125,12 @@ export default class SoundPlayer extends React.PureComponent<
     null && Tone.Frequency(midiNumber, "midi").toNote();
 
   render() {
-    const { instrument, loading, activeMidis, playerLoaded } = this.state;
+    const { instrument, loading, activeMidis, playerLoaded, keyboardRange } = this.state;
 
     return (
       <>
-        <div className={visualizerWrapper}>
-          <canvas
-            width={1620}
-            height={400}
-            style={{ height: 400 }}
-            ref={this.canvasRef}
-          />
-        </div>
+				<Visualizer ref={this.visualizerRef} range={keyboardRange} />
+				<div style={{height: 306}}>
         {playerLoaded && (
           <>
             <input
@@ -192,6 +166,7 @@ export default class SoundPlayer extends React.PureComponent<
             </div>
           </>
         )}
+				</div>
       </>
     );
   }

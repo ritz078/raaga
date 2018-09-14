@@ -1,6 +1,8 @@
 import { groupBy, range } from "lodash";
 import { MidiNumbers } from "react-piano";
 
+const SPEED = 1000;
+
 const pitchPositions = {
   C: 0,
   Db: 0.55,
@@ -45,72 +47,93 @@ function getRelativeKeyPosition(midiNumber, range) {
   );
 }
 
-function Bar(ctx) {
+function Bar(ctx, dimensions, range) {
   this.ctx = ctx.getContext("2d");
+  this.range = range;
+  this.setDimensions(dimensions);
 }
 
-let rectCoords = [];
-
-Bar.prototype.clearRectangles = function() {
-  rectCoords.forEach(coord => this.ctx.clearRect(...coord));
-  rectCoords = [];
+Bar.prototype.clearCanvas = function() {
+  this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 };
 
-Bar.prototype.createNoteBlock = function(track, range, offset) {
-  this.clearRectangles();
+Bar.prototype.setDimensions = function({ width, height }) {
+  this.ctx.canvas.width = width;
+	this.ctx.canvas.height = height;
+};
 
-  const _midiNumbers = getAllMidiNumbers(range);
+Bar.prototype.setRange = function(range) {
+	this.range = range;
+};
+
+Bar.prototype.createNoteBlock = function(track, offset) {
+  this.clearCanvas();
+
+  const _midiNumbers = getAllMidiNumbers(this.range);
   const _groupedNotes = groupBy(track && track.notes, "midi");
 
-  const _height = 638 * 500;
-  const _width = 1620;
+  const trackHeight = track.duration * SPEED;
+
+  const _width = this.ctx.canvas.width;
+  const _height = this.ctx.canvas.height;
 
   const naturalKeyWidth = getNaturalKeyWidth(_midiNumbers);
 
   _midiNumbers.forEach(midi => {
     if (!_groupedNotes[midi]) return;
     const isAccidental = MidiNumbers.getAttributes(midi).isAccidental;
-    const leftPosition = getRelativeKeyPosition(midi, range) * naturalKeyWidth * _width
+    const leftPosition =
+      getRelativeKeyPosition(midi, this.range) * naturalKeyWidth * _width;
+
     const width =
       (isAccidental ? 0.65 * naturalKeyWidth : naturalKeyWidth) * _width;
 
     for (let i = 0; i < _groupedNotes[midi].length; i++) {
       const note = _groupedNotes[midi][i];
-      const top = (note.time / 638) * _height + offset;
-      const height = (note.duration / 638) * _height;
+      const top = (note.time / track.duration) * trackHeight + offset;
+      const height = (note.duration / track.duration) * trackHeight;
 
       if (top + height < offset) {
-      	continue;
-			}
+        continue;
+      }
 
-      if (top > 400) {
+      if (top > _height) {
         break;
       }
 
-      const _rectCoords = [Math.floor(leftPosition), Math.floor(top), Math.floor(width), Math.floor(height)];
-      rectCoords.push(_rectCoords);
-
       this.ctx.beginPath();
-			this.ctx.fillStyle = isAccidental ? "#28E6FF" : "#42C9FF";
-      this.ctx.rect(..._rectCoords);
+      this.ctx.fillStyle = isAccidental ? "#ffdc66" : "#42C9FF";
+      this.ctx.rect(
+        Math.floor(leftPosition),
+        Math.floor(top),
+        Math.floor(width),
+        Math.floor(height)
+      );
       this.ctx.fill();
       this.ctx.closePath();
     }
   });
 };
 
-let bar;
+let bar, intervalId;
 
 self.onmessage = e => {
-  const { canvas, track, message, range } = e.data;
+  const { canvas, track, message, range, dimensions } = e.data;
 
   if (message === "init") {
-    bar = new Bar(canvas);
-  } else {
+    clearInterval(intervalId);
+    bar = new Bar(canvas, dimensions, range);
+  } else if (message === "updateDimensions") {
+    bar.setDimensions(dimensions)
+  } else if (message === "updateRange") {
+		bar.setRange(range)
+	} else {
     let offset = 0;
-    self.setInterval(() => {
-      bar.createNoteBlock(track, range, offset);
-      offset -= 1;
-    }, 0);
+		bar.setRange(range);
+		clearInterval(intervalId);
+    intervalId = self.setInterval(() => {
+      bar.createNoteBlock(track, offset);
+      offset -= 4;
+    }, 4);
   }
 };

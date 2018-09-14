@@ -17,6 +17,7 @@
     "emotion-server": "^9.2.8",
     "greenlet": "^1.0.1",
     "hex-to-rgba": "^1.0.1",
+    "just-debounce-it": "^1.1.0",
     "just-range": "^2.1.0",
     "just-values": "^1.1.0",
     "lodash": "^4.17.11",
