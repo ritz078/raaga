@@ -8,9 +8,9 @@ file.onload = () => {
   console.log(parsedMidi);
 
   parsedMidi.tracks = parsedMidi.tracks.map(track => ({
-		...track,
-		duration: track.duration
-	}));
+    ...track,
+    duration: track.duration
+  }));
   // @ts-ignore
   self.postMessage(parsedMidi);
 };

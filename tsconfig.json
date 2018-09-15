@@ -24,10 +24,6 @@
       "@workers/*": ["./workers/*"],
       "@enums/*": ["./enums/*"]
     },
-    "lib": [
-      "dom",
-      "es2016",
-      "webworker"
-    ]
+    "lib": ["dom", "es2016", "webworker"]
   }
 }

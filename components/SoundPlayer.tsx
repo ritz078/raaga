@@ -81,7 +81,7 @@ export default class SoundPlayer extends React.PureComponent<
       this.resetPlayer();
       const midi: MIDI = e.data;
 
-      const trackIndex = 1
+      const trackIndex = 1;
 
       this.preparePlayer(midi, trackIndex, () => {
         this.setState(
@@ -137,9 +137,9 @@ export default class SoundPlayer extends React.PureComponent<
   };
 
   private renderNoteLabel = ({ midiNumber, isAccidental }) => {
-  	const noteName = Tone.Frequency(midiNumber, "midi").toNote()
-		return !isAccidental && noteName.startsWith("C") && noteName;
-	};
+    const noteName = Tone.Frequency(midiNumber, "midi").toNote();
+    return !isAccidental && noteName.startsWith("C") && noteName;
+  };
 
   private onNoteStart = midi => {
     this.visualizerRef.current.addNote(midi);

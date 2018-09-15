@@ -16,9 +16,14 @@ export default class Settings extends React.PureComponent<SettingsProps> {
   };
 
   render() {
-    const { instrument = instruments[0], onRecordingEnd, onRecordingStart, onInstrumentChange } = this.props;
+    const {
+      instrument = instruments[0],
+      onRecordingEnd,
+      onRecordingStart,
+      onInstrumentChange
+    } = this.props;
 
-    return null
+    return null;
     return (
       <div className={settingsWrapper}>
         <Popper
@@ -46,10 +51,10 @@ export default class Settings extends React.PureComponent<SettingsProps> {
           )}
         </Popper>
 
-				<Recorder
-					onRecordingEnd={onRecordingEnd}
-					onRecordingStart={onRecordingStart}
-				/>
+        <Recorder
+          onRecordingEnd={onRecordingEnd}
+          onRecordingStart={onRecordingStart}
+        />
       </div>
     );
   }

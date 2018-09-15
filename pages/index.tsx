@@ -1,17 +1,20 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { css } from "emotion";
-import {colors} from "@anarock/pebble";
+import { colors } from "@anarock/pebble";
 import hex2rgba from "hex-to-rgba";
 
 const bodyClass = css({
-	minWidth: 1100,
-	background: `linear-gradient(to top right,${hex2rgba(colors.gray.darker, 0.9)},${hex2rgba("#000", 0.9)}), url(/static/images/background.jpg)`,
-	backgroundSize: "cover",
-	height: "100vh",
-	flexDirection: "column",
-	display: "flex",
-	width: "100%"
+  minWidth: 1100,
+  background: `linear-gradient(to top right,${hex2rgba(
+    colors.gray.darker,
+    0.9
+  )},${hex2rgba("#000", 0.9)}), url(/static/images/background.jpg)`,
+  backgroundSize: "cover",
+  height: "100vh",
+  flexDirection: "column",
+  display: "flex",
+  width: "100%"
 });
 
 // @ts-ignore
@@ -22,9 +25,9 @@ export default function() {
     <div className={bodyClass}>
       <div
         style={{
-					flex: 1,
-					display: "flex",
-					flexDirection: "column"
+          flex: 1,
+          display: "flex",
+          flexDirection: "column"
         }}
       >
         <SoundPlayer />

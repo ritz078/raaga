@@ -28,7 +28,7 @@ export function isWithinRange(toCheck: number[], range: number[]) {
 }
 
 export function getAllMidiNumbersInRange(_range: Range): number[] {
-	return range(_range.first, _range.last + 1);
+  return range(_range.first, _range.last + 1);
 }
 
 export function getNaturalKeysInRange(range: Range) {

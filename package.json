@@ -7,7 +7,8 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "format": "pretty-quick"
   },
   "dependencies": {
     "@anarock/pebble": "^0.17.1",

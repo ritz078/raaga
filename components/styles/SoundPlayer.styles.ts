@@ -1,5 +1,5 @@
 import { css } from "emotion";
-import {colors} from "@anarock/pebble";
+import { colors } from "@anarock/pebble";
 
 export const loaderClass = css({
   position: "absolute",
@@ -29,7 +29,7 @@ export const piano = css({
     borderRadius: "0 0 5px 5px",
     backgroundColor: "#fff",
     flex: 1,
-		width: "auto !important",
+    width: "auto !important",
     cursor: "pointer",
     borderBottom: "4px solid #90caf9",
     "&:last-child": {
@@ -39,9 +39,9 @@ export const piano = css({
       height: "15.5em",
       backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
       borderBottomColor: "#42C9FF",
-			".ReactPiano__NoteLabelContainer": {
-				color: colors.gray.dark
-			}
+      ".ReactPiano__NoteLabelContainer": {
+        color: colors.gray.dark
+      }
     }
   },
   ".ReactPiano__Key--accidental": {
@@ -61,9 +61,9 @@ export const piano = css({
       borderColor: "#b49b45",
       boxShadow:
         "-1px -1px 2px rgba(255, 255, 255, 0.2) inset,0 -5px 2px 3px rgba(0, 0, 0, 0.2) inset, 0 2px 4px rgba(0, 0, 0, 0.2)",
-			".ReactPiano__NoteLabelContainer": {
-      	color: colors.gray.dark
-			}
+      ".ReactPiano__NoteLabelContainer": {
+        color: colors.gray.dark
+      }
     }
   },
   ".ReactPiano__NoteLabelContainer": {
@@ -73,10 +73,8 @@ export const piano = css({
     alignSelf: "flex-end",
     width: "100%",
     paddingBottom: 15,
-		color: colors.gray.base,
-		userSelect: "none",
-		fontSize: 14
+    color: colors.gray.base,
+    userSelect: "none",
+    fontSize: 14
   }
 });
-
-

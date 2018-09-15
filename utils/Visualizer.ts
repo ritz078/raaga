@@ -6,7 +6,7 @@ import {
   getNaturalKeyWidthRatio,
   getRelativeKeyPosition
 } from "@utils/keyboard";
-import {Dimensions, Range} from "@utils/typings/Visualizer";
+import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 
 const SPEED = 250;
@@ -31,25 +31,25 @@ export class Visualizer {
     this.setMode(mode);
   }
 
-	/**
-	 * Sets the dimension of the canvas.
-	 * @param width
-	 * @param height
-	 */
+  /**
+   * Sets the dimension of the canvas.
+   * @param width
+   * @param height
+   */
   public setDimensions = ({ width, height }: Dimensions) => {
     this.ctx.canvas.width = width;
     this.ctx.canvas.height = height;
   };
 
-	/**
-	 * Creates a single note block on canvas. The color varies based on whether it's
-	 * an accidental note or natural note.
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param isAccidental
-	 */
+  /**
+   * Creates a single note block on canvas. The color varies based on whether it's
+   * an accidental note or natural note.
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   * @param isAccidental
+   */
   private createNoteBlock = (
     x: number,
     y: number,
@@ -66,7 +66,6 @@ export class Visualizer {
       height - RADIUS
     ].map(num => Math.floor(num));
 
-
     const color = isAccidental ? "#ffdc66" : "#42C9FF";
 
     this.ctx.lineJoin = "round";
@@ -82,11 +81,11 @@ export class Visualizer {
     this.ctx.closePath();
   };
 
-	/**
-	 * Utility that returns all the midis that fall within the piano range and groups them
-	 * by key
-	 * @param track
-	 */
+  /**
+   * Utility that returns all the midis that fall within the piano range and groups them
+   * by key
+   * @param track
+   */
   private getTrackInfo = (track?: Track) => {
     const notes =
       this.mode === VISUALIZER_MODE.WRITE ? this.notes : track && track.notes;
@@ -99,10 +98,10 @@ export class Visualizer {
     };
   };
 
-	/**
-	 * utility that returns info about a midi number.
-	 * @param midi
-	 */
+  /**
+   * utility that returns info about a midi number.
+   * @param midi
+   */
   private getMidiInfo = midi => {
     const { isAccidental } = MidiNumbers.getAttributes(midi);
     const _width = this.ctx.canvas.width;
@@ -114,13 +113,13 @@ export class Visualizer {
     return { left, width, isAccidental };
   };
 
-	/**
-	 * The main renderer that renders notes on the canvas in the WRITE mode.
-	 * WRITE mode refers to the mode when the user is controlling the piano my
-	 * manually providing input either from real midi device or the on screen
-	 * piano
-	 */
-	private renderNotesInWriteMode = () => {
+  /**
+   * The main renderer that renders notes on the canvas in the WRITE mode.
+   * WRITE mode refers to the mode when the user is controlling the piano my
+   * manually providing input either from real midi device or the on screen
+   * piano
+   */
+  private renderNotesInWriteMode = () => {
     this.clearCanvas();
     const timeElapsed = Date.now() / 1000 - this.referenceTime;
 

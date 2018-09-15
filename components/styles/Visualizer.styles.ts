@@ -23,9 +23,9 @@ export const noteSectionWrapper = css({
 
 export const noteSection = css({
   flex: 1,
-	"&:nth-of-type(4n)": {
-		border: `1px solid rgba(255,255,255,0.07)`,
-		borderTopWidth: 0,
-		borderBottomWidth: 0,
-	}
+  "&:nth-of-type(4n)": {
+    border: `1px solid rgba(255,255,255,0.07)`,
+    borderTopWidth: 0,
+    borderBottomWidth: 0
+  }
 });
