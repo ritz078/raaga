@@ -22,7 +22,6 @@ export default function() {
     <div className={bodyClass}>
       <div
         style={{
-          padding: "30px",
 					flex: 1,
 					display: "flex",
 					flexDirection: "column"

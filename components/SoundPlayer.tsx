@@ -79,11 +79,11 @@ export default class SoundPlayer extends React.PureComponent<
       this.resetPlayer();
       const midi: MIDI = e.data;
 
-      this.preparePlayer(midi, 1, () => {
-        this.visualizerRef.current.play(midi.tracks[1], this.state.keyboardRange)
-        this.player.playMidi(1, midi, this.onRecordPlay);
+      this.preparePlayer(midi, 2, () => {
+        this.visualizerRef.current.play(midi.tracks[2], this.state.keyboardRange)
+        this.player.playMidi(2, midi, this.onRecordPlay);
         this.setState({
-          currentTrack: midi.tracks[1]
+          currentTrack: midi.tracks[2]
         });
       });
     };
@@ -110,7 +110,9 @@ export default class SoundPlayer extends React.PureComponent<
     this.player.playRecording(this.onRecordPlay);
   };
 
-  private loadMidiFile = async e => {
+  private loadMidiFile = e => {
+  	console.log(e)
+  	e.preventDefault();
     const file = e.target.files[0];
     worker.postMessage(file);
   };
@@ -124,13 +126,14 @@ export default class SoundPlayer extends React.PureComponent<
     return (
       <>
 				<Visualizer ref={this.visualizerRef} range={keyboardRange} />
-				<div style={{height: 306}}>
+				<div>
         {playerLoaded && (
           <>
             <input
               style={{ position: "absolute" }}
               type="file"
               onChange={this.loadMidiFile}
+							accept=".mid"
             />
             <Settings
               instrument={instrument}

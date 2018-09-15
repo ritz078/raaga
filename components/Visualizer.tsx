@@ -35,6 +35,7 @@ export default class extends React.PureComponent<VisualizerProps> {
     }
   };
 
+
   private setDimensions = (_e, update = true) => {
     const {
       width,
@@ -79,6 +80,7 @@ export default class extends React.PureComponent<VisualizerProps> {
 
     // @ts-ignore
     window.addEventListener("resize", this.debouncedSetDimensions);
+
   }
 
   componentWillUnmount() {
