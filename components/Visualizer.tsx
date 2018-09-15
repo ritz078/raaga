@@ -71,6 +71,11 @@ export default class extends React.PureComponent<VisualizerProps> {
     // @ts-ignore
 		window.addEventListener("resize", this.debouncedSetDimensions)
   }
+  
+  componentWillUnmount () {
+  	// @ts-ignore
+		window.removeEventListener("resize", this.debouncedSetDimensions)
+	}
 
   componentDidUpdate (prevProps) {
   	if (prevProps.range.first !== this.props.range.first || prevProps.range.last !== this.props.range.last) {

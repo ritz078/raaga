@@ -1,8 +1,8 @@
 import Tone from "tone";
 import load from "audio-loader";
-import { create, MIDI } from "midiconvert";
-import { Clock } from "@utils";
-import { Sampler } from "./typings/Player";
+import {create, MIDI, Note} from "midiconvert";
+import {NoteWithEvent, Sampler} from "./typings/Player";
+import {EVENT_TYPE} from "@enums/piano";
 
 function nameToUrl(name, format: "mp3" | "ogg" = "mp3"): string {
   return `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${name}-${format}.js`;
@@ -10,7 +10,6 @@ function nameToUrl(name, format: "mp3" | "ogg" = "mp3"): string {
 
 export class Player {
   sampler: Sampler;
-  private _clock: Clock;
   private _midi: MIDI;
   private _activeNotes: Map<number, number>;
   private _track: any;
@@ -21,7 +20,6 @@ export class Player {
     this.sampler = new Tone.Sampler({});
     this.sampler.connect(Tone.Master);
     this._activeNotes = new Map();
-    this._clock = new Clock(this.sampler.context);
   }
 
   private getRelativeTime = () => Date.now() / 1000 - this._recordingStartTime;
@@ -38,25 +36,57 @@ export class Player {
     this._activeNotes.clear();
   };
 
+  static getNotesWithStopCallback = (notes: Note[]): NoteWithEvent[] => {
+    const _notes = [];
+
+    notes.forEach((note, i) => {
+      _notes.push(
+        {
+          ...note,
+          event: EVENT_TYPE.NOTE_START
+        },
+        {
+          ...note,
+          time: note.time + note.duration,
+          event: EVENT_TYPE.NOTE_STOP
+        }
+      );
+
+      if (i === notes.length - 1) {
+      	_notes.push({
+					...note,
+					time: note.time + note.duration,
+					event: EVENT_TYPE.PLAYING_COMPLETE
+				})
+			}
+    });
+
+    return _notes;
+  };
+
   public playMidi = (trackIndex, midi, cb) => {
+    const notes = Player.getNotesWithStopCallback(
+      midi.tracks[trackIndex].notes
+    );
     Tone.Transport.bpm.value = midi.header.bpm;
 
-    this._clock.setCallbacks(midi.tracks[trackIndex].notes, cb);
+    this._notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
+    	if (note.event === EVENT_TYPE.NOTE_START) {
+				this.sampler.triggerAttackRelease(
+					Tone.Frequency(note.midi, "midi").toNote(),
+					note.duration,
+					time,
+					note.velocity
+				);
+			}
 
-    this._notesPlayer = new Tone.Part((time, note) => {
-    	// setup callback here
-      this.sampler.triggerAttackRelease(
-        Tone.Frequency(note.midi, "midi").toNote(),
-        note.duration,
-        time,
-        note.velocity
-      );
-    }, midi.tracks[trackIndex].notes).start();
+			cb (note);
+    }, notes).start();
 
     Tone.Transport.start();
-	};
+  };
 
-  public playRecording = (cb) => {
+  public playRecording = cb => {
     this.playMidi(0, this._midi, cb);
   };
 
@@ -89,7 +119,6 @@ export class Player {
 
   public reset = () => {
     this._notesPlayer && this._notesPlayer.dispose();
-    this._clock.dispose();
     this._activeNotes.clear();
     this._recordingStartTime = null;
   };

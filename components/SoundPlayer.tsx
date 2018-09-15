@@ -1,7 +1,6 @@
 import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
 import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
@@ -17,6 +16,8 @@ import Tone from "tone";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { MIDI } from "midiconvert";
 import Visualizer from "@components/Visualizer";
+import {EVENT_TYPE} from "@enums/piano";
+import {NoteWithEvent} from "@utils/typings/Player";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -88,18 +89,16 @@ export default class SoundPlayer extends React.PureComponent<
     };
   }
 
-  onRecordPlay = (e: { args: EventArgs }) => {
-    const { eventType, midi } = e.args;
-
-    this.setState(prevState => {
+  onRecordPlay = ({midi, event}: NoteWithEvent) => {
+  	this.setState(prevState => {
       const set = new Set(prevState.activeMidis || []);
 
-      if (eventType === EVENT_TYPE.NOTE_START) {
+      if (event === EVENT_TYPE.NOTE_START) {
         return { activeMidis: [...set.add(midi)] };
-      } else if (eventType === EVENT_TYPE.NOTE_STOP) {
+      } else if (event === EVENT_TYPE.NOTE_STOP) {
         set.delete(midi);
         return { activeMidis: [...set] };
-      } else if (eventType === EVENT_TYPE.PLAYING_COMPLETE) {
+      } else if (event === EVENT_TYPE.PLAYING_COMPLETE) {
         return { activeMidis: undefined };
       }
     });

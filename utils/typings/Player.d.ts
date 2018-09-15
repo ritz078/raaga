@@ -1,4 +1,5 @@
-import {Note} from "@utilities";
+import {Note} from "midiconvert";
+import {EVENT_TYPE} from "@enums/piano";
 
 export interface Sampler {
 	connect: (master: any) => void;
@@ -13,4 +14,8 @@ export interface Sampler {
 		time: number,
 		velocity: number
 	) => void;
+}
+
+export interface NoteWithEvent extends Note {
+	event: EVENT_TYPE
 }

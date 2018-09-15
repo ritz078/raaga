@@ -5898,10 +5898,6 @@ wav-decoder@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/wav-decoder/-/wav-decoder-1.3.0.tgz#1d0bf7195f623661bd182464c434a3e8bc42eb0e"
 
-web-audio-scheduler@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/web-audio-scheduler/-/web-audio-scheduler-1.4.0.tgz#f4b027ba8a8ca64a072ed3ac27d18168a08dee5a"
-
 webpack-dev-middleware@1.12.0:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-1.12.0.tgz#d34efefb2edda7e1d3b5dbe07289513219651709"

@@ -23,8 +23,7 @@
     "react-dom": "^16.5.1",
     "react-piano": "^2.0.1",
     "soundfont-player": "^0.10.7",
-    "tone": "^0.12.80",
-    "web-audio-scheduler": "^1.4.0"
+    "tone": "^0.12.80"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.116",

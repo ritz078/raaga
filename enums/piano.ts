@@ -1,0 +1,5 @@
+export enum EVENT_TYPE {
+	NOTE_START = 1,
+	NOTE_STOP,
+	PLAYING_COMPLETE
+}
