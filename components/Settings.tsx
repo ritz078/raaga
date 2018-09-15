@@ -18,6 +18,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
   render() {
     const { instrument = instruments[0], onRecordingEnd, onRecordingStart, onInstrumentChange } = this.props;
 
+    return null
     return (
       <div className={settingsWrapper}>
         <Popper

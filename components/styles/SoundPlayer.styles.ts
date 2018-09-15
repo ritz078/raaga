@@ -75,7 +75,7 @@ export const piano = css({
     paddingBottom: 15,
 		color: colors.gray.base,
 		userSelect: "none",
-		fontSize: 10
+		fontSize: 14
   }
 });
 

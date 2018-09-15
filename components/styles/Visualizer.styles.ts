@@ -6,8 +6,7 @@ export const visualizerWrapper = css({
   flexDirection: "row",
   position: "relative",
   flex: 1,
-  transform: "rotate(180deg) scaleX(-1)",
-  overflow: "scroll"
+  overflow: "hidden"
 });
 
 export const noteSectionWrapper = css({

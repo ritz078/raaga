@@ -2,7 +2,7 @@ import * as React from "react";
 import CanvasWorker from "@workers/canvas.worker";
 import { Track } from "midiconvert";
 import { debounce } from "lodash";
-import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
+import {VISUALIZER_MESSAGES, VISUALIZER_MODE} from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
 import {
@@ -10,11 +10,13 @@ import {
   noteSectionWrapper,
   visualizerWrapper
 } from "@components/styles/Visualizer.styles";
+import {css, cx} from "emotion";
 
 const canvasWorker: Worker = new CanvasWorker();
 
 interface VisualizerProps {
   range: Range;
+  mode: VISUALIZER_MODE
 }
 
 export default class extends React.PureComponent<VisualizerProps> {
@@ -73,14 +75,14 @@ export default class extends React.PureComponent<VisualizerProps> {
       {
         canvas: offscreen,
         message: VISUALIZER_MESSAGES.INIT,
-        dimensions
+        dimensions,
+				range: this.props.range
       },
       [offscreen]
     );
 
     // @ts-ignore
     window.addEventListener("resize", this.debouncedSetDimensions);
-
   }
 
   componentWillUnmount() {
@@ -98,9 +100,16 @@ export default class extends React.PureComponent<VisualizerProps> {
         range: this.props.range
       });
     }
+
+    if (prevProps.mode !== this.props.mode) {
+    	canvasWorker.postMessage({
+				message: VISUALIZER_MESSAGES.SET_MODE,
+				mode: this.props.mode
+			})
+		}
   }
 
-  public play = (track: Track, range: { first: number; last: number }) => {
+  public start = (track: Track, range: { first: number; last: number }) => {
     canvasWorker.postMessage({
       track,
       range,
@@ -114,11 +123,31 @@ export default class extends React.PureComponent<VisualizerProps> {
     });
   };
 
+  public addNote = (midi) => {
+  	canvasWorker.postMessage({
+			message: VISUALIZER_MESSAGES.ADD_NOTE,
+			midi
+		})
+	};
+
+  public stopNote = (midi) => {
+  	canvasWorker.postMessage({
+			message: VISUALIZER_MESSAGES.END_NOTE,
+			midi
+		})
+	};
+
   render() {
     const { width, height } = this.state.dimensions;
 
+    const className = cx(visualizerWrapper, {
+    	[css({
+				transform: "rotate(180deg) scaleX(-1)"
+			})]: this.props.mode === VISUALIZER_MODE.READ
+		});
+
     return (
-      <div className={visualizerWrapper} ref={this.visualizerRef}>
+      <div className={className} ref={this.visualizerRef}>
         <canvas
           width={width}
           height={height}

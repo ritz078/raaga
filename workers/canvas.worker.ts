@@ -1,16 +1,10 @@
-import {VISUALIZER_MESSAGES} from "@enums/visualizerMessages";
-import {Track} from "midiconvert";
-import {Visualizer} from "@utils/Visualizer";
-
-interface Range {
-  first: number;
-  last: number;
-}
-
-interface Dimensions {
-  width: number;
-  height: number;
-}
+import {
+  VISUALIZER_MESSAGES,
+  VISUALIZER_MODE
+} from "@enums/visualizerMessages";
+import { Track } from "midiconvert";
+import { Visualizer } from "@utils/Visualizer";
+import { Dimensions, Range } from "@utils/typings/Visualizer";
 
 let visualizer, intervalId;
 
@@ -22,10 +16,20 @@ interface Data {
   message: VISUALIZER_MESSAGES;
   range: Range;
   dimensions: Dimensions;
+  midi: number;
+  mode: VISUALIZER_MODE;
 }
 
 self.onmessage = e => {
-  const { canvas, track, message, range, dimensions }: Data = e.data;
+  const {
+    canvas,
+    track,
+    message,
+    range,
+    dimensions,
+    midi,
+    mode
+  }: Data = e.data;
 
   if (message === VISUALIZER_MESSAGES.INIT) {
     clearInterval(intervalId);
@@ -38,6 +42,12 @@ self.onmessage = e => {
     visualizer.setRange(range);
     visualizer.play(track);
   } else if (message === VISUALIZER_MESSAGES.STOP) {
-  	visualizer.stop();
-	}
+    visualizer.stop();
+  } else if (message === VISUALIZER_MESSAGES.ADD_NOTE) {
+    visualizer.addNote(midi);
+  } else if (message === VISUALIZER_MESSAGES.END_NOTE) {
+    visualizer.endNote(midi);
+  } else if (message === VISUALIZER_MESSAGES.SET_MODE) {
+    visualizer.setMode(mode);
+  }
 };

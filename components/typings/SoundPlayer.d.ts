@@ -1,4 +1,5 @@
 import {Track} from "midiconvert";
+import {VISUALIZER_MODE} from "@enums/visualizerMessages";
 
 export interface SoundPlayerState {
   instrument: string;
@@ -10,4 +11,5 @@ export interface SoundPlayerState {
 		last: number;
 	};
 	currentTrack: Track;
+	visualizerMode: VISUALIZER_MODE;
 }
