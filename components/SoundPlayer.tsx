@@ -1,7 +1,6 @@
 import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-import { EVENT_TYPE, EventArgs } from "@utils/typings/Clock";
 import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
@@ -15,15 +14,21 @@ import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
 import MidiLoadWorker from "@workers/midiload.worker";
+import { MIDI } from "midiconvert";
+import Visualizer from "@components/Visualizer";
+import { EVENT_TYPE } from "@enums/piano";
+import { NoteWithEvent } from "@utils/typings/Player";
+import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
-const worker = new MidiLoadWorker();
+const worker: Worker = new MidiLoadWorker();
 
 export default class SoundPlayer extends React.PureComponent<
   {},
   SoundPlayerState
 > {
+  visualizerRef: React.RefObject<Visualizer> = React.createRef();
   player: Player;
 
   state: SoundPlayerState = {
@@ -31,7 +36,9 @@ export default class SoundPlayer extends React.PureComponent<
     loading: false,
     playerLoaded: false,
     activeMidis: undefined,
-    keyboardRange: range
+    keyboardRange: range,
+    currentTrack: undefined,
+    visualizerMode: VISUALIZER_MODE.WRITE
   };
 
   private resetPlayer = () => {
@@ -56,11 +63,7 @@ export default class SoundPlayer extends React.PureComponent<
   private preparePlayer = (midi, trackIndex = 0, cb) => {
     const { notes } = midi.tracks[trackIndex];
     const requiredRange = getMidiRange(notes);
-    const currentRange = [
-      this.state.keyboardRange.first,
-      this.state.keyboardRange.last
-    ];
-    if (!isWithinRange(requiredRange, currentRange))
+    if (!isWithinRange(requiredRange, [range.first, range.last]))
       this.setState(
         {
           keyboardRange: getPianoRangeAndShortcuts(requiredRange).range
@@ -76,26 +79,49 @@ export default class SoundPlayer extends React.PureComponent<
 
     worker.onmessage = e => {
       this.resetPlayer();
-      const midi = e.data;
-      this.preparePlayer(midi, 1, () => {
-        this.player.playMidi(1, midi, this.onRecordPlay);
+      const midi: MIDI = e.data;
+
+      const trackIndex = 1;
+
+      this.preparePlayer(midi, trackIndex, () => {
+        this.setState(
+          {
+            visualizerMode: VISUALIZER_MODE.READ
+          },
+          () => {
+            this.visualizerRef.current.start(
+              midi.tracks[trackIndex],
+              this.state.keyboardRange
+            );
+            this.player.playMidi(trackIndex, midi, this.onRecordPlay);
+            this.setState({
+              currentTrack: midi.tracks[trackIndex]
+            });
+          }
+        );
       });
     };
   }
 
-  onRecordPlay = (e: { args: EventArgs }) => {
-    const { eventType, midi } = e.args;
-
+  onRecordPlay = ({ midi, event }: NoteWithEvent) => {
     this.setState(prevState => {
       const set = new Set(prevState.activeMidis || []);
 
-      if (eventType === EVENT_TYPE.NOTE_START) {
+      if (event === EVENT_TYPE.NOTE_START) {
         return { activeMidis: [...set.add(midi)] };
-      } else if (eventType === EVENT_TYPE.NOTE_STOP) {
+      } else if (event === EVENT_TYPE.NOTE_STOP) {
         set.delete(midi);
         return { activeMidis: [...set] };
-      } else if (eventType === EVENT_TYPE.PLAYING_COMPLETE) {
-        return { activeMidis: undefined };
+      } else if (event === EVENT_TYPE.PLAYING_COMPLETE) {
+        this.setState(
+          {
+            visualizerMode: VISUALIZER_MODE.WRITE
+          },
+          () => {
+            this.visualizerRef.current.stop();
+            return { activeMidis: undefined };
+          }
+        );
       }
     });
   };
@@ -105,49 +131,77 @@ export default class SoundPlayer extends React.PureComponent<
     this.player.playRecording(this.onRecordPlay);
   };
 
-  private loadMidiFile = async e => {
+  private loadMidiFile = e => {
     const file = e.target.files[0];
     worker.postMessage(file);
   };
 
-  private renderNoteLabel = ({ midiNumber }) =>
-    null && Tone.Frequency(midiNumber, "midi").toNote();
+  private renderNoteLabel = ({ midiNumber, isAccidental }) => {
+    const noteName = Tone.Frequency(midiNumber, "midi").toNote();
+    return !isAccidental && noteName.startsWith("C") && noteName;
+  };
+
+  private onNoteStart = midi => {
+    this.visualizerRef.current.addNote(midi);
+    this.player.startNote(midi);
+  };
+
+  private onNoteStop = midi => {
+    this.visualizerRef.current.stopNote(midi);
+    this.player.stopNote(midi);
+  };
 
   render() {
-    const { instrument, loading, activeMidis, playerLoaded } = this.state;
+    const {
+      instrument,
+      loading,
+      activeMidis,
+      playerLoaded,
+      keyboardRange,
+      visualizerMode
+    } = this.state;
 
     return (
-      playerLoaded && (
-        <>
-          <input type="file" onChange={this.loadMidiFile} />
-          <Settings
-            instrument={instrument}
-            onInstrumentChange={this.changeInstrument}
-            onRecordingStart={this.player.startRecording}
-            onRecordingEnd={this.stopRecording}
-          />
-          <div className={pianoWrapperClass}>
-            {loading && (
-              <Loader className={loaderClass} color={colors.white.base} />
-            )}
-            <Piano
-              noteRange={this.state.keyboardRange}
-              onPlayNote={this.player.startNote}
-              onStopNote={this.player.stopNote}
-              keyboardShortcuts={keyboardShortcuts}
-              playbackNotes={activeMidis}
-              disabled={loading}
-              className={cx(
-                {
-                  [css({ opacity: 0.2 })]: loading
-                },
-                piano
-              )}
-              renderNoteLabel={this.renderNoteLabel}
-            />
-          </div>
-        </>
-      )
+      <>
+        <input type="file" onChange={this.loadMidiFile} accept=".mid" />
+        <Visualizer
+          ref={this.visualizerRef}
+          range={keyboardRange}
+          mode={visualizerMode}
+        />
+        <div>
+          {playerLoaded && (
+            <>
+              <Settings
+                instrument={instrument}
+                onInstrumentChange={this.changeInstrument}
+                onRecordingStart={this.player.startRecording}
+                onRecordingEnd={this.stopRecording}
+              />
+              <div className={pianoWrapperClass}>
+                {loading && (
+                  <Loader className={loaderClass} color={colors.white.base} />
+                )}
+                <Piano
+                  noteRange={this.state.keyboardRange}
+                  onPlayNote={this.onNoteStart}
+                  onStopNote={this.onNoteStop}
+                  keyboardShortcuts={keyboardShortcuts}
+                  playbackNotes={activeMidis}
+                  disabled={loading}
+                  className={cx(
+                    {
+                      [css({ opacity: 0.2 })]: loading
+                    },
+                    piano
+                  )}
+                  renderNoteLabel={this.renderNoteLabel}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </>
     );
   }
 }

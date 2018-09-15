@@ -11,7 +11,8 @@
         "@styles": "./styles",
         "@utils": "./utils",
         "@config": "./config",
-        "@workers": "./workers"
+        "@workers": "./workers",
+        "@enums": "./enums"
       }
     }]
   ]

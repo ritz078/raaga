@@ -21,11 +21,9 @@
       "@utils": ["./utils"],
       "@utils/*": ["./utils/*"],
       "@config/*": ["./config/*"],
-      "@workers/*": ["./workers/*"]
+      "@workers/*": ["./workers/*"],
+      "@enums/*": ["./enums/*"]
     },
-    "lib": [
-      "dom",
-      "es2016"
-    ]
+    "lib": ["dom", "es2016", "webworker"]
   }
 }

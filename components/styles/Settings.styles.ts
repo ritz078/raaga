@@ -1,5 +1,5 @@
 import { css } from "emotion";
-import {mixins} from "@anarock/pebble";
+import { mixins } from "@anarock/pebble";
 
 export const popperClass = css({
   zIndex: 9,
@@ -12,11 +12,17 @@ export const popperClass = css({
 export const settingsWrapper = css({
   backgroundColor: "#2d2d2d",
   height: 50,
-  marginTop: -50,
   borderRadius: "4px 4px 0 0",
   alignItems: "center",
   padding: "0 26px",
-	...mixins.flexSpaceBetween
+  ...mixins.flexSpaceBetween,
+  position: "absolute",
+  width: "100%",
+  marginTop: -50,
+  transition: "transform 200ms",
+  "&.__visible__": {
+    transform: "translateY(-50px)"
+  }
 });
 
 export const labelClass = css({

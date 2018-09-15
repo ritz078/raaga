@@ -688,9 +688,13 @@
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.8.1.tgz#f3a81587ad8d0ef33cdad6f3b4310774fcc1053e"
 
-"@types/next@^6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@types/next/-/next-6.1.4.tgz#cc294253e4f4c1c2e1da7ea440b6024c143a26dc"
+"@types/lodash@^4.14.116":
+  version "4.14.116"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.116.tgz#5ccf215653e3e8c786a58390751033a9adca0eb9"
+
+"@types/next@^6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@types/next/-/next-6.1.5.tgz#5ead3d87a48061817a4ca2b58c202fe0e09bc9c5"
   dependencies:
     "@types/node" "*"
     "@types/node-fetch" "*"
@@ -712,9 +716,16 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.4.13":
+"@types/react@*":
   version "16.4.13"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.13.tgz#1385f5dc3486aa493849a32ccce626a817543e28"
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
+"@types/react@^16.4.14":
+  version "16.4.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.14.tgz#47c604c8e46ed674bbdf4aabf82b34b9041c6a04"
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -2702,10 +2713,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-greenlet@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/greenlet/-/greenlet-1.0.1.tgz#5d2708dc75bda084ee06d27ebb207671cbf202be"
-
 gud@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/gud/-/gud-1.0.0.tgz#a489581b17e6a70beca9abe3ae57de7a499852c0"
@@ -2793,6 +2800,10 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
+
+hex-to-rgba@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/hex-to-rgba/-/hex-to-rgba-1.0.1.tgz#81adf8306207d659286cf80d71a9b5245c9c6cbe"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -3359,10 +3370,6 @@ just-debounce-it@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/just-debounce-it/-/just-debounce-it-1.1.0.tgz#8e92578effc155358a44f458c52ffbee66983bef"
 
-just-values@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/just-values/-/just-values-1.1.0.tgz#67d97562d84cd3faa002dabf59644f49c5b302bb"
-
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -3472,6 +3479,10 @@ lodash.uniq@^4.5.0:
 lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.5.1:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
+lodash@^4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -4701,7 +4712,7 @@ react-calendar@^2.17.2:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
-react-dom@^16.4.2, react-dom@^16.5.0:
+react-dom@^16.5.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.0.tgz#57704e5718669374b182a17ea79a6d24922cb27d"
   dependencies:
@@ -4709,6 +4720,15 @@ react-dom@^16.4.2, react-dom@^16.5.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     schedule "^0.3.0"
+
+react-dom@^16.5.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.1.tgz#29d0c5a01ed3b6b4c14309aa91af6ec4eb4f292c"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.4.0"
 
 react-ink@^6.4.0:
   version "6.4.0"
@@ -4739,13 +4759,13 @@ react-popper@^1.0.2:
     typed-styles "^0.0.5"
     warning "^3.0.0"
 
-react-spring@^5.7.1, react-spring@^5.7.2:
+react-spring@^5.7.1:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-5.7.2.tgz#5c0fb7c726305f11bfae6fbb5dfaf08fe0ea113f"
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-react@^16.4.2, react@^16.5.0:
+react@^16.5.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
   dependencies:
@@ -4753,6 +4773,15 @@ react@^16.4.2, react@^16.5.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     schedule "^0.3.0"
+
+react@^16.5.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.1.tgz#8cb8e9f8cdcb4bde41c9a138bfbf907e66132372"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.4.0"
 
 read-chunk@^2.0.0:
   version "2.1.0"
@@ -5068,6 +5097,12 @@ sax@^1.2.4, sax@~1.2.1:
 schedule@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
+  dependencies:
+    object-assign "^4.1.1"
+
+schedule@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.4.0.tgz#fa20cfd0bfbf91c47d02272fd7096780d3170bbb"
   dependencies:
     object-assign "^4.1.1"
 
@@ -5862,10 +5897,6 @@ watchpack@^1.4.0:
 wav-decoder@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/wav-decoder/-/wav-decoder-1.3.0.tgz#1d0bf7195f623661bd182464c434a3e8bc42eb0e"
-
-web-audio-scheduler@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/web-audio-scheduler/-/web-audio-scheduler-1.4.0.tgz#f4b027ba8a8ca64a072ed3ac27d18168a08dee5a"
 
 webpack-dev-middleware@1.12.0:
   version "1.12.0"

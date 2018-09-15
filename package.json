@@ -7,7 +7,8 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "format": "pretty-quick"
   },
   "dependencies": {
     "@anarock/pebble": "^0.17.1",
@@ -15,21 +16,20 @@
     "audio-loader": "^1.0.3",
     "emotion": "^9.2.8",
     "emotion-server": "^9.2.8",
-    "greenlet": "^1.0.1",
-    "just-values": "^1.1.0",
+    "hex-to-rgba": "^1.0.1",
+    "lodash": "^4.17.11",
     "midiconvert": "^0.4.7",
     "next": "^6.1.1",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
     "react-piano": "^2.0.1",
-    "react-spring": "^5.7.2",
     "soundfont-player": "^0.10.7",
-    "tone": "^0.12.80",
-    "web-audio-scheduler": "^1.4.0"
+    "tone": "^0.12.80"
   },
   "devDependencies": {
-    "@types/next": "^6.1.4",
-    "@types/react": "^16.4.13",
+    "@types/lodash": "^4.14.116",
+    "@types/next": "^6.1.5",
+    "@types/react": "^16.4.14",
     "@zeit/next-css": "^0.2.0",
     "babel-plugin-module-resolver": "^3.1.1",
     "fork-ts-checker-webpack-plugin": "^0.4.9",

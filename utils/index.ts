@@ -1,3 +1,3 @@
-export * from "./Clock"
-export * from "./Player"
-export * from "./keyboard"
+export * from "./Player";
+export * from "./keyboard";
+export * from "./Visualizer";

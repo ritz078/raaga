@@ -1,0 +1,15 @@
+export enum VISUALIZER_MESSAGES {
+  INIT = 1,
+  UPDATE_DIMENSIONS,
+  UPDATE_RANGE,
+  PLAY,
+  STOP,
+  ADD_NOTE,
+  END_NOTE,
+  SET_MODE
+}
+
+export enum VISUALIZER_MODE {
+  READ = 1,
+  WRITE
+}
