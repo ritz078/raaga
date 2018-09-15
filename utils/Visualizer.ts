@@ -149,22 +149,27 @@ export class Visualizer {
     });
   };
 
+  private cleanup = () => {
+  	this.clearCanvas();
+  	this.intervalId && clearInterval(this.intervalId);
+  	this.writeIntervalId && clearInterval(this.writeIntervalId);
+	};
+
   public setMode = (mode: VISUALIZER_MODE) => {
     this.mode = mode;
-    this.clearCanvas();
+    this.cleanup();
     if (mode === VISUALIZER_MODE.WRITE) {
       this.referenceTime = Date.now() / 1000;
       this.stop();
       this.writeIntervalId = self.setInterval(() => {
         this.renderNotesInWriteMode();
       }, 4);
-    } else {
-      this.writeIntervalId && clearInterval(this.writeIntervalId);
     }
   };
 
   public play = (track: Track) => {
     let offset = 0;
+    this.cleanup();
     this.intervalId = self.setInterval(() => {
       this.renderNotesInReadMode(track, offset);
       offset -= 1;
@@ -184,8 +189,7 @@ export class Visualizer {
   };
 
   public stop = () => {
-    clearInterval(this.intervalId);
-    this.clearCanvas();
+    this.cleanup();
   };
 
   private clearCanvas = () =>

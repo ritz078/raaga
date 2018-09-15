@@ -86,8 +86,12 @@ class SoundPlayer extends React.PureComponent<
 
     worker.onmessage = e => {
       this.resetPlayer();
-      const midi: MIDI = e.data;
+      if (e.data.error) {
+      	alert(e.data.error)
+				return;
+			}
 
+      const midi: MIDI = e.data.data;
       const trackIndex = 1;
 
       this.preparePlayer(midi, trackIndex, () => {
