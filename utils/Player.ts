@@ -38,8 +38,7 @@ export class Player {
     this._activeNotes.clear();
   };
 
-  public playMidi = (trackIndex, midi, cb, progress) => {
-  	console.log(progress);
+  public playMidi = (trackIndex, midi, cb) => {
     Tone.Transport.bpm.value = midi.header.bpm;
 
     this._clock.setCallbacks(midi.tracks[trackIndex].notes, cb);
@@ -57,8 +56,8 @@ export class Player {
     Tone.Transport.start();
 	};
 
-  public playRecording = (cb, progress) => {
-    this.playMidi(0, this._midi, cb, progress);
+  public playRecording = (cb) => {
+    this.playMidi(0, this._midi, cb);
   };
 
   public loadSound = async (instrument = "accordion") => {

@@ -2,11 +2,19 @@ import * as React from "react";
 import { visualizerWrapper } from "@components/styles/SoundPlayer.styles";
 import CanvasWorker from "@workers/canvas.worker";
 import { Track } from "midiconvert";
-import debounce from "just-debounce-it";
+import { debounce } from "lodash"
+import {VISUALIZER_MESSAGES} from "@enums/visulaizerMessages";
 
 const canvasWorker: Worker = new CanvasWorker();
 
-export default class extends React.PureComponent {
+interface VisualizerProps {
+	range: {
+		first: number;
+		last: number;
+	}
+}
+
+export default class extends React.PureComponent<VisualizerProps> {
   private canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef();
   private visualizerRef: React.RefObject<HTMLDivElement> = React.createRef();
   private debouncedSetDimensions: (e: Event, update: boolean) => void;
@@ -35,7 +43,7 @@ export default class extends React.PureComponent {
 			if (!update) return;
 			// @ts-ignore
 			canvasWorker.postMessage({
-				message: "updateDimensions",
+				message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
 				dimensions: {
 					width,
 					height
@@ -54,7 +62,7 @@ export default class extends React.PureComponent {
     canvasWorker.postMessage(
       {
         canvas: offscreen,
-        message: "init",
+        message: VISUALIZER_MESSAGES.INIT,
 				dimensions
       },
       [offscreen]
@@ -67,16 +75,17 @@ export default class extends React.PureComponent {
   componentDidUpdate (prevProps) {
   	if (prevProps.range.first !== this.props.range.first || prevProps.range.last !== this.props.range.last) {
   		canvasWorker.postMessage({
-				message: "updateRange",
+				message: VISUALIZER_MESSAGES.UPDATE_RANGE,
 				range: this.props.range
 			})
 		}
 	}
 
-  public init = (track: Track, range: { first: number; last: number }) => {
+  public play = (track: Track, range: { first: number; last: number }) => {
     canvasWorker.postMessage({
       track,
-      range
+      range,
+			message: VISUALIZER_MESSAGES.PLAY
     });
   };
 
@@ -88,7 +97,7 @@ export default class extends React.PureComponent {
 				<canvas
           width={width}
           height={height}
-          style={{ height: height }}
+          style={{ height }}
           ref={this.canvasRef}
         />}
       </div>

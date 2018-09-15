@@ -6,7 +6,7 @@ module.exports = withCSS(withTypescript({
   webpack(config, options) {
     if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin());
 
-    config.module.rules.push({
+    config.module.rules.unshift({
       test: /\.worker\.ts/,
       use: { loader: 'worker-loader', options: { fallback: true } }
     });

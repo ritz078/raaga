@@ -70,12 +70,6 @@ export default class SoundPlayer extends React.PureComponent<
     else cb();
   };
 
-  private onProgressChange = () => {
-    // this.setState({
-    // 	currentTrackProgress: progress
-    // })
-  };
-
   async componentDidMount() {
     this.player = new Player();
     this.changeInstrument();
@@ -85,8 +79,8 @@ export default class SoundPlayer extends React.PureComponent<
       const midi: MIDI = e.data;
 
       this.preparePlayer(midi, 1, () => {
-        this.visualizerRef.current.init(midi.tracks[1], this.state.keyboardRange)
-        this.player.playMidi(1, midi, this.onRecordPlay, this.onProgressChange);
+        this.visualizerRef.current.play(midi.tracks[1], this.state.keyboardRange)
+        this.player.playMidi(1, midi, this.onRecordPlay);
         this.setState({
           currentTrack: midi.tracks[1]
         });
@@ -113,7 +107,7 @@ export default class SoundPlayer extends React.PureComponent<
 
   private stopRecording = () => {
     this.player.stopRecording();
-    this.player.playRecording(this.onRecordPlay, this.onProgressChange);
+    this.player.playRecording(this.onRecordPlay);
   };
 
   private loadMidiFile = async e => {
