@@ -692,9 +692,9 @@
   version "4.14.116"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.116.tgz#5ccf215653e3e8c786a58390751033a9adca0eb9"
 
-"@types/next@^6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@types/next/-/next-6.1.4.tgz#cc294253e4f4c1c2e1da7ea440b6024c143a26dc"
+"@types/next@^6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@types/next/-/next-6.1.5.tgz#5ead3d87a48061817a4ca2b58c202fe0e09bc9c5"
   dependencies:
     "@types/node" "*"
     "@types/node-fetch" "*"

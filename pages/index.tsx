@@ -6,7 +6,7 @@ import hex2rgba from "hex-to-rgba";
 
 const bodyClass = css({
 	minWidth: 1100,
-	background: `linear-gradient(to top right,${hex2rgba(colors.red.base, 0.9)},${hex2rgba("#000", 0.9)}), url(/static/images/background.jpg)`,
+	background: `linear-gradient(to top right,${hex2rgba(colors.gray.darker, 0.9)},${hex2rgba("#000", 0.9)}), url(/static/images/background.jpg)`,
 	backgroundSize: "cover",
 	height: "100vh",
 	flexDirection: "column",

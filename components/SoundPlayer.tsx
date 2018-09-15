@@ -99,6 +99,7 @@ export default class SoundPlayer extends React.PureComponent<
         set.delete(midi);
         return { activeMidis: [...set] };
       } else if (event === EVENT_TYPE.PLAYING_COMPLETE) {
+      	this.visualizerRef.current.stop();
         return { activeMidis: undefined };
       }
     });

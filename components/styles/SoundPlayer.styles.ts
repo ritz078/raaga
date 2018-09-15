@@ -79,11 +79,4 @@ export const piano = css({
   }
 });
 
-export const visualizerWrapper = css({
-	display: "flex",
-	flexDirection: "row",
-	position: "relative",
-	flex: 1,
-	transform: "rotate(180deg) scaleX(-1)",
-	overflow: "scroll"
-});
+
