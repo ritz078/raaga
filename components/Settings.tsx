@@ -23,6 +23,7 @@ export default class Settings extends React.PureComponent<SettingsProps> {
       onInstrumentChange
     } = this.props;
 
+    return null;
     return (
       <div className={settingsWrapper}>
         <Popper

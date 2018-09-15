@@ -19,13 +19,20 @@ import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
 import { NoteWithEvent } from "@utils/typings/Player";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
 const worker: Worker = new MidiLoadWorker();
 
-export default class SoundPlayer extends React.PureComponent<
-  {},
+interface SoundPlayerProps {
+  settings: any;
+  dispatch: Dispatch;
+}
+
+class SoundPlayer extends React.PureComponent<
+  SoundPlayerProps,
   SoundPlayerState
 > {
   visualizerRef: React.RefObject<Visualizer> = React.createRef();
@@ -205,3 +212,5 @@ export default class SoundPlayer extends React.PureComponent<
     );
   }
 }
+
+export default connect(({ settings }) => ({ settings }))(SoundPlayer);

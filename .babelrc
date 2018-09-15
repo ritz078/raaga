@@ -12,7 +12,8 @@
         "@utils": "./utils",
         "@config": "./config",
         "@workers": "./workers",
-        "@enums": "./enums"
+        "@enums": "./enums",
+        "@reducers": "./reducers"
       }
     }]
   ]
