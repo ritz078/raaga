@@ -4,6 +4,7 @@
     "@zeit/next-typescript/babel"
   ],
   "plugins": [
+    "lodash",
     ["module-resolver", {
       "root": ["."],
       "alias": {

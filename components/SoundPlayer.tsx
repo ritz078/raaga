@@ -13,7 +13,6 @@ import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
-import MidiLoadWorker from "@workers/midiload.worker";
 import { MIDI } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
@@ -24,11 +23,11 @@ import { Dispatch } from "redux";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
-const worker: Worker = new MidiLoadWorker();
-
 interface SoundPlayerProps {
   settings: any;
   dispatch: Dispatch;
+  loadedMidi: MIDI;
+  selectedTrack: number;
 }
 
 class SoundPlayer extends React.PureComponent<
@@ -80,38 +79,9 @@ class SoundPlayer extends React.PureComponent<
     else cb();
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.player = new Player();
     this.changeInstrument();
-
-    worker.onmessage = e => {
-      this.resetPlayer();
-      if (e.data.error) {
-        alert(e.data.error);
-        return;
-      }
-
-      const midi: MIDI = e.data.data;
-      const trackIndex = 1;
-
-      this.preparePlayer(midi, trackIndex, () => {
-        this.setState(
-          {
-            visualizerMode: VISUALIZER_MODE.READ
-          },
-          () => {
-            this.visualizerRef.current.start(
-              midi.tracks[trackIndex],
-              this.state.keyboardRange
-            );
-            this.player.playMidi(trackIndex, midi, this.onRecordPlay);
-            this.setState({
-              currentTrack: midi.tracks[trackIndex]
-            });
-          }
-        );
-      });
-    };
   }
 
   onRecordPlay = ({ midi, event }: NoteWithEvent) => {
@@ -142,11 +112,6 @@ class SoundPlayer extends React.PureComponent<
     this.player.playRecording(this.onRecordPlay);
   };
 
-  private loadMidiFile = e => {
-    const file = e.target.files[0];
-    worker.postMessage(file);
-  };
-
   private renderNoteLabel = ({ midiNumber, isAccidental }) => {
     const noteName = Tone.Frequency(midiNumber, "midi").toNote();
     return !isAccidental && noteName.startsWith("C") && noteName;
@@ -162,6 +127,40 @@ class SoundPlayer extends React.PureComponent<
     this.player.stopNote(midi);
   };
 
+  componentDidUpdate(prevProps: SoundPlayerProps) {
+    const { loadedMidi, selectedTrack } = this.props;
+
+    const trackIndex = selectedTrack - 1;
+
+    if (selectedTrack !== prevProps.selectedTrack) {
+      this.resetPlayer();
+    }
+
+    if (
+      loadedMidi &&
+      prevProps.selectedTrack !== selectedTrack &&
+      selectedTrack
+    ) {
+      this.preparePlayer(loadedMidi, trackIndex, () => {
+        this.setState(
+          {
+            visualizerMode: VISUALIZER_MODE.READ
+          },
+          () => {
+            this.visualizerRef.current.start(
+              loadedMidi.tracks[trackIndex],
+              this.state.keyboardRange
+            );
+            this.player.playMidi(trackIndex, loadedMidi, this.onRecordPlay);
+            this.setState({
+              currentTrack: loadedMidi.tracks[trackIndex]
+            });
+          }
+        );
+      });
+    }
+  }
+
   render() {
     const {
       instrument,
@@ -174,7 +173,6 @@ class SoundPlayer extends React.PureComponent<
 
     return (
       <>
-        <input type="file" onChange={this.loadMidiFile} accept=".mid" />
         <Visualizer
           ref={this.visualizerRef}
           range={keyboardRange}
@@ -217,4 +215,8 @@ class SoundPlayer extends React.PureComponent<
   }
 }
 
-export default connect(({ settings }) => ({ settings }))(SoundPlayer);
+export default connect(({ settings, loadedMidi, selectedTrack }) => ({
+  settings,
+  loadedMidi,
+  selectedTrack
+}))(SoundPlayer);

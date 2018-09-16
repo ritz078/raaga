@@ -125,7 +125,8 @@ export class Player {
   };
 
   public reset = () => {
-    this._notesPlayer && this._notesPlayer.dispose();
+    // TODO: fix this
+    // this._notesPlayer && this._notesPlayer.dispose();
     this._activeNotes.clear();
     this._recordingStartTime = null;
   };

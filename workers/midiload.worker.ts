@@ -8,14 +8,8 @@ file.onload = () => {
   try {
     const parsedMidi = parse(file.result);
 
-    console.log(parsedMidi);
-
-    parsedMidi.tracks = parsedMidi.tracks.map(track => ({
-      ...track,
-      duration: track.duration
-    }));
     _self.postMessage({
-      data: parsedMidi
+      data: parsedMidi.toJSON()
     });
   } catch (e) {
     _self.postMessage({

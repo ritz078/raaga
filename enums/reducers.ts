@@ -1,3 +1,6 @@
 export enum ReducersType {
-  CHANGE_SETTINGS = 1
+  CHANGE_SETTINGS = 1,
+  LOADED_MIDI,
+  SET_TRACK_NUMBER,
+  CLEAR_TRACK_NUMBER
 }

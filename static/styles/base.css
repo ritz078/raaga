@@ -1,9 +1,11 @@
-@import url("https://fonts.googleapis.com/css?family=Josefin+Sans");
+@import url("https://fonts.googleapis.com/css?family=Lato");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://i.icomoon.io/public/temp/e0ed905fc3/UntitledProject1/style.css");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Josefin Sans", sans-serif;
+  font-family: "Lato", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
