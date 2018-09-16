@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { ReducersType } from "@enums/reducers";
-import { MIDI } from "midiconvert";
 import prettyMs from "pretty-ms";
 import {
+  modalBottom,
+  modalTop,
   trackRow,
   trackSelectionModal
 } from "@components/styles/Header.styles";
@@ -15,14 +16,14 @@ import { Transition, animated } from "react-spring";
 
 interface HeaderProps {
   dispatch: Dispatch;
-  loadedMidi: MIDI;
 }
 
 class Header extends React.Component<HeaderProps> {
   worker: Worker;
 
   state = {
-    showTrackSelectionModal: false
+    showTrackSelectionModal: false,
+    tempLoadedMidi: undefined
   };
 
   private loadFile = e => {
@@ -39,24 +40,22 @@ class Header extends React.Component<HeaderProps> {
       }
 
       this.setState({
-        showTrackSelectionModal: true
-      });
-
-      this.props.dispatch({
-        type: ReducersType.CLEAR_TRACK_NUMBER
-      });
-
-      this.props.dispatch({
-        type: ReducersType.LOADED_MIDI,
-        payload: e.data.data || null
+        showTrackSelectionModal: true,
+        tempLoadedMidi: e.data.data
       });
     };
   }
 
   private selectTrack = (i: number) => {
+    const { tempLoadedMidi } = this.state;
+
     this.props.dispatch({
-      type: ReducersType.SET_TRACK_NUMBER,
-      payload: i + 1
+      type: ReducersType.LOADED_MIDI,
+      payload: tempLoadedMidi
+    });
+    this.props.dispatch({
+      type: ReducersType.SET_SELECTED_TRACK,
+      payload: tempLoadedMidi.tracks[i]
     });
 
     this.setState({
@@ -65,6 +64,8 @@ class Header extends React.Component<HeaderProps> {
   };
 
   render() {
+    const { showTrackSelectionModal, tempLoadedMidi } = this.state;
+
     return (
       <>
         <header className={headerClass}>
@@ -75,7 +76,7 @@ class Header extends React.Component<HeaderProps> {
             </label>
             <input
               onChange={this.loadFile}
-              style={{ display: "none" }}
+              hidden
               type="file"
               name="photo"
               id="upload-midi"
@@ -91,33 +92,19 @@ class Header extends React.Component<HeaderProps> {
           enter={{ opacity: 1, marginTop: 0 }}
           leave={{ opacity: 0, marginTop: 40, pointerEvents: "none" }}
         >
-          {this.state.showTrackSelectionModal &&
+          {showTrackSelectionModal &&
             (styles => (
               <animated.div style={styles} className={trackSelectionModal}>
-                <div
-                  style={{
-                    height: 100,
-                    backgroundColor: "#090a0c7a",
-                    padding: 20,
-                    color: "#fff",
-                    paddingTop: 55
-                  }}
-                >
+                <div className={modalTop}>
                   <h2>
-                    {(this.props.loadedMidi.header &&
-                      this.props.loadedMidi.header.name) ||
+                    {(tempLoadedMidi.header && tempLoadedMidi.header.name) ||
                       "Unnamed"}
                   </h2>
                 </div>
 
-                <div
-                  style={{
-                    flex: 1,
-                    overflow: "scroll"
-                  }}
-                >
-                  {this.props.loadedMidi.tracks &&
-                    this.props.loadedMidi.tracks.map((track, i) => (
+                <div className={modalBottom}>
+                  {tempLoadedMidi.tracks &&
+                    tempLoadedMidi.tracks.map((track, i) => (
                       <div
                         onClick={() => this.selectTrack(i)}
                         className={trackRow}
@@ -125,13 +112,7 @@ class Header extends React.Component<HeaderProps> {
                         data-index={i}
                       >
                         <div style={{ paddingRight: 20 }}>#{i + 1}</div>
-                        <div
-                          style={{
-                            flex: 1,
-                            ...mixins.textEllipsis,
-                            paddingRight: 30
-                          }}
-                        >
+                        <div className="__name__">
                           {track.name || "Unnamed"}
                         </div>
                         <div style={{ flex: 1 }}>
@@ -140,11 +121,7 @@ class Header extends React.Component<HeaderProps> {
                         <div style={{ flex: 0.5 }}>
                           {prettyMs(track.duration * 1000)}
                         </div>
-                        <div
-                          style={{
-                            fontSize: 14
-                          }}
-                        >
+                        <div className="__play__">
                           <i className="icon icon-play" />
                         </div>
                       </div>
@@ -158,4 +135,4 @@ class Header extends React.Component<HeaderProps> {
   }
 }
 
-export default connect(({ loadedMidi }) => ({ loadedMidi }))(Header);
+export default connect()(Header);

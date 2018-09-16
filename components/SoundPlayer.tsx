@@ -13,7 +13,7 @@ import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
-import { MIDI } from "midiconvert";
+import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
 import { NoteWithEvent } from "@utils/typings/Player";
@@ -27,7 +27,7 @@ interface SoundPlayerProps {
   settings: any;
   dispatch: Dispatch;
   loadedMidi: MIDI;
-  selectedTrack: number;
+  selectedTrack: Track;
 }
 
 class SoundPlayer extends React.PureComponent<
@@ -66,8 +66,8 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private preparePlayer = (midi, trackIndex = 0, cb) => {
-    const { notes } = midi.tracks[trackIndex];
+  private preparePlayer = (selectedTrack: Track, cb) => {
+    const { notes } = selectedTrack;
     const requiredRange = getMidiRange(notes);
     if (!isWithinRange(requiredRange, [range.first, range.last]))
       this.setState(
@@ -130,31 +130,20 @@ class SoundPlayer extends React.PureComponent<
   componentDidUpdate(prevProps: SoundPlayerProps) {
     const { loadedMidi, selectedTrack } = this.props;
 
-    const trackIndex = selectedTrack - 1;
-
-    if (selectedTrack !== prevProps.selectedTrack) {
+    if (selectedTrack !== prevProps.selectedTrack && selectedTrack) {
       this.resetPlayer();
-    }
 
-    if (
-      loadedMidi &&
-      prevProps.selectedTrack !== selectedTrack &&
-      selectedTrack
-    ) {
-      this.preparePlayer(loadedMidi, trackIndex, () => {
+      this.preparePlayer(selectedTrack, () => {
         this.setState(
           {
             visualizerMode: VISUALIZER_MODE.READ
           },
           () => {
             this.visualizerRef.current.start(
-              loadedMidi.tracks[trackIndex],
+              selectedTrack,
               this.state.keyboardRange
             );
-            this.player.playMidi(trackIndex, loadedMidi, this.onRecordPlay);
-            this.setState({
-              currentTrack: loadedMidi.tracks[trackIndex]
-            });
+            this.player.playMidi(selectedTrack, loadedMidi, this.onRecordPlay);
           }
         );
       });

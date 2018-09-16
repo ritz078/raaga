@@ -64,10 +64,8 @@ export class Player {
     return _notes;
   };
 
-  public playMidi = (trackIndex, midi, cb) => {
-    const notes = Player.getNotesWithStopCallback(
-      midi.tracks[trackIndex].notes
-    );
+  public playMidi = (track, midi, cb) => {
+    const notes = Player.getNotesWithStopCallback(track.notes);
     Tone.Transport.bpm.value = midi.header.bpm;
 
     this._notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
@@ -126,7 +124,7 @@ export class Player {
 
   public reset = () => {
     // TODO: fix this
-    // this._notesPlayer && this._notesPlayer.dispose();
+    this._notesPlayer && this._notesPlayer.dispose();
     this._activeNotes.clear();
     this._recordingStartTime = null;
   };
