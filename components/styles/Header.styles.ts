@@ -9,6 +9,11 @@ export const trackRow = css({
   cursor: "pointer",
   "&:hover": {
     backgroundColor: "#2a2a2a"
+  },
+  "&.__disabled__": {
+    pointerEvents: "none",
+    cursor: "not-allowed",
+    opacity: 0.6
   }
 });
 
@@ -40,12 +45,12 @@ export const modalTop = css({
 export const modalBottom = css({
   flex: 1,
   overflow: "scroll",
-  "& > __name__": {
+  "& .__name__": {
     flex: 1,
     ...mixins.textEllipsis,
     paddingRight: 30
   },
-  "& > __play__": {
+  "& .__play__": {
     fontSize: 14
   }
 });

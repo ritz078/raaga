@@ -13,6 +13,7 @@ import {
   trackSelectionModal
 } from "@components/styles/Header.styles";
 import { Transition, animated } from "react-spring";
+import { cx } from "emotion";
 
 interface HeaderProps {
   dispatch: Dispatch;
@@ -107,7 +108,9 @@ class Header extends React.Component<HeaderProps> {
                     tempLoadedMidi.tracks.map((track, i) => (
                       <div
                         onClick={() => this.selectTrack(i)}
-                        className={trackRow}
+                        className={cx(trackRow, {
+                          __disabled__: !track.duration
+                        })}
                         key={i}
                         data-index={i}
                       >
@@ -121,8 +124,11 @@ class Header extends React.Component<HeaderProps> {
                         <div style={{ flex: 0.5 }}>
                           {prettyMs(track.duration * 1000)}
                         </div>
+                        <div style={{ flex: 0.5 }}>
+                          {track.notes && track.notes.length} Notes
+                        </div>
                         <div className="__play__">
-                          <i className="icon icon-play" />
+                          {!!track.duration && <i className="icon icon-play" />}
                         </div>
                       </div>
                     ))}
