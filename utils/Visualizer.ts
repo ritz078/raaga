@@ -12,7 +12,10 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 const SPEED = 250;
 const RADIUS = 5;
 const HORIZONTAL_MARGIN = 2;
-const CORRECTION = SPEED;
+
+function now() {
+  return Date.now() / 1000;
+}
 
 export class Visualizer {
   ctx: CanvasRenderingContext2D;
@@ -39,6 +42,9 @@ export class Visualizer {
   public setDimensions = ({ width, height }: Dimensions) => {
     this.ctx.canvas.width = width;
     this.ctx.canvas.height = height;
+    if (this.mode === VISUALIZER_MODE.WRITE) {
+      this.startWriteMode();
+    }
   };
 
   /**
@@ -121,8 +127,6 @@ export class Visualizer {
    */
   private renderNotesInWriteMode = () => {
     this.clearCanvas();
-    const timeElapsed = Date.now() / 1000 - this.referenceTime;
-
     const { midiNumbers, groupedNotes } = this.getTrackInfo();
 
     const canvasHeight = this.ctx.canvas.height;
@@ -133,8 +137,7 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top =
-          (note.time - timeElapsed) * SPEED + canvasHeight - CORRECTION;
+        const top = (note.time - now()) * SPEED + canvasHeight;
         const height =
           (note.duration || Number.MAX_SAFE_INTEGER / SPEED) * SPEED;
 
@@ -150,52 +153,51 @@ export class Visualizer {
   };
 
   private cleanup = () => {
-  	this.clearCanvas();
-  	this.intervalId && clearInterval(this.intervalId);
-  	this.writeIntervalId && clearInterval(this.writeIntervalId);
-	};
+    this.clearCanvas();
+    this.intervalId && clearInterval(this.intervalId);
+    this.writeIntervalId && clearInterval(this.writeIntervalId);
+  };
+
+  private startWriteMode = () => {
+    this.cleanup();
+    this.referenceTime = now();
+    this.writeIntervalId = self.setInterval(() => {
+      this.renderNotesInWriteMode();
+    }, 4);
+  };
 
   public setMode = (mode: VISUALIZER_MODE) => {
     this.mode = mode;
     this.cleanup();
     if (mode === VISUALIZER_MODE.WRITE) {
-      this.referenceTime = Date.now() / 1000;
-      this.stop();
-      this.writeIntervalId = self.setInterval(() => {
-        this.renderNotesInWriteMode();
-      }, 4);
+      this.startWriteMode();
     }
   };
 
   public play = (track: Track) => {
-    let offset = 0;
     this.cleanup();
+    this.referenceTime = now();
     this.intervalId = self.setInterval(() => {
-      this.renderNotesInReadMode(track, offset);
-      offset -= 1;
-    }, 4);
+      this.renderNotesInReadMode(track);
+    }, 5);
   };
 
   public addNote = midi => {
     this.notes.push({
       midi,
-      time: Date.now() / 1000 - this.referenceTime
+      time: now()
     });
   };
 
   public endNote = midi => {
     const note = this.notes.find(note => note.midi === midi && !note.duration);
-    note.duration = Date.now() / 1000 - (this.referenceTime + note.time);
-  };
-
-  public stop = () => {
-    this.cleanup();
+    note.duration = now() - note.time;
   };
 
   private clearCanvas = () =>
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-  private renderNotesInReadMode = (track: Track, offset: number) => {
+  private renderNotesInReadMode = (track: Track) => {
     this.clearCanvas();
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
@@ -208,12 +210,17 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = note.time * SPEED + offset;
+        const top = (note.time - (now() - this.referenceTime)) * SPEED;
         const height = note.duration * SPEED;
 
-        if (top + height < offset) {
+        // These are past notes which have been shown.
+        if (top + height < 0) {
           continue;
         }
+
+        // This is assuming that the notes in the midi are sorted by their time
+				// in increasing order. In case one note is out of bound, all the following
+				// will be. We skip all the future notes.
         if (top > canvasHeight) {
           break;
         }

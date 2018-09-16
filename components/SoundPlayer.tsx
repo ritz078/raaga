@@ -1,26 +1,22 @@
 import * as React from "react";
-import { SoundPlayerState } from "./typings/SoundPlayer";
+import {SoundPlayerState} from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-import { getMidiRange, isWithinRange, Player } from "@utils";
-import {
-  loaderClass,
-  piano,
-  pianoWrapperClass
-} from "@components/styles/SoundPlayer.styles";
-import { colors, Loader } from "@anarock/pebble";
-import { css, cx } from "emotion";
-import { Piano } from "react-piano";
-import { getPianoRangeAndShortcuts } from "@config/piano";
+import {getMidiRange, isWithinRange, Player} from "@utils";
+import {loaderClass, piano, pianoWrapperClass} from "@components/styles/SoundPlayer.styles";
+import {colors, Loader} from "@anarock/pebble";
+import {css, cx} from "emotion";
+import {Piano} from "react-piano";
+import {getPianoRangeAndShortcuts} from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
 import MidiLoadWorker from "@workers/midiload.worker";
-import { MIDI } from "midiconvert";
+import {MIDI} from "midiconvert";
 import Visualizer from "@components/Visualizer";
-import { EVENT_TYPE } from "@enums/piano";
-import { NoteWithEvent } from "@utils/typings/Player";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import {EVENT_TYPE} from "@enums/piano";
+import {NoteWithEvent} from "@utils/typings/Player";
+import {VISUALIZER_MODE} from "@enums/visualizerMessages";
+import {connect} from "react-redux";
+import {Dispatch} from "redux";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -180,7 +176,7 @@ class SoundPlayer extends React.PureComponent<
           range={keyboardRange}
           mode={visualizerMode}
         />
-        <div>
+        <div style={{height: 300}}>
           {playerLoaded && (
             <>
               <Settings
@@ -199,7 +195,7 @@ class SoundPlayer extends React.PureComponent<
                   onStopNote={this.onNoteStop}
                   keyboardShortcuts={keyboardShortcuts}
                   playbackNotes={activeMidis}
-                  disabled={loading}
+                  disabled={loading || visualizerMode === VISUALIZER_MODE.READ}
                   className={cx(
                     {
                       [css({ opacity: 0.2 })]: loading

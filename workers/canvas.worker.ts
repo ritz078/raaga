@@ -42,7 +42,7 @@ self.onmessage = e => {
     visualizer.setRange(range);
     visualizer.play(track);
   } else if (message === VISUALIZER_MESSAGES.STOP) {
-    visualizer.stop();
+    visualizer.cleanup();
   } else if (message === VISUALIZER_MESSAGES.ADD_NOTE) {
     visualizer.addNote(midi);
   } else if (message === VISUALIZER_MESSAGES.END_NOTE) {
