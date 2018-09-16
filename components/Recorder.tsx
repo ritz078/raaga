@@ -1,7 +1,7 @@
 import * as React from "react";
 import { colors, Tooltip } from "@anarock/pebble";
 import { recordingButton, recordingWrapper } from "./styles/Recorder.styles";
-import {RecorderProps} from "./typings/Recorder";
+import { RecorderProps } from "./typings/Recorder";
 
 export default class extends React.PureComponent<RecorderProps> {
   state = {
@@ -9,11 +9,16 @@ export default class extends React.PureComponent<RecorderProps> {
   };
 
   private toggle = () => {
-    this.setState({
-      isRecording: !this.state.isRecording
-    }, () => {
-    	this.state.isRecording ? this.props.onRecordingStart() : this.props.onRecordingEnd()
-		});
+    this.setState(
+      {
+        isRecording: !this.state.isRecording
+      },
+      () => {
+        this.state.isRecording
+          ? this.props.onRecordingStart()
+          : this.props.onRecordingEnd();
+      }
+    );
   };
 
   render() {
@@ -22,15 +27,22 @@ export default class extends React.PureComponent<RecorderProps> {
     return (
       <div className={recordingWrapper}>
         <Tooltip
-					modifiers={{
-						preventOverflow: {
-							padding: 40
-						}
-					}}
+          modifiers={{
+            preventOverflow: {
+              padding: 40
+            }
+          }}
           label={({ ref }) => (
-            <div className={recordingButton} style={{
-            	backgroundColor: isRecording ? colors.red.base : colors.white.base
-						}} onClick={this.toggle} ref={ref}>
+            <div
+              className={recordingButton}
+              style={{
+                backgroundColor: isRecording
+                  ? colors.red.base
+                  : colors.white.base
+              }}
+              onClick={this.toggle}
+              ref={ref}
+            >
               <i
                 className="material-icons"
                 style={{

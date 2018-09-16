@@ -8,7 +8,7 @@
     "start": "next start",
     "build": "next build",
     "precommit": "pretty-quick --staged",
-    "format": "prettier --write **/*.ts"
+    "format": "prettier --write '**/*.ts' '**/*.tsx'"
   },
   "dependencies": {
     "@anarock/pebble": "^0.17.1",
