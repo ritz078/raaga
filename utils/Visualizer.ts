@@ -119,6 +119,18 @@ export class Visualizer {
     return { left, width, isAccidental };
   };
 
+  private getCoordinates = (note: Partial<Note>) => {
+    const canvasHeight = this.ctx.canvas.height;
+
+    const top = (note.time - now()) * SPEED + canvasHeight;
+    const height = (note.duration || Number.MAX_SAFE_INTEGER / SPEED) * SPEED;
+
+    return {
+      top,
+      height
+    };
+  };
+
   /**
    * The main renderer that renders notes on the canvas in the WRITE mode.
    * WRITE mode refers to the mode when the user is controlling the piano my
@@ -129,21 +141,19 @@ export class Visualizer {
     this.clearCanvas();
     const { midiNumbers, groupedNotes } = this.getTrackInfo();
 
-    const canvasHeight = this.ctx.canvas.height;
-
     midiNumbers.forEach(midi => {
       if (!groupedNotes[midi]) return;
       const { isAccidental, left, width } = this.getMidiInfo(midi);
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time - now()) * SPEED + canvasHeight;
-        const height =
-          (note.duration || Number.MAX_SAFE_INTEGER / SPEED) * SPEED;
+        const { top, height } = this.getCoordinates(note);
 
         if (top + height < 0) {
-          //TODO: fix this
-          this.notes.shift();
+          this.notes = this.notes.filter(_note => {
+            const { top, height } = this.getCoordinates(_note);
+            return top + height >= 0;
+          });
           continue;
         }
 
@@ -162,7 +172,7 @@ export class Visualizer {
     this.cleanup();
     this.referenceTime = now();
     this.writeIntervalId = self.setInterval(() => {
-      this.renderNotesInWriteMode();
+      if (this.notes.length) this.renderNotesInWriteMode();
     }, 4);
   };
 

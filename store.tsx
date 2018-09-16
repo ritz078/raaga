@@ -2,9 +2,27 @@ import React from "react";
 import { createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import reducers from "@reducers";
+import { ReducersType } from "@enums/reducers";
+
+// Transform actions-type to a string if the action type is a
+// number and there's we defined an actiontype for that.
+// Else, use the unsanitized action as normal. The reason
+// for the checks is to escape dispatched actions from
+// packages like react-router or redux-form.
+const actionTypeEnumToString = (action: any): any =>
+  typeof action.type === "number" && ReducersType[action.type]
+    ? {
+        type: ReducersType[action.type],
+        payload: action.payload
+      }
+    : action;
 
 export function initializeStore(initialState = {}) {
-  return createStore(reducers, initialState, composeWithDevTools());
+  return createStore(
+    reducers,
+    initialState,
+    composeWithDevTools({ actionSanitizer: actionTypeEnumToString })()
+  );
 }
 
 const isServer = typeof window === "undefined";

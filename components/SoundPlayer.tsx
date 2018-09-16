@@ -1,30 +1,33 @@
 import * as React from "react";
-import {SoundPlayerState} from "./typings/SoundPlayer";
+import { SoundPlayerState } from "./typings/SoundPlayer";
 import Settings from "@components/Settings";
-import {getMidiRange, isWithinRange, Player} from "@utils";
-import {loaderClass, piano, pianoWrapperClass} from "@components/styles/SoundPlayer.styles";
-import {colors, Loader} from "@anarock/pebble";
-import {css, cx} from "emotion";
-import {Piano} from "react-piano";
-import {getPianoRangeAndShortcuts} from "@config/piano";
+import { getMidiRange, isWithinRange, Player } from "@utils";
+import {
+  loaderClass,
+  piano,
+  pianoWrapperClass
+} from "@components/styles/SoundPlayer.styles";
+import { colors, Loader } from "@anarock/pebble";
+import { css, cx } from "emotion";
+import { Piano } from "react-piano";
+import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
 import Tone from "tone";
-import MidiLoadWorker from "@workers/midiload.worker";
-import {MIDI} from "midiconvert";
+import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
-import {EVENT_TYPE} from "@enums/piano";
-import {NoteWithEvent} from "@utils/typings/Player";
-import {VISUALIZER_MODE} from "@enums/visualizerMessages";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
+import { EVENT_TYPE } from "@enums/piano";
+import { NoteWithEvent } from "@utils/typings/Player";
+import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
-
-const worker: Worker = new MidiLoadWorker();
 
 interface SoundPlayerProps {
   settings: any;
   dispatch: Dispatch;
+  loadedMidi: MIDI;
+  selectedTrack: Track;
 }
 
 class SoundPlayer extends React.PureComponent<
@@ -63,8 +66,8 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private preparePlayer = (midi, trackIndex = 0, cb) => {
-    const { notes } = midi.tracks[trackIndex];
+  private preparePlayer = (selectedTrack: Track, cb) => {
+    const { notes } = selectedTrack;
     const requiredRange = getMidiRange(notes);
     if (!isWithinRange(requiredRange, [range.first, range.last]))
       this.setState(
@@ -76,38 +79,9 @@ class SoundPlayer extends React.PureComponent<
     else cb();
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.player = new Player();
     this.changeInstrument();
-
-    worker.onmessage = e => {
-      this.resetPlayer();
-      if (e.data.error) {
-      	alert(e.data.error)
-				return;
-			}
-
-      const midi: MIDI = e.data.data;
-      const trackIndex = 1;
-
-      this.preparePlayer(midi, trackIndex, () => {
-        this.setState(
-          {
-            visualizerMode: VISUALIZER_MODE.READ
-          },
-          () => {
-            this.visualizerRef.current.start(
-              midi.tracks[trackIndex],
-              this.state.keyboardRange
-            );
-            this.player.playMidi(trackIndex, midi, this.onRecordPlay);
-            this.setState({
-              currentTrack: midi.tracks[trackIndex]
-            });
-          }
-        );
-      });
-    };
   }
 
   onRecordPlay = ({ midi, event }: NoteWithEvent) => {
@@ -138,11 +112,6 @@ class SoundPlayer extends React.PureComponent<
     this.player.playRecording(this.onRecordPlay);
   };
 
-  private loadMidiFile = e => {
-    const file = e.target.files[0];
-    worker.postMessage(file);
-  };
-
   private renderNoteLabel = ({ midiNumber, isAccidental }) => {
     const noteName = Tone.Frequency(midiNumber, "midi").toNote();
     return !isAccidental && noteName.startsWith("C") && noteName;
@@ -158,6 +127,29 @@ class SoundPlayer extends React.PureComponent<
     this.player.stopNote(midi);
   };
 
+  componentDidUpdate(prevProps: SoundPlayerProps) {
+    const { loadedMidi, selectedTrack } = this.props;
+
+    if (selectedTrack !== prevProps.selectedTrack && selectedTrack) {
+      this.resetPlayer();
+
+      this.preparePlayer(selectedTrack, () => {
+        this.setState(
+          {
+            visualizerMode: VISUALIZER_MODE.READ
+          },
+          () => {
+            this.visualizerRef.current.start(
+              selectedTrack,
+              this.state.keyboardRange
+            );
+            this.player.playMidi(selectedTrack, loadedMidi, this.onRecordPlay);
+          }
+        );
+      });
+    }
+  }
+
   render() {
     const {
       instrument,
@@ -170,13 +162,12 @@ class SoundPlayer extends React.PureComponent<
 
     return (
       <>
-        <input type="file" onChange={this.loadMidiFile} accept=".mid" />
         <Visualizer
           ref={this.visualizerRef}
           range={keyboardRange}
           mode={visualizerMode}
         />
-        <div style={{height: 300}}>
+        <div style={{ height: 300 }}>
           {playerLoaded && (
             <>
               <Settings
@@ -213,4 +204,8 @@ class SoundPlayer extends React.PureComponent<
   }
 }
 
-export default connect(({ settings }) => ({ settings }))(SoundPlayer);
+export default connect(({ settings, loadedMidi, selectedTrack }) => ({
+  settings,
+  loadedMidi,
+  selectedTrack
+}))(SoundPlayer);

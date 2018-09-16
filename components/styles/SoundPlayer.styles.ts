@@ -22,7 +22,7 @@ export const piano = css({
     transition: "all 200ms"
   },
   ".ReactPiano__Key--natural": {
-    height: "16em",
+    height: 300,
     zIndex: 0,
     border: "1px solid #4a4a4a",
     borderTopWidth: 0,
@@ -36,7 +36,7 @@ export const piano = css({
       marginRight: 0
     },
     "&.ReactPiano__Key--active": {
-      height: "15.5em",
+      height: 280,
       backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
       borderBottomColor: "#42C9FF",
       ".ReactPiano__NoteLabelContainer": {

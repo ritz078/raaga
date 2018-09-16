@@ -1,4 +1,4 @@
 export interface RecorderProps {
-	onRecordingStart: () => void;
-	onRecordingEnd: () => void;
+  onRecordingStart: () => void;
+  onRecordingEnd: () => void;
 }

@@ -8,7 +8,7 @@
     "start": "next start",
     "build": "next build",
     "precommit": "pretty-quick --staged",
-    "format": "prettier --write **/*.ts"
+    "format": "prettier --write '**/*.ts' '**/*.tsx'"
   },
   "dependencies": {
     "@anarock/pebble": "^0.17.1",
@@ -21,20 +21,24 @@
     "lodash": "^4.17.11",
     "midiconvert": "^0.4.7",
     "next": "^6.1.1",
+    "pretty-ms": "^3.2.0",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-piano": "^2.0.1",
     "react-redux": "^5.0.7",
+    "react-spring": "^5.7.2",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",
     "soundfont-player": "^0.10.7",
-    "tone": "^0.12.80"
+    "tone": "^0.12.80",
+    "webmidi": "^2.2.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.116",
     "@types/next": "^6.1.5",
     "@types/react": "^16.4.14",
     "@zeit/next-css": "^0.2.0",
+    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "fork-ts-checker-webpack-plugin": "^0.4.9",
     "husky": "^0.14.3",
