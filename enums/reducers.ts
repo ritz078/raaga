@@ -1,3 +1,3 @@
 export enum ReducersType {
-	CHANGE_SETTINGS=1
+  CHANGE_SETTINGS = 1
 }

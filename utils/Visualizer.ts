@@ -219,8 +219,8 @@ export class Visualizer {
         }
 
         // This is assuming that the notes in the midi are sorted by their time
-				// in increasing order. In case one note is out of bound, all the following
-				// will be. We skip all the future notes.
+        // in increasing order. In case one note is out of bound, all the following
+        // will be. We skip all the future notes.
         if (top > canvasHeight) {
           break;
         }

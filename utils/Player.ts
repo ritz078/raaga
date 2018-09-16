@@ -91,15 +91,15 @@ export class Player {
   };
 
   public loadSound = async (instrument = "accordion") => {
-  	let buffers;
-  	if (instrument === "accordion") {
-  		// @ts-ignore
-			buffers = await (import("./soundfont-mp3.json"));
-  		delete buffers.__webpackChunkName
-		} else {
-  		buffers = await load(nameToUrl(instrument))
-		}
-		Object.keys(buffers).forEach(key => this.sampler.add(key, buffers[key]));
+    let buffers;
+    if (instrument === "accordion") {
+      // @ts-ignore
+      buffers = await import("./soundfont-mp3.json");
+      delete buffers.__webpackChunkName;
+    } else {
+      buffers = await load(nameToUrl(instrument));
+    }
+    Object.keys(buffers).forEach(key => this.sampler.add(key, buffers[key]));
   };
 
   public startNote = (midiNumber: number) => {
