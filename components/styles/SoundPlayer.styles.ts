@@ -9,7 +9,8 @@ export const loaderClass = css({
 export const pianoWrapperClass = css({
   display: "flex",
   justifyContent: "center",
-  alignItems: "center"
+  width: "100%",
+  position: "relative"
 });
 
 export const piano = css({

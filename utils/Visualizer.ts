@@ -12,6 +12,7 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 const SPEED = 250;
 const RADIUS = 5;
 const HORIZONTAL_MARGIN = 2;
+const MS_PER_SECOND = 10;
 
 function now() {
   return Date.now() / 1000;
@@ -173,7 +174,7 @@ export class Visualizer {
     this.referenceTime = now();
     this.writeIntervalId = self.setInterval(() => {
       if (this.notes.length) this.renderNotesInWriteMode();
-    }, 4);
+    }, MS_PER_SECOND);
   };
 
   public setMode = (mode: VISUALIZER_MODE) => {
@@ -189,7 +190,7 @@ export class Visualizer {
     this.referenceTime = now();
     this.intervalId = self.setInterval(() => {
       this.renderNotesInReadMode(track);
-    }, 5);
+    }, MS_PER_SECOND);
   };
 
   public addNote = midi => {

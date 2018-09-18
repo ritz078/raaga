@@ -4,15 +4,11 @@ import Settings from "@components/Settings";
 import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
-  piano,
   pianoWrapperClass
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
-import { css, cx } from "emotion";
-import { Piano } from "react-piano";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import instruments from "soundfont-player/instruments.json";
-import Tone from "tone";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
@@ -21,8 +17,9 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Store } from "@typings/store";
+import { Piano } from "./Piano";
 
-const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
+const { range } = getPianoRangeAndShortcuts([38, 88]);
 
 interface SoundPlayerProps {
   settings: any;
@@ -42,7 +39,7 @@ class SoundPlayer extends React.PureComponent<
     instrument: instruments[0],
     loading: false,
     playerLoaded: false,
-    activeMidis: undefined,
+    activeMidis: [],
     keyboardRange: range,
     currentTrack: undefined,
     visualizerMode: VISUALIZER_MODE.WRITE
@@ -51,7 +48,7 @@ class SoundPlayer extends React.PureComponent<
   private resetPlayer = () => {
     this.player.reset();
     this.setState({
-      activeMidis: undefined
+      activeMidis: []
     });
   };
 
@@ -85,25 +82,25 @@ class SoundPlayer extends React.PureComponent<
     this.changeInstrument();
   }
 
-  onRecordPlay = ({ midi, event }: NoteWithEvent) => {
-    this.setState(prevState => {
-      const set = new Set(prevState.activeMidis || []);
+  onRecordPlay = ({ midi, event }: Partial<NoteWithEvent>) => {
+    if (event === EVENT_TYPE.PLAYING_COMPLETE) {
+      this.visualizerRef.current.stop();
+    }
 
+    // @ts-ignore
+    this.setState(state => {
       if (event === EVENT_TYPE.NOTE_START) {
-        return { activeMidis: [...set.add(midi)] };
+        return { activeMidis: state.activeMidis.concat(midi) };
       } else if (event === EVENT_TYPE.NOTE_STOP) {
-        set.delete(midi);
-        return { activeMidis: [...set] };
+        const activeMidis = state.activeMidis.filter(_midi => _midi !== midi);
+        return {
+          activeMidis
+        };
       } else if (event === EVENT_TYPE.PLAYING_COMPLETE) {
-        this.setState(
-          {
-            visualizerMode: VISUALIZER_MODE.WRITE
-          },
-          () => {
-            this.visualizerRef.current.stop();
-            return { activeMidis: undefined };
-          }
-        );
+        return {
+          visualizerMode: VISUALIZER_MODE.WRITE,
+          activeMidis: []
+        };
       }
     });
   };
@@ -113,18 +110,15 @@ class SoundPlayer extends React.PureComponent<
     this.player.playRecording(this.onRecordPlay);
   };
 
-  private renderNoteLabel = ({ midiNumber, isAccidental }) => {
-    const noteName = Tone.Frequency(midiNumber, "midi").toNote();
-    return !isAccidental && noteName.startsWith("C") && noteName;
-  };
-
   private onNoteStart = midi => {
     this.visualizerRef.current.addNote(midi);
     this.player.startNote(midi);
+    this.onRecordPlay({ midi, event: EVENT_TYPE.NOTE_START });
   };
 
   private onNoteStop = midi => {
     this.visualizerRef.current.stopNote(midi);
+    this.onRecordPlay({ midi, event: EVENT_TYPE.NOTE_STOP });
     this.player.stopNote(midi);
   };
 
@@ -161,6 +155,8 @@ class SoundPlayer extends React.PureComponent<
       visualizerMode
     } = this.state;
 
+    console.log("hello", activeMidis);
+
     return (
       <>
         <Visualizer
@@ -182,19 +178,11 @@ class SoundPlayer extends React.PureComponent<
                   <Loader className={loaderClass} color={colors.white.base} />
                 )}
                 <Piano
-                  noteRange={this.state.keyboardRange}
-                  onPlayNote={this.onNoteStart}
-                  onStopNote={this.onNoteStop}
-                  keyboardShortcuts={keyboardShortcuts}
-                  playbackNotes={activeMidis}
-                  disabled={loading || visualizerMode === VISUALIZER_MODE.READ}
-                  className={cx(
-                    {
-                      [css({ opacity: 0.2 })]: loading
-                    },
-                    piano
-                  )}
-                  renderNoteLabel={this.renderNoteLabel}
+                  activeMidis={activeMidis}
+                  onPlay={this.onNoteStart}
+                  onStop={this.onNoteStop}
+                  min={keyboardRange.first}
+                  max={keyboardRange.last}
                 />
               </div>
             </>
