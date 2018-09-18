@@ -20,6 +20,7 @@ import { NoteWithEvent } from "@utils/typings/Player";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
+import { Store } from "@typings/store";
 
 const { keyboardShortcuts, range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -204,7 +205,7 @@ class SoundPlayer extends React.PureComponent<
   }
 }
 
-export default connect(({ settings, loadedMidi, selectedTrack }) => ({
+export default connect(({ settings, loadedMidi, selectedTrack }: Store) => ({
   settings,
   loadedMidi,
   selectedTrack

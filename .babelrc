@@ -14,7 +14,8 @@
         "@config": "./config",
         "@workers": "./workers",
         "@enums": "./enums",
-        "@reducers": "./reducers"
+        "@reducers": "./reducers",
+        "@typings": "./typings"
       }
     }]
   ]
