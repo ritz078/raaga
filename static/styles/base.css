@@ -8,5 +8,8 @@
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+body {
   overflow-x: hidden;
 }

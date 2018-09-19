@@ -19,9 +19,13 @@ import { Dispatch } from "redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
 import dynamic from "next/dynamic";
+import { PlayerControllerProps } from "@components/PlayerController";
+import { css, cx } from "emotion";
 
-// @ts-ignore
-const PlayerController = dynamic(import("@components/PlayerController"));
+const PlayerController: React.SFC<PlayerControllerProps> = dynamic(
+  // @ts-ignore
+  import("@components/PlayerController")
+);
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -162,7 +166,12 @@ class SoundPlayer extends React.PureComponent<
     return (
       <>
         <div style={{ display: "flex", flex: 1 }}>
-          <PlayerController mode={visualizerMode} />
+          <PlayerController
+            mode={visualizerMode}
+            instrument={instrument}
+            onInstrumentChange={this.changeInstrument}
+            isPlaying
+          />
           <Visualizer
             ref={this.visualizerRef}
             range={keyboardRange}
@@ -171,26 +180,28 @@ class SoundPlayer extends React.PureComponent<
         </div>
         <div style={{ height: 300 }}>
           {playerLoaded && (
-            <>
-              <Settings
-                instrument={instrument}
-                onInstrumentChange={this.changeInstrument}
-                onRecordingStart={this.player.startRecording}
-                onRecordingEnd={this.stopRecording}
+            <div
+              className={cx(
+                pianoWrapperClass,
+                css({
+                  alignItems: "center"
+                })
+              )}
+            >
+              {loading && (
+                <Loader className={loaderClass} color={colors.white.base} />
+              )}
+              <Piano
+                activeMidis={activeMidis}
+                onPlay={this.onNoteStart}
+                onStop={this.onNoteStop}
+                min={keyboardRange.first}
+                max={keyboardRange.last}
+                className={cx({
+                  [css({ opacity: 0.2 })]: loading
+                })}
               />
-              <div className={pianoWrapperClass}>
-                {loading && (
-                  <Loader className={loaderClass} color={colors.white.base} />
-                )}
-                <Piano
-                  activeMidis={activeMidis}
-                  onPlay={this.onNoteStart}
-                  onStop={this.onNoteStop}
-                  min={keyboardRange.first}
-                  max={keyboardRange.last}
-                />
-              </div>
-            </>
+            </div>
           )}
         </div>
       </>

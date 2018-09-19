@@ -3,17 +3,17 @@ import { colors, mixins } from "@anarock/pebble";
 
 export const playerController = css({
   position: "absolute",
-  width: 350,
+  width: 400,
   height: 40,
   padding: 20,
   borderRadius: 4,
   backgroundColor: "rgba(255, 255, 255, 0.15)",
   zIndex: 99,
   cursor: "move",
+  overflow: "visible",
   ...mixins.flexSpaceBetween,
   ...mixins.flexMiddleAlign,
   color: colors.white.base,
-  overflow: "hidden",
   i: {
     cursor: "pointer",
     fontSize: 14

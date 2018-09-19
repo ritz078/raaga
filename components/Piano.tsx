@@ -21,6 +21,7 @@ interface PianoProps {
   onPlay: (midi: number) => void;
   onStop: (midi: number) => void;
   activeMidis: number[];
+  className?: string;
 }
 
 export class Piano extends React.PureComponent<PianoProps> {
@@ -60,12 +61,12 @@ export class Piano extends React.PureComponent<PianoProps> {
   };
 
   render() {
-    const { activeMidis, min, max } = this.props;
+    const { activeMidis, min, max, className } = this.props;
     const range = { first: min, last: max };
     const midis = getAllMidiNumbersInRange(range);
 
     return (
-      <div className={pianoWrapperClass}>
+      <div className={cx(pianoWrapperClass, className)}>
         {midis.map(midi => {
           const { isAccidental } = MidiNumbers.getAttributes(midi);
           const naturalKeyWidth = getNaturalKeyWidthRatio(range) * 100;
