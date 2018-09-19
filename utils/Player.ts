@@ -1,6 +1,6 @@
 import Tone from "tone";
 import load from "audio-loader";
-import { create, MIDI, Note } from "midiconvert";
+import { create, MIDI, Note, Track } from "midiconvert";
 import { NoteWithEvent, Sampler } from "./typings/Player";
 import { EVENT_TYPE } from "@enums/piano";
 
@@ -64,9 +64,11 @@ export class Player {
     return _notes;
   };
 
-  public playMidi = (track, midi, cb) => {
+  public playMidi = (track: Track, midi: MIDI, cb) => {
     const notes = Player.getNotesWithStopCallback(track.notes);
     Tone.Transport.bpm.value = midi.header.bpm;
+    Tone.Transport.duration = track.duration;
+    Tone.Transport.seconds = 0;
 
     this._notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {

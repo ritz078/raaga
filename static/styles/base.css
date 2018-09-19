@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Lato");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-@import url("https://i.icomoon.io/public/temp/f4fcf912e3/UntitledProject1/style.css");
+@import url("https://i.icomoon.io/public/temp/27144aae73/UntitledProject1/style.css");
 
 * {
   margin: 0;
@@ -8,5 +8,5 @@
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
   -webkit-font-smoothing: antialiased;
-  ,overflow-x: hidden;
+  overflow-x: hidden;
 }

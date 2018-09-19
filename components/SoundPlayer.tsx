@@ -18,6 +18,10 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
+import dynamic from "next/dynamic";
+
+// @ts-ignore
+const PlayerController = dynamic(import("@components/PlayerController"));
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -155,15 +159,16 @@ class SoundPlayer extends React.PureComponent<
       visualizerMode
     } = this.state;
 
-    console.log("hello", activeMidis);
-
     return (
       <>
-        <Visualizer
-          ref={this.visualizerRef}
-          range={keyboardRange}
-          mode={visualizerMode}
-        />
+        <div style={{ display: "flex", flex: 1 }}>
+          <PlayerController mode={visualizerMode} />
+          <Visualizer
+            ref={this.visualizerRef}
+            range={keyboardRange}
+            mode={visualizerMode}
+          />
+        </div>
         <div style={{ height: 300 }}>
           {playerLoaded && (
             <>
