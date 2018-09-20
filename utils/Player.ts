@@ -1,6 +1,6 @@
 import Tone from "tone";
 import load from "audio-loader";
-import { create, MIDI, Note } from "midiconvert";
+import { create, MIDI, Note, Track } from "midiconvert";
 import { NoteWithEvent, Sampler } from "./typings/Player";
 import { EVENT_TYPE } from "@enums/piano";
 
@@ -15,6 +15,7 @@ export class Player {
   private _track: any;
   private _recordingStartTime: number = null;
   private _notesPlayer: any;
+  private isPlaying = false;
 
   constructor() {
     this.sampler = new Tone.Sampler({});
@@ -64,9 +65,11 @@ export class Player {
     return _notes;
   };
 
-  public playMidi = (track, midi, cb) => {
+  public playMidi = (track: Track, midi: MIDI, cb) => {
     const notes = Player.getNotesWithStopCallback(track.notes);
     Tone.Transport.bpm.value = midi.header.bpm;
+    Tone.Transport.duration = track.duration;
+    Tone.Transport.seconds = 0;
 
     this._notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {
@@ -82,10 +85,21 @@ export class Player {
     }, notes).start();
 
     Tone.Transport.start();
+    this.isPlaying = true;
   };
 
-  public playRecording = cb => {
-    this.playMidi(0, this._midi, cb);
+  public toggle = () => {
+    if (this.isPlaying) {
+      Tone.Transport.pause();
+      this.isPlaying = false;
+    } else {
+      Tone.Transport.start();
+      this.isPlaying = true;
+    }
+  };
+
+  public playRecording = (track: Track, cb) => {
+    this.playMidi(track, this._midi, cb);
   };
 
   public loadSound = async (instrument = "accordion") => {
@@ -123,6 +137,7 @@ export class Player {
   };
 
   public reset = () => {
+    this.isPlaying = false;
     // TODO: fix this
     this._notesPlayer && this._notesPlayer.dispose();
     this._activeNotes.clear();

@@ -29,6 +29,8 @@ export const labelClass = css({
   color: "white",
   cursor: "pointer",
   fontSize: 14,
+  marginLeft: 20,
+  verticalAlign: "text-top",
   "&:hover": {
     textDecoration: "underline"
   }

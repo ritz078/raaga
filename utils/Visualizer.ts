@@ -8,10 +8,12 @@ import {
 } from "@utils/keyboard";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import { Clock } from "@utils/Clock";
 
 const SPEED = 250;
 const RADIUS = 5;
 const HORIZONTAL_MARGIN = 2;
+const MS_PER_SECOND = 10;
 
 function now() {
   return Date.now() / 1000;
@@ -21,10 +23,9 @@ export class Visualizer {
   ctx: CanvasRenderingContext2D;
   range: Range;
   mode: VISUALIZER_MODE;
-  intervalId: number;
   notes: Partial<Note>[];
   writeIntervalId: number;
-  referenceTime: number;
+  clock = new Clock(MS_PER_SECOND);
 
   constructor(canvas, dimensions, range, mode = VISUALIZER_MODE.WRITE) {
     this.ctx = canvas.getContext("2d");
@@ -163,17 +164,16 @@ export class Visualizer {
   };
 
   private cleanup = () => {
+    this.clock.stop();
     this.clearCanvas();
-    this.intervalId && clearInterval(this.intervalId);
     this.writeIntervalId && clearInterval(this.writeIntervalId);
   };
 
   private startWriteMode = () => {
     this.cleanup();
-    this.referenceTime = now();
     this.writeIntervalId = self.setInterval(() => {
       if (this.notes.length) this.renderNotesInWriteMode();
-    }, 4);
+    }, MS_PER_SECOND);
   };
 
   public setMode = (mode: VISUALIZER_MODE) => {
@@ -186,10 +186,17 @@ export class Visualizer {
 
   public play = (track: Track) => {
     this.cleanup();
-    this.referenceTime = now();
-    this.intervalId = self.setInterval(() => {
-      this.renderNotesInReadMode(track);
-    }, 5);
+    this.clock.start(track.duration, progress => {
+      this.renderNotesInReadMode(track, progress);
+    });
+  };
+
+  public toggle = () => {
+    if (this.mode === VISUALIZER_MODE.WRITE) {
+      console.warn(`toggle() method only works in Read mode.`);
+      return;
+    }
+    this.clock.toggle();
   };
 
   public addNote = midi => {
@@ -207,8 +214,10 @@ export class Visualizer {
   private clearCanvas = () =>
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-  private renderNotesInReadMode = (track: Track) => {
+  private renderNotesInReadMode = (track: Track, progress: number) => {
     this.clearCanvas();
+
+    const timeElapsed = track.duration * progress;
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
 
@@ -220,7 +229,7 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time - (now() - this.referenceTime)) * SPEED;
+        const top = (note.time - timeElapsed) * SPEED;
         const height = note.duration * SPEED;
 
         // These are past notes which have been shown.

@@ -44,7 +44,7 @@ export const modalTop = css({
 
 export const modalBottom = css({
   flex: 1,
-  overflow: "scroll",
+  overflow: "auto",
   "& .__name__": {
     flex: 1,
     ...mixins.textEllipsis,
