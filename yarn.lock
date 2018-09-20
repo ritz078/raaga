@@ -792,10 +792,6 @@ acorn@^5.0.0:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.2.tgz#91fa871883485d06708800318404e72bfb26dcc5"
 
-adsr@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/adsr/-/adsr-1.0.1.tgz#a7bc08e5ef8a71e6364abc96fce7df1c44881cc3"
-
 ajv-keywords@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
@@ -1028,10 +1024,6 @@ audio-format@^2.0.0, audio-format@^2.3.2:
     is-plain-obj "^1.1.0"
     pick-by-alias "^1.2.0"
     sample-rate "^2.0.0"
-
-audio-loader@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/audio-loader/-/audio-loader-0.5.0.tgz#9c125d1b25c33cd9626084054d9f6b7f31ddc908"
 
 audio-loader@^1.0.3:
   version "1.0.3"
@@ -3680,16 +3672,16 @@ midi-file-parser@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/midi-file-parser/-/midi-file-parser-1.0.0.tgz#175a013f277e9d26acf94cfe6c03b13abb0a1e9e"
 
+midi-instruments@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.0.3.tgz#b2991d9ebc763f6785d242f2f67d9a3177b30f04"
+
 midiconvert@^0.4.7:
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/midiconvert/-/midiconvert-0.4.7.tgz#4744cd2e57cffdb980f3e56aa1268e56a86f20f8"
   dependencies:
     jsmidgen "^0.1.5"
     midi-file-parser "^1.0.0"
-
-midimessage@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/midimessage/-/midimessage-1.0.5.tgz#ad99f04d863a053a2563d553c5bf35070b48802c"
 
 miller-rabin@^4.0.0:
   version "4.0.1"
@@ -4024,14 +4016,6 @@ normalize-url@^1.4.0:
     prepend-http "^1.0.0"
     query-string "^4.1.0"
     sort-keys "^1.0.0"
-
-note-parser@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/note-parser/-/note-parser-1.1.0.tgz#12e9f17e51450ec994f1364a01982c22667b8e6b"
-
-note-parser@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/note-parser/-/note-parser-2.0.1.tgz#2438fd57a46894b402b3a2071798660129c8fbc1"
 
 npm-bundled@^1.0.1:
   version "1.0.5"
@@ -5213,14 +5197,6 @@ safe-regex@^1.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
-sample-player@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/sample-player/-/sample-player-0.5.5.tgz#bc35bea3449c6fa972528f022a9bbc2872195637"
-  dependencies:
-    adsr "^1.0.0"
-    midimessage "^1.0.5"
-    note-parser "^1.1.0"
-
 sample-rate@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/sample-rate/-/sample-rate-2.0.1.tgz#3f508969262b2c729a95d4d42b795a5b33610bd0"
@@ -5375,14 +5351,6 @@ sort-keys@^1.0.0:
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-1.1.2.tgz#441b6d4d346798f1b4e49e8920adfba0e543f9ad"
   dependencies:
     is-plain-obj "^1.0.0"
-
-soundfont-player@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/soundfont-player/-/soundfont-player-0.10.7.tgz#b386f70777d3dfdfe0d7159dd982a2529a1bc878"
-  dependencies:
-    audio-loader "^0.5.0"
-    note-parser "^2.0.0"
-    sample-player "^0.5.5"
 
 source-list-map@^2.0.0:
   version "2.0.0"

@@ -17,6 +17,7 @@
     "emotion-server": "^9.2.10",
     "hex-to-rgba": "^1.0.2",
     "lodash": "^4.17.11",
+    "midi-instruments": "^1.0.3",
     "midiconvert": "^0.4.7",
     "next": "6.1.1",
     "pretty-ms": "^4.0.0",
@@ -27,7 +28,6 @@
     "react-redux": "^5.0.7",
     "react-spring": "^5.8.0",
     "redux": "^4.0.0",
-    "soundfont-player": "^0.10.7",
     "tone": "^0.12.80",
     "webmidi": "^2.2.0"
   },

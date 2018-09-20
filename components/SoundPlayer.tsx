@@ -7,7 +7,6 @@ import {
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@config/piano";
-import instruments from "soundfont-player/instruments.json";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
@@ -23,6 +22,7 @@ import { Piano } from "./Piano";
 import { css, cx } from "emotion";
 import Header from "@components/Header";
 import CanvasWorker from "@workers/canvas.worker";
+import { getInstrumentById, instruments } from "midi-instruments";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -40,10 +40,10 @@ class SoundPlayer extends React.PureComponent<
   SoundPlayerState
 > {
   visualizerRef: React.RefObject<Visualizer> = React.createRef();
-  player: Player;
+  player: Player = new Player();
 
   state: SoundPlayerState = {
-    instrument: instruments[0],
+    instrument: instruments[0].value,
     loading: false,
     playerLoaded: false,
     activeMidis: [],
@@ -72,22 +72,29 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private preparePlayer = (selectedTrack: Track, cb) => {
+  private preparePlayerForNewTrack = async (selectedTrack: Track) => {
     const { notes } = selectedTrack;
+    //reset player
+    this.resetPlayer();
+
+    // change instrument if info present in midi.
+    if (selectedTrack.instrumentNumber) {
+      const instrument = getInstrumentById(selectedTrack.instrumentNumber);
+      await this.changeInstrument(instrument.value);
+    } else {
+      await this.changeInstrument();
+    }
+
+    // change piano range.
     const requiredRange = getMidiRange(notes);
     if (!isWithinRange(requiredRange, [range.first, range.last]))
-      this.setState(
-        {
-          keyboardRange: getPianoRangeAndShortcuts(requiredRange).range,
-          isPlaying: true
-        },
-        cb
-      );
-    else cb();
+      this.setState({
+        keyboardRange: getPianoRangeAndShortcuts(requiredRange).range,
+        isPlaying: true
+      });
   };
 
   componentDidMount() {
-    this.player = new Player();
     this.changeInstrument();
   }
 
@@ -131,26 +138,24 @@ class SoundPlayer extends React.PureComponent<
     this.player.stopNote(midi);
   };
 
-  componentDidUpdate(prevProps: SoundPlayerProps) {
+  async componentDidUpdate(prevProps: SoundPlayerProps) {
     const { loadedMidi, selectedTrack } = this.props;
 
     if (selectedTrack !== prevProps.selectedTrack && selectedTrack) {
-      this.resetPlayer();
+      await this.preparePlayerForNewTrack(selectedTrack);
 
-      this.preparePlayer(selectedTrack, () => {
-        this.setState(
-          {
-            visualizerMode: VISUALIZER_MODE.READ
-          },
-          () => {
-            this.visualizerRef.current.start(
-              selectedTrack,
-              this.state.keyboardRange
-            );
-            this.player.playMidi(selectedTrack, loadedMidi, this.onRecordPlay);
-          }
-        );
-      });
+      this.setState(
+        {
+          visualizerMode: VISUALIZER_MODE.READ
+        },
+        () => {
+          this.visualizerRef.current.start(
+            selectedTrack,
+            this.state.keyboardRange
+          );
+          this.player.playMidi(selectedTrack, loadedMidi, this.onRecordPlay);
+        }
+      );
     }
   }
 
