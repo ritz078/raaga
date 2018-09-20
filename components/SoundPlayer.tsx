@@ -74,9 +74,6 @@ class SoundPlayer extends React.PureComponent<
 
   private preparePlayerForNewTrack = async (selectedTrack: Track) => {
     const { notes } = selectedTrack;
-    //reset player
-    this.resetPlayer();
-
     // change instrument if info present in midi.
     if (selectedTrack.instrumentNumber) {
       const instrument = getInstrumentById(selectedTrack.instrumentNumber);
@@ -142,6 +139,7 @@ class SoundPlayer extends React.PureComponent<
     const { loadedMidi, selectedTrack } = this.props;
 
     if (selectedTrack !== prevProps.selectedTrack && selectedTrack) {
+      this.resetPlayer();
       await this.preparePlayerForNewTrack(selectedTrack);
 
       this.setState(
@@ -207,7 +205,8 @@ class SoundPlayer extends React.PureComponent<
               className={cx(
                 pianoWrapperClass,
                 css({
-                  alignItems: "center"
+                  alignItems: "center",
+                  borderTop: "5px solid #000"
                 })
               )}
             >
