@@ -1,5 +1,4 @@
 import * as React from "react";
-import CanvasWorker from "@workers/canvas.worker";
 import { Track } from "midiconvert";
 import { debounce } from "lodash";
 import {
@@ -15,11 +14,10 @@ import {
 } from "@components/styles/Visualizer.styles";
 import { css, cx } from "emotion";
 
-const canvasWorker: Worker = new CanvasWorker();
-
 interface VisualizerProps {
   range: Range;
   mode: VISUALIZER_MODE;
+  canvasWorker: Worker;
 }
 
 export default class extends React.PureComponent<VisualizerProps> {
@@ -55,7 +53,7 @@ export default class extends React.PureComponent<VisualizerProps> {
       () => {
         if (!update) return;
         // @ts-ignore
-        canvasWorker.postMessage({
+        this.props.canvasWorker.postMessage({
           message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
           dimensions: {
             width,
@@ -73,7 +71,7 @@ export default class extends React.PureComponent<VisualizerProps> {
     const offscreen = this.canvasRef.current.transferControlToOffscreen();
 
     const dimensions = this.visualizerRef.current.getBoundingClientRect();
-    canvasWorker.postMessage(
+    this.props.canvasWorker.postMessage(
       {
         canvas: offscreen,
         message: VISUALIZER_MESSAGES.INIT,
@@ -97,14 +95,14 @@ export default class extends React.PureComponent<VisualizerProps> {
       prevProps.range.first !== this.props.range.first ||
       prevProps.range.last !== this.props.range.last
     ) {
-      canvasWorker.postMessage({
+      this.props.canvasWorker.postMessage({
         message: VISUALIZER_MESSAGES.UPDATE_RANGE,
         range: this.props.range
       });
     }
 
     if (prevProps.mode !== this.props.mode) {
-      canvasWorker.postMessage({
+      this.props.canvasWorker.postMessage({
         message: VISUALIZER_MESSAGES.SET_MODE,
         mode: this.props.mode
       });
@@ -112,7 +110,7 @@ export default class extends React.PureComponent<VisualizerProps> {
   }
 
   public start = (track: Track, range: { first: number; last: number }) => {
-    canvasWorker.postMessage({
+    this.props.canvasWorker.postMessage({
       track,
       range,
       message: VISUALIZER_MESSAGES.PLAY
@@ -120,20 +118,20 @@ export default class extends React.PureComponent<VisualizerProps> {
   };
 
   public stop = () => {
-    canvasWorker.postMessage({
+    this.props.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.STOP
     });
   };
 
   public addNote = midi => {
-    canvasWorker.postMessage({
+    this.props.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.ADD_NOTE,
       midi
     });
   };
 
   public stopNote = midi => {
-    canvasWorker.postMessage({
+    this.props.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.END_NOTE,
       midi
     });

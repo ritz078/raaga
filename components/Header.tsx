@@ -12,19 +12,35 @@ import {
   trackRow,
   trackSelectionModal
 } from "@components/styles/Header.styles";
-import { Transition, animated } from "react-spring";
-import { cx } from "emotion";
+import { animated, Transition } from "react-spring";
+import { css, cx } from "emotion";
+import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import Tone from "tone";
+import { progressBar } from "@components/styles/PlayerController.styles";
 
 interface HeaderProps {
   dispatch: Dispatch;
+  mode: VISUALIZER_MODE;
+  instrument: string;
+  isPlaying: boolean;
+  onTogglePlay: () => void;
 }
+
+const playPause = css({
+  ...mixins.flexSpaceBetween,
+  width: 300,
+  ...mixins.flexMiddleAlign
+});
 
 class Header extends React.Component<HeaderProps> {
   worker: Worker;
+  progressInterval: number;
 
   state = {
     showTrackSelectionModal: false,
-    tempLoadedMidi: undefined
+    tempLoadedMidi: undefined,
+    mute: false,
+    progress: 0
   };
 
   private loadFile = e => {
@@ -45,6 +61,8 @@ class Header extends React.Component<HeaderProps> {
         tempLoadedMidi: e.data.data
       });
     };
+
+    this.reportProgress();
   }
 
   private selectTrack = (i: number) => {
@@ -64,14 +82,95 @@ class Header extends React.Component<HeaderProps> {
     });
   };
 
+  private reportProgress = () => {
+    if (this.props.mode === VISUALIZER_MODE.READ) {
+      this.progressInterval = window.setInterval(
+        () =>
+          this.setState({
+            progress: Tone.Transport.seconds / Tone.Transport.duration
+          }),
+        500
+      );
+    } else {
+      this.clearInterval();
+    }
+  };
+
+  private clearInterval = () =>
+    this.progressInterval && window.clearInterval(this.progressInterval);
+
+  componentDidUpdate(prevProps: HeaderProps) {
+    if (prevProps.mode !== this.props.mode) {
+      this.reportProgress();
+    }
+  }
+
+  componentWillMount() {
+    this.clearInterval();
+  }
+
+  private toggleMute = () => {
+    this.setState(
+      {
+        mute: !this.state.mute
+      },
+      () => {
+        Tone.Master.mute = this.state.mute;
+      }
+    );
+  };
+
   render() {
-    const { showTrackSelectionModal, tempLoadedMidi } = this.state;
+    const {
+      showTrackSelectionModal,
+      tempLoadedMidi,
+      mute,
+      progress
+    } = this.state;
+    const { isPlaying, mode } = this.props;
+
+    const className = cx({
+      "icon-play": isPlaying,
+      "icon-pause": !isPlaying
+    });
+
+    const volumeClass = cx({
+      "icon-volume": !mute,
+      "icon-volume-mute": mute
+    });
 
     return (
       <>
         <header className={headerClass}>
-          <div />
+          <div>
+            <Transition
+              native
+              from={{ opacity: 0, marginTop: -60 }}
+              enter={{ opacity: 1, marginTop: 0 }}
+              leave={{ opacity: 0, marginTop: -60, pointerEvents: "none" }}
+            >
+              {mode === VISUALIZER_MODE.READ &&
+                (styles => (
+                  <animated.div style={styles} className={playPause}>
+                    <i
+                      className={className}
+                      onClick={this.props.onTogglePlay}
+                    />
+
+                    <div className={progressBar}>
+                      <div
+                        className={"__track__"}
+                        style={{
+                          width: `${progress * 100}%`
+                        }}
+                      />
+                    </div>
+                  </animated.div>
+                ))}
+            </Transition>
+          </div>
           <div style={mixins.flexSpaceBetween}>
+            <i className={volumeClass} onClick={this.toggleMute} />
             <label htmlFor="upload-midi" style={{ display: "flex" }}>
               <i className="icon icon-upload" />
             </label>
@@ -151,4 +250,6 @@ class Header extends React.Component<HeaderProps> {
   }
 }
 
-export default connect()(Header);
+const mapStateToProps = ({ settings }) => ({ settings });
+
+export default connect(mapStateToProps)(Header);

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { SoundPlayerState } from "./typings/SoundPlayer";
-import Settings from "@components/Settings";
 import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   loaderClass,
@@ -13,21 +12,21 @@ import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { EVENT_TYPE } from "@enums/piano";
 import { NoteWithEvent } from "@utils/typings/Player";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import {
+  VISUALIZER_MESSAGES,
+  VISUALIZER_MODE
+} from "@enums/visualizerMessages";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
-import dynamic from "next/dynamic";
-import { PlayerControllerProps } from "@components/PlayerController";
 import { css, cx } from "emotion";
-
-const PlayerController: React.SFC<PlayerControllerProps> = dynamic(
-  // @ts-ignore
-  import("@components/PlayerController")
-);
+import Header from "@components/Header";
+import CanvasWorker from "@workers/canvas.worker";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
+
+const canvasWorker: Worker = new CanvasWorker();
 
 interface SoundPlayerProps {
   settings: any;
@@ -50,7 +49,8 @@ class SoundPlayer extends React.PureComponent<
     activeMidis: [],
     keyboardRange: range,
     currentTrack: undefined,
-    visualizerMode: VISUALIZER_MODE.WRITE
+    visualizerMode: VISUALIZER_MODE.WRITE,
+    isPlaying: false
   };
 
   private resetPlayer = () => {
@@ -78,7 +78,8 @@ class SoundPlayer extends React.PureComponent<
     if (!isWithinRange(requiredRange, [range.first, range.last]))
       this.setState(
         {
-          keyboardRange: getPianoRangeAndShortcuts(requiredRange).range
+          keyboardRange: getPianoRangeAndShortcuts(requiredRange).range,
+          isPlaying: true
         },
         cb
       );
@@ -115,7 +116,7 @@ class SoundPlayer extends React.PureComponent<
 
   private stopRecording = () => {
     this.player.stopRecording();
-    this.player.playRecording(this.onRecordPlay);
+    this.player.playRecording(this.props.selectedTrack, this.onRecordPlay);
   };
 
   private onNoteStart = midi => {
@@ -153,6 +154,21 @@ class SoundPlayer extends React.PureComponent<
     }
   }
 
+  private onTogglePlay = () => {
+    // toggle visualizer
+    canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.TOGGLE
+    });
+
+    // toggle sound player
+    this.player.toggle();
+
+    // toggle state for UI
+    this.setState({
+      isPlaying: !this.state.isPlaying
+    });
+  };
+
   render() {
     const {
       instrument,
@@ -160,22 +176,24 @@ class SoundPlayer extends React.PureComponent<
       activeMidis,
       playerLoaded,
       keyboardRange,
-      visualizerMode
+      visualizerMode,
+      isPlaying
     } = this.state;
 
     return (
       <>
         <div style={{ display: "flex", flex: 1 }}>
-          <PlayerController
-            mode={visualizerMode}
+          <Header
+            onTogglePlay={this.onTogglePlay}
+            isPlaying={isPlaying}
             instrument={instrument}
-            onInstrumentChange={this.changeInstrument}
-            isPlaying
+            mode={visualizerMode}
           />
           <Visualizer
             ref={this.visualizerRef}
             range={keyboardRange}
             mode={visualizerMode}
+            canvasWorker={canvasWorker}
           />
         </div>
         <div style={{ height: 300 }}>

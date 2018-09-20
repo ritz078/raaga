@@ -6,7 +6,8 @@ export enum VISUALIZER_MESSAGES {
   STOP,
   ADD_NOTE,
   END_NOTE,
-  SET_MODE
+  SET_MODE,
+  TOGGLE
 }
 
 export enum VISUALIZER_MODE {

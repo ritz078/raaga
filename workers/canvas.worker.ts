@@ -49,5 +49,7 @@ self.onmessage = e => {
     visualizer.endNote(midi);
   } else if (message === VISUALIZER_MESSAGES.SET_MODE) {
     visualizer.setMode(mode);
+  } else if (message === VISUALIZER_MESSAGES.TOGGLE) {
+    visualizer.toggle();
   }
 };

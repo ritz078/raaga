@@ -22,7 +22,7 @@ export const playerController = css({
 
 export const progressBar = css({
   flex: 1,
-  height: 3,
+  height: 6,
   borderRadius: 3,
   backgroundColor: "rgba(255, 255, 255, 0.4)",
   margin: "0 20px",

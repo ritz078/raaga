@@ -15,6 +15,7 @@ export class Player {
   private _track: any;
   private _recordingStartTime: number = null;
   private _notesPlayer: any;
+  private isPlaying = false;
 
   constructor() {
     this.sampler = new Tone.Sampler({});
@@ -84,10 +85,21 @@ export class Player {
     }, notes).start();
 
     Tone.Transport.start();
+    this.isPlaying = true;
   };
 
-  public playRecording = cb => {
-    this.playMidi(0, this._midi, cb);
+  public toggle = () => {
+    if (this.isPlaying) {
+      Tone.Transport.pause();
+      this.isPlaying = false;
+    } else {
+      Tone.Transport.start();
+      this.isPlaying = true;
+    }
+  };
+
+  public playRecording = (track: Track, cb) => {
+    this.playMidi(track, this._midi, cb);
   };
 
   public loadSound = async (instrument = "accordion") => {
@@ -125,6 +137,7 @@ export class Player {
   };
 
   public reset = () => {
+    this.isPlaying = false;
     // TODO: fix this
     this._notesPlayer && this._notesPlayer.dispose();
     this._activeNotes.clear();

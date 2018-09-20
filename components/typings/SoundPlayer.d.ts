@@ -12,4 +12,5 @@ export interface SoundPlayerState {
   };
   currentTrack: Track;
   visualizerMode: VISUALIZER_MODE;
+  isPlaying: boolean;
 }
