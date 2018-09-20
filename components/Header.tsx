@@ -17,6 +17,7 @@ import { css, cx } from "emotion";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { progressBar } from "@components/styles/PlayerController.styles";
+import { isEmpty } from "lodash";
 
 interface HeaderProps {
   dispatch: Dispatch;
@@ -182,6 +183,16 @@ class Header extends React.Component<HeaderProps> {
               id="upload-midi"
               accept=".mid"
             />
+            {!isEmpty(this.state.tempLoadedMidi) && (
+              <i
+                className="icon icon-tracks"
+                onClick={() =>
+                  this.setState({
+                    showTrackSelectionModal: true
+                  })
+                }
+              />
+            )}
             <i className="icon icon-midi" />
           </div>
         </header>
@@ -250,6 +261,8 @@ class Header extends React.Component<HeaderProps> {
   }
 }
 
-const mapStateToProps = ({ settings }) => ({ settings });
+const mapStateToProps = ({ settings }) => ({
+  settings
+});
 
 export default connect(mapStateToProps)(Header);
