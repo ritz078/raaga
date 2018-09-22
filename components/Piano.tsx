@@ -12,7 +12,7 @@ import {
   naturalKeys
 } from "@components/styles/Piano.styles";
 import { MidiNumbers } from "react-piano";
-import { pianoWrapperClass } from "@components/styles/SoundPlayer.styles";
+import { piano } from "@components/styles/SoundPlayer.styles";
 import Tone from "tone";
 
 interface PianoProps {
@@ -66,7 +66,7 @@ export class Piano extends React.PureComponent<PianoProps> {
     const midis = getAllMidiNumbersInRange(range);
 
     return (
-      <div className={cx(pianoWrapperClass, className)}>
+      <div className={cx(piano, className)}>
         {midis.map(midi => {
           const { isAccidental } = MidiNumbers.getAttributes(midi);
           const naturalKeyWidth = getNaturalKeyWidthRatio(range) * 100;

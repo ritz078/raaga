@@ -38,14 +38,14 @@ self.onmessage = e => {
     visualizer.setDimensions(dimensions);
   } else if (message === VISUALIZER_MESSAGES.UPDATE_RANGE) {
     visualizer.setRange(range);
-  } else if (message === VISUALIZER_MESSAGES.PLAY) {
+  } else if (message === VISUALIZER_MESSAGES.PLAY_TRACK) {
     visualizer.setRange(range);
     visualizer.play(track);
-  } else if (message === VISUALIZER_MESSAGES.STOP) {
+  } else if (message === VISUALIZER_MESSAGES.STOP_TRACK) {
     visualizer.cleanup();
-  } else if (message === VISUALIZER_MESSAGES.ADD_NOTE) {
+  } else if (message === VISUALIZER_MESSAGES.PLAY_NOTE) {
     visualizer.addNote(midi);
-  } else if (message === VISUALIZER_MESSAGES.END_NOTE) {
+  } else if (message === VISUALIZER_MESSAGES.STOP_NOTE) {
     visualizer.endNote(midi);
   } else if (message === VISUALIZER_MESSAGES.SET_MODE) {
     visualizer.setMode(mode);

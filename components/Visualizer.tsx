@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Track } from "midiconvert";
 import { debounce } from "lodash";
 import {
   VISUALIZER_MESSAGES,
@@ -91,16 +90,6 @@ export default class extends React.PureComponent<VisualizerProps> {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.range.first !== this.props.range.first ||
-      prevProps.range.last !== this.props.range.last
-    ) {
-      this.props.canvasWorker.postMessage({
-        message: VISUALIZER_MESSAGES.UPDATE_RANGE,
-        range: this.props.range
-      });
-    }
-
     if (prevProps.mode !== this.props.mode) {
       this.props.canvasWorker.postMessage({
         message: VISUALIZER_MESSAGES.SET_MODE,
@@ -108,34 +97,6 @@ export default class extends React.PureComponent<VisualizerProps> {
       });
     }
   }
-
-  public start = (track: Track, range: { first: number; last: number }) => {
-    this.props.canvasWorker.postMessage({
-      track,
-      range,
-      message: VISUALIZER_MESSAGES.PLAY
-    });
-  };
-
-  public stop = () => {
-    this.props.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.STOP
-    });
-  };
-
-  public addNote = midi => {
-    this.props.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.ADD_NOTE,
-      midi
-    });
-  };
-
-  public stopNote = midi => {
-    this.props.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.END_NOTE,
-      midi
-    });
-  };
 
   render() {
     const { width, height } = this.state.dimensions;

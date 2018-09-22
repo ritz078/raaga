@@ -1,77 +1,131 @@
+import {
+  VISUALIZER_MESSAGES,
+  VISUALIZER_MODE
+} from "@enums/visualizerMessages";
+import {
+  NoteWithEvent,
+  Sampler,
+  CanvasWorkerInterface
+} from "@utils/typings/Player";
 import Tone from "tone";
-import load from "audio-loader";
-import { create, MIDI, Note, Track } from "midiconvert";
-import { NoteWithEvent, Sampler } from "./typings/Player";
+import { instruments } from "midi-instruments";
+import { MIDI, Note, Track } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
+import { Range } from "@utils/typings/Visualizer";
 
-function nameToUrl(name, format: "mp3" | "ogg" = "mp3"): string {
-  return `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${name}-${format}.js`;
+function midiJsToJson(data) {
+  let begin = data.indexOf("MIDI.Soundfont.");
+  if (begin < 0) throw Error("Invalid MIDI.js Soundfont format");
+  begin = data.indexOf("=", begin) + 2;
+  const end = data.lastIndexOf(",");
+  return JSON.parse(data.slice(begin, end) + "}");
+}
+
+function getNotesWithNoteEnd(notes: Note[]) {
+  const _notes = [];
+
+  notes.forEach((note, i) => {
+    _notes.push(
+      {
+        ...note,
+        event: EVENT_TYPE.NOTE_START
+      },
+      {
+        ...note,
+        time: note.time + note.duration,
+        event: EVENT_TYPE.NOTE_STOP
+      }
+    );
+
+    if (i === notes.length - 1) {
+      _notes.push({
+        ...note,
+        time: note.time + note.duration,
+        event: EVENT_TYPE.PLAYING_COMPLETE
+      });
+    }
+  });
+
+  return _notes;
 }
 
 export class Player {
-  sampler: Sampler;
-  private _midi: MIDI;
-  private _activeNotes: Map<number, number>;
-  private _track: any;
-  private _recordingStartTime: number = null;
-  private _notesPlayer: any;
-  private isPlaying = false;
+  private range: Range;
+  private sampler: Sampler;
+  public isPlaying = false;
+  private notesPlayer: any;
+  private canvasWorker: CanvasWorkerInterface;
 
-  constructor() {
+  constructor({
+    canvasWorker,
+    range
+  }: {
+    canvasWorker: CanvasWorkerInterface;
+    range: Range;
+  }) {
+    this.range = range;
     this.sampler = new Tone.Sampler({});
     this.sampler.connect(Tone.Master);
-    this._activeNotes = new Map();
+    this.canvasWorker = canvasWorker;
   }
 
-  private getRelativeTime = () => Date.now() / 1000 - this._recordingStartTime;
-
-  public startRecording = () => {
-    this._midi = create();
-    // @ts-ignore
-    this._track = this._midi.track().patch(32);
-    this._recordingStartTime = Date.now() / 1000;
+  /**
+   * Load a soundFont and add it to Tone sampler.
+   * @param instrument
+   */
+  public loadSoundFont = async (instrument = instruments[0].value) => {
+    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
+    const response = await fetch(url);
+    const data = await response.text();
+    const audio = midiJsToJson(data);
+    Object.keys(audio).forEach(key => this.sampler.add(key, audio[key]));
   };
 
-  public stopRecording = () => {
-    this._recordingStartTime = null;
-    this._activeNotes.clear();
-  };
+  /**
+   * Takes a midi number and returns the corresponding note name.
+   * @param midi
+   */
+  private getNoteName = (midi: number) => Tone.Frequency(midi, "midi").toNote();
 
-  static getNotesWithStopCallback = (notes: Note[]): NoteWithEvent[] => {
-    const _notes = [];
+  /**
+   * Plays a single note
+   * @param midi
+   */
+  public playNote = (midi: number) => {
+    this.sampler.triggerAttack(this.getNoteName(midi));
 
-    notes.forEach((note, i) => {
-      _notes.push(
-        {
-          ...note,
-          event: EVENT_TYPE.NOTE_START
-        },
-        {
-          ...note,
-          time: note.time + note.duration,
-          event: EVENT_TYPE.NOTE_STOP
-        }
-      );
-
-      if (i === notes.length - 1) {
-        _notes.push({
-          ...note,
-          time: note.time + note.duration,
-          event: EVENT_TYPE.PLAYING_COMPLETE
-        });
-      }
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.PLAY_NOTE,
+      midi
     });
-
-    return _notes;
   };
 
-  public playMidi = (track: Track, midi: MIDI, cb) => {
-    const notes = Player.getNotesWithStopCallback(track.notes);
+  /**
+   * Stops a note that's already playing.
+   * @param midi
+   */
+  public stopNote = (midi: number) => {
+    this.sampler.triggerRelease(this.getNoteName(midi));
+
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.STOP_NOTE,
+      midi
+    });
+  };
+
+  /**
+   * Play a track in read mode
+   * @param midi
+   * @param track
+   * @param cb
+   */
+  public playTrack = (midi: MIDI, track: Track, cb) => {
+    const notes = getNotesWithNoteEnd(track.notes);
     Tone.Transport.bpm.value = midi.header.bpm;
     Tone.Transport.duration = track.duration;
     Tone.Transport.seconds = 0;
 
-    this._notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
+    this.notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {
         this.sampler.triggerAttackRelease(
           Tone.Frequency(note.midi, "midi").toNote(),
@@ -81,13 +135,41 @@ export class Player {
         );
       }
 
+      // callback for all events
       cb(note);
     }, notes).start();
 
     Tone.Transport.start();
+
+    // start playing on the visualizer
+    this.canvasWorker.postMessage({
+      track,
+      range: this.range,
+      message: VISUALIZER_MESSAGES.PLAY_TRACK
+    });
+
     this.isPlaying = true;
   };
 
+  /**
+   * Stops the track.
+   */
+  public stopTrack = () => {
+    Tone.Transport.stop();
+
+    this.notesPlayer && this.notesPlayer.dispose();
+
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.STOP_TRACK
+    });
+
+    this.isPlaying = false;
+  };
+
+  /**
+   * Toggle play/pause of track. Only works in read mode.
+   * Is no-op in write mode.
+   */
   public toggle = () => {
     if (this.isPlaying) {
       Tone.Transport.pause();
@@ -96,44 +178,28 @@ export class Player {
       Tone.Transport.start();
       this.isPlaying = true;
     }
+
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.TOGGLE
+    });
   };
 
-  public playRecording = (track: Track, cb) => {
-    this.playMidi(track, this._midi, cb);
+  public setMode = (mode: VISUALIZER_MODE) => {
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.SET_MODE,
+      mode
+    });
   };
 
-  public loadSound = async (instrument = "accordion") => {
-    const buffers = await load(nameToUrl(instrument));
-    Object.keys(buffers).forEach(key => this.sampler.add(key, buffers[key]));
+  public setRange = (range: Range) => {
+    this.range = range;
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.UPDATE_RANGE,
+      range
+    });
   };
 
-  public startNote = (midiNumber: number) => {
-    if (this._recordingStartTime) {
-      this._activeNotes.set(midiNumber, this.getRelativeTime());
-    }
-
-    this.sampler.triggerAttack(Tone.Frequency(midiNumber, "midi").toNote());
-  };
-
-  public stopNote = (midiNumber: number) => {
-    if (this._recordingStartTime) {
-      this._track.note(
-        midiNumber,
-        this._activeNotes.get(midiNumber),
-        Date.now() / 1000 -
-          this._activeNotes.get(midiNumber) -
-          this._recordingStartTime
-      );
-    }
-
-    this.sampler.triggerRelease(Tone.Frequency(midiNumber, "midi").toNote());
-  };
-
-  public reset = () => {
+  public clear = () => {
     this.isPlaying = false;
-    // TODO: fix this
-    this._notesPlayer && this._notesPlayer.dispose();
-    this._activeNotes.clear();
-    this._recordingStartTime = null;
   };
 }

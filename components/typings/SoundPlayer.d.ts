@@ -1,16 +1,22 @@
-import { Track } from "midiconvert";
+import { MIDI, Track } from "midiconvert";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import { Dispatch } from "redux";
+
+export interface SoundPlayerProps {
+  settings: any;
+  dispatch: Dispatch;
+  loadedMidi: MIDI;
+  selectedTrack: Track;
+}
 
 export interface SoundPlayerState {
   instrument: string;
   loading: boolean;
-  playerLoaded: boolean;
   activeMidis: number[];
   keyboardRange: {
     first: number;
     last: number;
   };
-  currentTrack: Track;
-  visualizerMode: VISUALIZER_MODE;
+  mode: VISUALIZER_MODE;
   isPlaying: boolean;
 }
