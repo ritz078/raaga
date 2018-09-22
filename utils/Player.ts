@@ -12,6 +12,7 @@ import { instruments } from "midi-instruments";
 import { MIDI, Note, Track } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
+import { get, set } from "idb-keyval";
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -74,10 +75,16 @@ export class Player {
    * @param instrument
    */
   public loadSoundFont = async (instrument = instruments[0].value) => {
-    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
-    const response = await fetch(url);
-    const data = await response.text();
-    const audio = midiJsToJson(data);
+    let audio;
+    try {
+      audio = await get(instrument);
+    } catch (e) {
+      const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
+      const response = await fetch(url);
+      const data = await response.text();
+      audio = midiJsToJson(data);
+      await set(instrument, audio);
+    }
     Object.keys(audio).forEach(key => this.sampler.add(key, audio[key]));
   };
 

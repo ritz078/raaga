@@ -28,7 +28,7 @@ export const accidentalKeys = css({
 });
 
 export const naturalKeys = css({
-  height: 300,
+  height: 295,
   zIndex: 0,
   border: "1px solid #4a4a4a",
   borderTopWidth: 0,
