@@ -54,5 +54,5 @@ export const labelStyle = css({
   paddingBottom: 15,
   color: colors.gray.base,
   userSelect: "none",
-  fontSize: 14
+  fontSize: 12
 });

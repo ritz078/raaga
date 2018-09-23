@@ -70,6 +70,15 @@ export class Player {
     this.canvasWorker = canvasWorker;
   }
 
+  private fetchInstrumentFromRemote = async instrument => {
+    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
+    const response = await fetch(url);
+    const data = await response.text();
+    const audio = midiJsToJson(data);
+    await set(instrument, audio);
+    return audio;
+  };
+
   /**
    * Load a soundFont and add it to Tone sampler.
    * @param instrument
@@ -78,12 +87,9 @@ export class Player {
     let audio;
     try {
       audio = await get(instrument);
+      if (!audio) audio = await this.fetchInstrumentFromRemote(instrument);
     } catch (e) {
-      const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
-      const response = await fetch(url);
-      const data = await response.text();
-      audio = midiJsToJson(data);
-      await set(instrument, audio);
+      audio = await this.fetchInstrumentFromRemote(instrument);
     }
     Object.keys(audio).forEach(key => this.sampler.add(key, audio[key]));
   };
