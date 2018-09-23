@@ -95,9 +95,11 @@ export class Piano extends React.PureComponent<PianoProps> {
               className={className}
               key={midi}
             >
-              <div className={labelStyle}>
-                {Tone.Frequency(midi, "midi").toNote()}
-              </div>
+              {!isAccidental && (
+                <div className={labelStyle}>
+                  {Tone.Frequency(midi, "midi").toNote()}
+                </div>
+              )}
             </div>
           );
         })}
