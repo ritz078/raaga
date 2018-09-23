@@ -1,23 +1,17 @@
 import * as React from "react";
 import { headerClass } from "../pages/styles/main.styles";
-import { mixins, OutsideClick } from "@anarock/pebble";
+import { mixins } from "@anarock/pebble";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { ReducersType } from "@enums/reducers";
-import prettyMs from "pretty-ms";
-import {
-  modalBottom,
-  modalTop,
-  trackRow,
-  trackSelectionModal
-} from "@components/styles/Header.styles";
 import { animated, Transition } from "react-spring";
 import { css, cx } from "emotion";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { progressBar } from "@components/styles/PlayerController.styles";
 import { isEmpty } from "lodash";
+import TrackSelectionModal from "@components/TrackSelectionModal";
 
 interface HeaderProps {
   dispatch: Dispatch;
@@ -197,65 +191,16 @@ class Header extends React.Component<HeaderProps> {
           </div>
         </header>
 
-        <Transition
-          native
-          from={{ opacity: 0, marginTop: 40 }}
-          enter={{ opacity: 1, marginTop: 0 }}
-          leave={{ opacity: 0, marginTop: 40, pointerEvents: "none" }}
-        >
-          {showTrackSelectionModal &&
-            (styles => (
-              <animated.div style={styles} className={trackSelectionModal}>
-                <OutsideClick
-                  onOutsideClick={() =>
-                    this.setState({
-                      showTrackSelectionModal: false
-                    })
-                  }
-                >
-                  <div className={modalTop}>
-                    <h2>
-                      {(tempLoadedMidi.header && tempLoadedMidi.header.name) ||
-                        "Unnamed"}
-                    </h2>
-                  </div>
-
-                  <div className={modalBottom}>
-                    {tempLoadedMidi.tracks &&
-                      tempLoadedMidi.tracks.map((track, i) => (
-                        <div
-                          onClick={() => this.selectTrack(i)}
-                          className={cx(trackRow, {
-                            __disabled__: !track.duration
-                          })}
-                          key={i}
-                          data-index={i}
-                        >
-                          <div style={{ paddingRight: 20 }}>#{i + 1}</div>
-                          <div className="__name__">
-                            {track.name || "Unnamed"}
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            {track.instrument || "N/A"}
-                          </div>
-                          <div style={{ flex: 0.5 }}>
-                            {prettyMs(track.duration * 1000)}
-                          </div>
-                          <div style={{ flex: 0.5 }}>
-                            {track.notes && track.notes.length} Notes
-                          </div>
-                          <div className="__play__">
-                            {!!track.duration && (
-                              <i className="icon icon-play" />
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </OutsideClick>
-              </animated.div>
-            ))}
-        </Transition>
+        <TrackSelectionModal
+          visible={showTrackSelectionModal}
+          midi={tempLoadedMidi}
+          onSelectTrack={this.selectTrack}
+          onClose={() =>
+            this.setState({
+              showTrackSelectionModal: false
+            })
+          }
+        />
       </>
     );
   }
