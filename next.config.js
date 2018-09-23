@@ -10,7 +10,10 @@ module.exports = withCSS(
 
       config.module.rules.unshift({
         test: /\.worker\.ts/,
-        use: { loader: "worker-loader", options: { fallback: true } }
+        use: {
+          loader: "worker-loader",
+          options: { fallback: true, inline: true }
+        }
       });
 
       return config;
