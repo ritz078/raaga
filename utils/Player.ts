@@ -91,7 +91,11 @@ export class Player {
     } catch (e) {
       audio = await this.fetchInstrumentFromRemote(instrument);
     }
-    Object.keys(audio).forEach(key => this.sampler.add(key, audio[key]));
+
+    const promises = Object.keys(audio).map(
+      key => new Promise(resolve => this.sampler.add(key, audio[key], resolve))
+    );
+    return Promise.all(promises);
   };
 
   /**
@@ -140,7 +144,6 @@ export class Player {
 
     this.notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {
-        debugger;
         this.sampler.triggerAttackRelease(
           Tone.Frequency(note.midi, "midi").toNote(),
           note.duration,
