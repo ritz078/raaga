@@ -1,5 +1,5 @@
 import { css } from "emotion";
-import { mixins } from "@anarock/pebble";
+import { colors, mixins } from "@anarock/pebble";
 
 export const trackRow = css({
   ...mixins.flexSpaceBetween,
@@ -52,5 +52,14 @@ export const modalBottom = css({
   },
   "& .__play__": {
     fontSize: 14
+  }
+});
+
+export const headerRight = css({
+  ...mixins.flexSpaceBetween,
+  svg: {
+    margin: 15,
+    cursor: "pointer",
+    fill: colors.white.base
   }
 });

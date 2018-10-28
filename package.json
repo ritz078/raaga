@@ -7,45 +7,59 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "precommit": "pretty-quick --staged",
     "format": "prettier --write '**/*.ts' '**/*.tsx'"
   },
+  "lint-staged": {
+    "./assets/*/*.svg": [
+      "imagemin-lint-staged",
+      "git add"
+    ]
+  },
   "dependencies": {
-    "@anarock/pebble": "^0.20.0",
-    "emotion": "^9.2.10",
-    "emotion-server": "^9.2.10",
+    "@anarock/pebble": "^0.26.0",
+    "emotion": "^9.2.12",
+    "emotion-server": "^9.2.12",
     "hex-to-rgba": "^1.0.2",
     "idb-keyval": "^3.1.0",
     "lodash": "^4.17.11",
     "midi-instruments": "^1.0.3",
     "midiconvert": "^0.4.7",
-    "next": "6.1.1",
+    "next": "7.0.2",
     "pretty-ms": "^4.0.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "react-draggable": "^3.0.5",
-    "react-piano": "^2.0.1",
-    "react-redux": "^5.0.7",
+    "react-piano": "^3.1.0",
+    "react-redux": "^5.1.0",
     "react-spring": "^5.8.0",
-    "redux": "^4.0.0",
+    "redux": "^4.0.1",
     "tone": "^0.12.80",
     "webmidi": "^2.2.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.116",
-    "@types/next": "^6.1.6",
+    "@babel/plugin-transform-react-constant-elements": "^7.0.0",
+    "@svgr/webpack": "^3.1.0",
+    "@types/lodash": "^4.14.117",
+    "@types/next": "^7.0.3",
     "@types/react": "^16.4.14",
     "@types/react-redux": "^6.0.9",
-    "@zeit/next-css": "^0.2.0",
-    "@zeit/next-typescript": "1.1.0",
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-typescript": "1.1.1",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^3.1.1",
-    "fork-ts-checker-webpack-plugin": "^0.4.9",
-    "husky": "^1.0.0-rc.15",
+    "fork-ts-checker-webpack-plugin": "^0.4.14",
+    "husky": "^1.1.2",
+    "imagemin-lint-staged": "^0.3.0",
+    "lint-staged": "^7.3.0",
     "prettier": "^1.14.3",
-    "pretty-quick": "^1.7.0",
+    "pretty-quick": "^1.8.0",
     "redux-devtools-extension": "^2.13.5",
     "typescript": "^3.0.3",
     "worker-loader": "^2.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged && lint-staged"
+    }
   }
 }

@@ -1,10 +1,9 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { bodyClass, playerWrapper } from "./styles/main.styles";
-import { connect } from "react-redux";
 
 // @ts-ignore
-const SoundPlayer = dynamic(import("@components/SoundPlayer"));
+const SoundPlayer = dynamic(() => import("@components/SoundPlayer"));
 
 function App() {
   return (
@@ -16,4 +15,4 @@ function App() {
   );
 }
 
-export default connect()(App);
+export default App;

@@ -140,6 +140,7 @@ export class Player {
 
     this.notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {
+        debugger;
         this.sampler.triggerAttackRelease(
           Tone.Frequency(note.midi, "midi").toNote(),
           note.duration,
