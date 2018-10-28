@@ -38,4 +38,5 @@ export interface Sampler {
 
 export interface NoteWithEvent extends Note {
   event: EVENT_TYPE;
+  id: string;
 }
