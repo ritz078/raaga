@@ -25,7 +25,7 @@ export interface Sampler {
   connect: (master: any) => void;
   triggerAttack: (note: string) => void;
   triggerRelease: (note: string) => void;
-  add: (key: string, buffer: ArrayBuffer) => void;
+  add: (key: string, buffer: ArrayBuffer, cb: () => void) => void;
   context: AudioContext;
   dispose: () => void;
   triggerAttackRelease: (

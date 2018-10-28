@@ -3,6 +3,11 @@ declare module "*.json" {
   export default value;
 }
 
+declare module "*.svg" {
+  const value: any;
+  export default value;
+}
+
 declare module "@workers/midiload.worker" {
   class WebpackWorker extends Worker {
     constructor();

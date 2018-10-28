@@ -1,17 +1,20 @@
 import * as React from "react";
 import { headerClass } from "../pages/styles/main.styles";
-import { mixins } from "@anarock/pebble";
+import { colors, mixins } from "@anarock/pebble";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { ReducersType } from "@enums/reducers";
 import { animated, Transition } from "react-spring";
-import { css, cx } from "emotion";
+import { css } from "emotion";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { progressBar } from "@components/styles/PlayerController.styles";
 import { isEmpty } from "lodash";
 import TrackSelectionModal from "@components/TrackSelectionModal";
+
+import { Icon } from "@assets/svgs";
+import { headerRight } from "@components/styles/Header.styles";
 
 interface HeaderProps {
   dispatch: Dispatch;
@@ -124,15 +127,8 @@ class Header extends React.Component<HeaderProps> {
     } = this.state;
     const { isPlaying, mode } = this.props;
 
-    const className = cx({
-      "icon-play": isPlaying,
-      "icon-pause": !isPlaying
-    });
-
-    const volumeClass = cx({
-      "icon-volume": !mute,
-      "icon-volume-mute": mute
-    });
+    const playPauseIconName = isPlaying ? "pause" : "play";
+    const volumeName = mute ? "volume-mute" : "volume";
 
     return (
       <>
@@ -147,8 +143,9 @@ class Header extends React.Component<HeaderProps> {
               {mode === VISUALIZER_MODE.READ &&
                 (styles => (
                   <animated.div style={styles} className={playPause}>
-                    <i
-                      className={className}
+                    <Icon
+                      name={playPauseIconName}
+                      color={colors.white.base}
                       onClick={this.props.onTogglePlay}
                     />
 
@@ -164,10 +161,15 @@ class Header extends React.Component<HeaderProps> {
                 ))}
             </Transition>
           </div>
-          <div style={mixins.flexSpaceBetween}>
-            <i className={volumeClass} onClick={this.toggleMute} />
+          <div className={headerRight}>
+            <Icon
+              name={volumeName}
+              color={colors.white.base}
+              onClick={this.toggleMute}
+            />
+
             <label htmlFor="upload-midi" style={{ display: "flex" }}>
-              <i className="icon icon-upload" />
+              <Icon name="upload" color={colors.white.base} />
             </label>
             <input
               onChange={this.loadFile}
@@ -178,8 +180,9 @@ class Header extends React.Component<HeaderProps> {
               accept=".mid"
             />
             {!isEmpty(this.state.tempLoadedMidi) && (
-              <i
-                className="icon icon-tracks"
+              <Icon
+                name="tracks"
+                color={colors.white.base}
                 onClick={() =>
                   this.setState({
                     showTrackSelectionModal: true
@@ -187,7 +190,7 @@ class Header extends React.Component<HeaderProps> {
                 }
               />
             )}
-            <i className="icon icon-midi" />
+            <Icon name="midi" color={colors.white.base} />
           </div>
         </header>
 

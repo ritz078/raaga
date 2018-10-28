@@ -15,7 +15,8 @@
         "@workers": "./workers",
         "@enums": "./enums",
         "@reducers": "./reducers",
-        "@typings": "./typings"
+        "@typings": "./typings",
+        "@assets":  "./assets"
       }
     }]
   ]
