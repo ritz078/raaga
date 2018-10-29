@@ -10,7 +10,6 @@ import { colors, Loader } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import { Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
-import { EVENT_TYPE } from "@enums/piano";
 import { NoteWithEvent, CanvasWorkerInterface } from "@utils/typings/Player";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { connect } from "react-redux";
@@ -89,27 +88,18 @@ class SoundPlayer extends React.PureComponent<
     this.changeInstrument();
   }
 
-  onRecordPlay = ({ midi, event }: Partial<NoteWithEvent>) => {
-    if (event === EVENT_TYPE.PLAYING_COMPLETE) {
+  onRecordPlay = (notesPlaying: NoteWithEvent[], isComplete) => {
+    if (isComplete) {
       this.player.stopTrack();
+      this.setState({
+        mode: VISUALIZER_MODE.WRITE,
+        activeMidis: []
+      });
+    } else {
+      this.setState({
+        activeMidis: notesPlaying.map(note => note.midi)
+      });
     }
-
-    // @ts-ignore
-    this.setState(state => {
-      if (event === EVENT_TYPE.NOTE_START) {
-        return { activeMidis: state.activeMidis.concat(midi) };
-      } else if (event === EVENT_TYPE.NOTE_STOP) {
-        const activeMidis = state.activeMidis.filter(_midi => _midi !== midi);
-        return {
-          activeMidis
-        };
-      } else if (event === EVENT_TYPE.PLAYING_COMPLETE) {
-        return {
-          mode: VISUALIZER_MODE.WRITE,
-          activeMidis: []
-        };
-      }
-    });
   };
 
   // private stopRecording = () => {
@@ -119,12 +109,16 @@ class SoundPlayer extends React.PureComponent<
 
   private onNoteStart = midi => {
     this.player.playNote(midi);
-    this.onRecordPlay({ midi, event: EVENT_TYPE.NOTE_START });
+    this.setState(state => ({
+      activeMidis: state.activeMidis.concat(midi)
+    }));
   };
 
   private onNoteStop = midi => {
     this.player.stopNote(midi);
-    this.onRecordPlay({ midi, event: EVENT_TYPE.NOTE_STOP });
+    this.setState(state => ({
+      activeMidis: state.activeMidis.filter(activeMidi => activeMidi !== midi)
+    }));
   };
 
   async componentDidUpdate(prevProps: SoundPlayerProps) {

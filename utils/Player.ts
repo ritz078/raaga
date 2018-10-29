@@ -3,9 +3,9 @@ import {
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
 import {
+  CanvasWorkerInterface,
   NoteWithEvent,
-  Sampler,
-  CanvasWorkerInterface
+  Sampler
 } from "@utils/typings/Player";
 import Tone from "tone";
 import { instruments } from "midi-instruments";
@@ -26,15 +26,18 @@ function getNotesWithNoteEnd(notes: Note[]) {
   const _notes = [];
 
   notes.forEach((note, i) => {
+    const id = `${note.name}_${note.time}_${note.duration}`;
     _notes.push(
       {
         ...note,
-        event: EVENT_TYPE.NOTE_START
+        event: EVENT_TYPE.NOTE_START,
+        id
       },
       {
         ...note,
         time: note.time + note.duration,
-        event: EVENT_TYPE.NOTE_STOP
+        event: EVENT_TYPE.NOTE_STOP,
+        id
       }
     );
 
@@ -42,7 +45,8 @@ function getNotesWithNoteEnd(notes: Note[]) {
       _notes.push({
         ...note,
         time: note.time + note.duration,
-        event: EVENT_TYPE.PLAYING_COMPLETE
+        event: EVENT_TYPE.PLAYING_COMPLETE,
+        id
       });
     }
   });
@@ -142,6 +146,7 @@ export class Player {
     Tone.Transport.duration = track.duration;
     Tone.Transport.seconds = 0;
 
+    let notesPlaying = [];
     this.notesPlayer = new Tone.Part((time: number, note: NoteWithEvent) => {
       if (note.event === EVENT_TYPE.NOTE_START) {
         this.sampler.triggerAttackRelease(
@@ -150,10 +155,17 @@ export class Player {
           time,
           note.velocity
         );
+        notesPlaying.push(note);
+        cb(notesPlaying);
+      } else if (
+        note.event === EVENT_TYPE.NOTE_STOP &&
+        notesPlaying.find(_note => _note.id === note.id)
+      ) {
+        notesPlaying = notesPlaying.filter(_n => _n.id !== note.id);
+        cb(notesPlaying);
+      } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
+        cb(notesPlaying, true);
       }
-
-      // callback for all events
-      cb(note);
     }, notes).start();
 
     Tone.Transport.start();
