@@ -1,0 +1,3 @@
+```shell
+yarn && yarn dev
+```
