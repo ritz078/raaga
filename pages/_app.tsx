@@ -2,21 +2,28 @@ import App, { Container } from "next/app";
 import React from "react";
 import withReduxStore from "../store";
 import { Provider } from "react-redux";
-import { Store } from "redux";
+import { Store as S } from "redux";
+import Head from "next/head";
+import { Store } from "@typings/store";
 
 interface AppProps {
-  reduxStore: Store;
+  reduxStore: S<Store>;
 }
 
 class MyApp extends App<AppProps> {
   render() {
     const { Component, pageProps, reduxStore } = this.props;
     return (
-      <Container>
-        <Provider store={reduxStore}>
-          <Component {...pageProps} />
-        </Provider>
-      </Container>
+      <>
+        <Head>
+          <title>With Emotion</title>
+        </Head>
+        <Container>
+          <Provider store={reduxStore}>
+            <Component {...pageProps} />
+          </Provider>
+        </Container>
+      </>
     );
   }
 }

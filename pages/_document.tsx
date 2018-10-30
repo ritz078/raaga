@@ -1,27 +1,11 @@
 import * as React from "react";
-import Document, { DocumentProps, Head, Main, NextScript } from "next/document";
+import Document, { Main, NextScript } from "next/document";
 import { extractCritical } from "emotion-server";
-import { injectGlobal } from "emotion";
+import Head from "next-server/head";
 
-injectGlobal`
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: "Lato", sans-serif;
-	-webkit-font-smoothing: antialiased;
-}
-
-body {
-	overflow-x: hidden;
-}
-`;
-
-interface DocProps extends DocumentProps {
+export default class MyDocument extends Document<{
   css: string;
-}
-
-export default class MyDocument extends Document<DocProps> {
+}> {
   static getInitialProps({ renderPage }) {
     const page = renderPage();
     const styles = extractCritical(page.html);
@@ -40,12 +24,12 @@ export default class MyDocument extends Document<DocProps> {
     return (
       <html>
         <Head>
-          <title>With Emotion</title>
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Lato"
           />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
+
           <script src="https://cdn.polyfill.io/v2/polyfill.js?features=AudioContext,Map,Set,Array.prototype.includes,fetch" />
         </Head>
         <body>

@@ -2,7 +2,7 @@ import * as React from "react";
 import { headerClass } from "../pages/styles/main.styles";
 import { colors, mixins } from "@anarock/pebble";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { ReducersType } from "@enums/reducers";
 import { animated, Transition } from "react-spring";
@@ -17,7 +17,7 @@ import { Icon } from "@assets/svgs";
 import { headerRight } from "@components/styles/Header.styles";
 
 interface HeaderProps {
-  dispatch: Dispatch;
+  dispatch: Dispatch<AnyAction>;
   mode: VISUALIZER_MODE;
   instrument: string;
   isPlaying: boolean;
@@ -213,4 +213,5 @@ const mapStateToProps = ({ settings }) => ({
   settings
 });
 
+// @ts-ignore
 export default connect(mapStateToProps)(Header);

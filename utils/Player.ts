@@ -229,6 +229,10 @@ export class Player {
   };
 
   public clear = () => {
+    if (this.notesPlayer) {
+      this.notesPlayer.dispose();
+      this.notesPlayer = null;
+    }
     this.isPlaying = false;
   };
 }
