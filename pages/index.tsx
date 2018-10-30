@@ -3,7 +3,9 @@ import dynamic from "next/dynamic";
 import { bodyClass, playerWrapper } from "./styles/main.styles";
 
 // @ts-ignore
-const SoundPlayer = dynamic(() => import("@components/SoundPlayer"));
+const SoundPlayer = dynamic(() => import("@components/SoundPlayer"), {
+  ssr: false
+});
 
 function App() {
   return (
