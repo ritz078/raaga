@@ -28,13 +28,20 @@ interface IconProps extends React.SVGProps<React.ReactSVGElement> {
 
 const Icon: React.SFC<IconProps> = ({
   name,
-  size = 24,
+  size = 20,
   color = colors.white.base,
   ...props
 }) => {
   const IconComp = mapping[name];
+  const scale = size / 24;
   // @ts-ignore
-  return <IconComp height={size} width={size} fill={color} {...props} />;
+  return (
+    <IconComp
+      style={{ transform: `scale(${scale})` }}
+      fill={color}
+      {...props}
+    />
+  );
 };
 
 export { Icon };

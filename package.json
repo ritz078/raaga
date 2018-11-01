@@ -41,7 +41,7 @@
     "@svgr/webpack": "^3.1.0",
     "@types/lodash": "^4.14.117",
     "@types/next": "^7.0.3",
-    "@types/react": "^16.4.14",
+    "@types/react": "^16.4.18",
     "@types/react-redux": "^6.0.9",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-typescript": "1.1.1",
@@ -50,11 +50,11 @@
     "fork-ts-checker-webpack-plugin": "^0.4.14",
     "husky": "^1.1.2",
     "imagemin-lint-staged": "^0.3.0",
-    "lint-staged": "^8.0.3",
+    "lint-staged": "^8.0.4",
     "prettier": "^1.14.3",
     "pretty-quick": "^1.8.0",
     "redux-devtools-extension": "^2.13.5",
-    "typescript": "^3.1.4",
+    "typescript": "^3.1.5",
     "worker-loader": "^2.0.0"
   },
   "husky": {

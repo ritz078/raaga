@@ -55,6 +55,27 @@ export const modalBottom = css({
   }
 });
 
+export const headerClass = css({
+  height: 80,
+  position: "absolute",
+  width: "100%",
+  background: `linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%)`,
+  zIndex: 9,
+  ...mixins.flexSpaceBetween,
+  alignItems: "center",
+  padding: "0 30px",
+  i: {
+    cursor: "pointer",
+    padding: "28px 20px",
+    color: "#e7e7e7",
+    fontSize: 20,
+    transition: "all 200ms",
+    "&:hover": {
+      color: colors.white.base
+    }
+  }
+});
+
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
   svg: {
@@ -62,4 +83,13 @@ export const headerRight = css({
     cursor: "pointer",
     fill: colors.white.base
   }
+});
+
+export const playPause = css({
+  ...mixins.flexSpaceBetween,
+  width: 300,
+  ...mixins.flexMiddleAlign,
+  padding: "10px 20px",
+  borderRadius: 4,
+  backgroundColor: "rgba(37, 37, 37, 0.83)"
 });

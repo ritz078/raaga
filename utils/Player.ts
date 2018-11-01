@@ -26,7 +26,7 @@ function getNotesWithNoteEnd(notes: Note[]) {
   const _notes = [];
 
   notes.forEach((note, i) => {
-    const id = `${note.name}_${note.time}_${note.duration}`;
+    const id = Symbol(note.name);
     _notes.push(
       {
         ...note,

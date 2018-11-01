@@ -1,44 +1,31 @@
 import * as React from "react";
-import { headerClass } from "../pages/styles/main.styles";
-import { colors, mixins } from "@anarock/pebble";
+import { colors } from "@anarock/pebble";
 import { connect } from "react-redux";
-import { AnyAction, Dispatch } from "redux";
 import MidiLoadWorker from "@workers/midiload.worker";
 import { ReducersType } from "@enums/reducers";
 import { animated, Transition } from "react-spring";
-import { css } from "emotion";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import { progressBar } from "@components/styles/PlayerController.styles";
+import ProgressBar from "./ProgressBar";
 import { isEmpty } from "lodash";
 import TrackSelectionModal from "@components/TrackSelectionModal";
 
 import { Icon } from "@assets/svgs";
-import { headerRight } from "@components/styles/Header.styles";
+import {
+  headerRight,
+  headerClass,
+  playPause
+} from "@components/styles/Header.styles";
+import ModeToggle from "@components/ModeToggle";
+import { HeaderProps, HeaderState } from "./typings/Header";
 
-interface HeaderProps {
-  dispatch: Dispatch<AnyAction>;
-  mode: VISUALIZER_MODE;
-  instrument: string;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-}
-
-const playPause = css({
-  ...mixins.flexSpaceBetween,
-  width: 300,
-  ...mixins.flexMiddleAlign
-});
-
-class Header extends React.Component<HeaderProps> {
+class Header extends React.Component<HeaderProps, HeaderState> {
   worker: Worker;
-  progressInterval: number;
 
   state = {
     showTrackSelectionModal: false,
     tempLoadedMidi: undefined,
-    mute: false,
-    progress: 0
+    mute: false
   };
 
   private loadFile = e => {
@@ -59,8 +46,6 @@ class Header extends React.Component<HeaderProps> {
         tempLoadedMidi: e.data.data
       });
     };
-
-    this.reportProgress();
   }
 
   private selectTrack = (i: number) => {
@@ -80,33 +65,6 @@ class Header extends React.Component<HeaderProps> {
     });
   };
 
-  private reportProgress = () => {
-    if (this.props.mode === VISUALIZER_MODE.READ) {
-      this.progressInterval = window.setInterval(
-        () =>
-          this.setState({
-            progress: Tone.Transport.seconds / Tone.Transport.duration
-          }),
-        500
-      );
-    } else {
-      this.clearInterval();
-    }
-  };
-
-  private clearInterval = () =>
-    this.progressInterval && window.clearInterval(this.progressInterval);
-
-  componentDidUpdate(prevProps: HeaderProps) {
-    if (prevProps.mode !== this.props.mode) {
-      this.reportProgress();
-    }
-  }
-
-  componentWillMount() {
-    this.clearInterval();
-  }
-
   private toggleMute = () => {
     this.setState(
       {
@@ -118,14 +76,18 @@ class Header extends React.Component<HeaderProps> {
     );
   };
 
+  toggleMode = (mode: VISUALIZER_MODE) =>
+    this.props.dispatch({
+      type: ReducersType.CHANGE_SETTINGS,
+      payload: {
+        mode
+      }
+    });
+
   render() {
-    const {
-      showTrackSelectionModal,
-      tempLoadedMidi,
-      mute,
-      progress
-    } = this.state;
-    const { isPlaying, mode } = this.props;
+    const { showTrackSelectionModal, tempLoadedMidi, mute } = this.state;
+    const { isPlaying, settings } = this.props;
+    const { mode } = settings;
 
     const playPauseIconName = isPlaying ? "pause" : "play";
     const volumeName = mute ? "volume-mute" : "volume";
@@ -133,12 +95,14 @@ class Header extends React.Component<HeaderProps> {
     return (
       <>
         <header className={headerClass}>
-          <div>
+          <ModeToggle mode={mode} onToggle={this.toggleMode} />
+
+          <>
             <Transition
               native
-              from={{ opacity: 0, marginTop: -60 }}
-              enter={{ opacity: 1, marginTop: 0 }}
-              leave={{ opacity: 0, marginTop: -60, pointerEvents: "none" }}
+              from={{ opacity: 0 }}
+              enter={{ opacity: 1 }}
+              leave={{ opacity: 0, pointerEvents: "none" }}
             >
               {mode === VISUALIZER_MODE.READ &&
                 (styles => (
@@ -149,18 +113,12 @@ class Header extends React.Component<HeaderProps> {
                       onClick={this.props.onTogglePlay}
                     />
 
-                    <div className={progressBar}>
-                      <div
-                        className={"__track__"}
-                        style={{
-                          width: `${progress * 100}%`
-                        }}
-                      />
-                    </div>
+                    <ProgressBar />
                   </animated.div>
                 ))}
             </Transition>
-          </div>
+          </>
+
           <div className={headerRight}>
             <Icon
               name={volumeName}

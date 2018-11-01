@@ -1,7 +1,16 @@
 import * as React from "react";
-import Document, { Main, NextScript } from "next/document";
+import Document, { Main, NextScript, Head } from "next/document";
 import { extractCritical } from "emotion-server";
-import Head from "next-server/head";
+import { injectGlobal } from "emotion";
+
+injectGlobal`
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: "Lato";
+}
+`;
 
 export default class MyDocument extends Document<{
   css: string;

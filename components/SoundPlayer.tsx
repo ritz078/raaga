@@ -63,8 +63,8 @@ class SoundPlayer extends React.PureComponent<
 
     // change instrument if info present in midi.
     if (selectedTrack.instrumentNumber) {
-      const instrument = getInstrumentById(selectedTrack.instrumentNumber);
-      await this.changeInstrument(instrument.value);
+      const { value } = getInstrumentById(selectedTrack.instrumentNumber);
+      await this.changeInstrument(value);
     } else {
       await this.changeInstrument();
     }
@@ -92,7 +92,6 @@ class SoundPlayer extends React.PureComponent<
     if (isComplete) {
       this.player.stopTrack();
       this.setState({
-        mode: VISUALIZER_MODE.WRITE,
         activeMidis: []
       });
     } else {
