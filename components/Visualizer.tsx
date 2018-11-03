@@ -75,7 +75,8 @@ export default class extends React.PureComponent<VisualizerProps> {
         canvas: offscreen,
         message: VISUALIZER_MESSAGES.INIT,
         dimensions,
-        range: this.props.range
+        range: this.props.range,
+        mode: this.props.mode
       },
       [offscreen]
     );

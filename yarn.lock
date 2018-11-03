@@ -2,12 +2,10 @@
 # yarn lockfile v1
 
 
-"@anarock/pebble@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@anarock/pebble/-/pebble-0.26.0.tgz#3d9daae713dfbdacfbbf4b7aed0b2eea84cfa6fc"
+"@anarock/pebble@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@anarock/pebble/-/pebble-0.27.0.tgz#70cd7de974b9b3f6f607958a9f358a402e9e14e5"
   dependencies:
-    "@types/react" "^16.4.18"
-    "@types/rheostat" "^2.1.3"
     date-fns "^1.29.0"
     emotion "^9.2.12"
     is-in-browser "^1.1.3"
@@ -874,18 +872,12 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.4.14", "@types/react@^16.4.18":
+"@types/react@^16.4.18":
   version "16.4.18"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.18.tgz#2e28a2e7f92d3fa7d6a65f2b73275c3e3138a13d"
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
-
-"@types/rheostat@^2.1.3":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@types/rheostat/-/rheostat-2.1.4.tgz#2ca58cbf40b7e43a3688b4342f8b268ebfa4bc1a"
-  dependencies:
-    "@types/react" "*"
 
 "@types/tapable@*":
   version "1.0.4"
@@ -3625,9 +3617,9 @@ https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
 
-husky@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-1.1.2.tgz#574c2bb16958db8a8120b63306efaff110525c23"
+husky@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-1.1.3.tgz#3ccfdb4d7332896bf7cd0e618c6fb8be09d9de4b"
   dependencies:
     cosmiconfig "^5.0.6"
     execa "^0.9.0"
@@ -4319,9 +4311,9 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lint-staged@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-8.0.3.tgz#977a43d66914e2242d3c3c0b41bc10737622c61a"
+lint-staged@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-8.0.4.tgz#d3c909fcf7897152cdce2d6e42500cd9b5b41a0d"
   dependencies:
     chalk "^2.3.1"
     commander "^2.14.1"
@@ -4345,7 +4337,7 @@ lint-staged@^8.0.3:
     path-is-inside "^1.0.2"
     pify "^3.0.0"
     please-upgrade-node "^3.0.2"
-    staged-git-files "1.1.1"
+    staged-git-files "1.1.2"
     string-argv "^0.0.2"
     stringify-object "^3.2.2"
 
@@ -5861,6 +5853,10 @@ react-popper@^1.0.2:
     typed-styles "^0.0.5"
     warning "^3.0.0"
 
+react-progress-arc@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-progress-arc/-/react-progress-arc-2.0.0.tgz#b781caa63adb0a4686a9cdce210247bcf3de5eaa"
+
 react-redux@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.1.0.tgz#948b1e2686473d1999092bcfb32d0dc43d33f667"
@@ -5873,11 +5869,17 @@ react-redux@^5.1.0:
     react-is "^16.6.0"
     react-lifecycles-compat "^3.0.0"
 
-react-spring@^5.8.0, react-spring@^5.9.2:
+react-spring@^5.9.2:
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-5.9.2.tgz#4c4e048ffce24755eaa60acd2f3fe4a3d686ef16"
   dependencies:
     "@babel/runtime" "^7.0.0"
+
+react-spring@^6.1.6:
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-6.1.6.tgz#032671c051c0ec90408fcb8c8e7dc7934dd2e7fc"
+  dependencies:
+    "@babel/runtime" "^7.1.2"
 
 react@^16.5.2:
   version "16.5.2"
@@ -6592,9 +6594,9 @@ stackframe@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
 
-staged-git-files@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-1.1.1.tgz#37c2218ef0d6d26178b1310719309a16a59f8f7b"
+staged-git-files@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-1.1.2.tgz#4326d33886dc9ecfa29a6193bf511ba90a46454b"
 
 stat-mode@^0.2.0:
   version "0.2.2"
@@ -7070,9 +7072,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.4.tgz#c74ef7b3c2da65beff548b903022cb8c3cd997ed"
+typescript@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.6.tgz#b6543a83cfc8c2befb3f4c8fba6896f5b0c9be68"
 
 ua-parser-js@^0.7.18:
   version "0.7.18"

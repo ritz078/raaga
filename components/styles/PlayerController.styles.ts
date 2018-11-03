@@ -1,23 +1,25 @@
 import { css } from "emotion";
 import { colors, mixins } from "@anarock/pebble";
 
-export const playerController = css({
+export const playerWrapper = css({
   position: "absolute",
-  width: 400,
-  height: 40,
-  padding: 20,
-  borderRadius: 4,
-  backgroundColor: "rgba(255, 255, 255, 0.15)",
-  zIndex: 99,
-  cursor: "move",
-  overflow: "visible",
+  bottom: 300,
+  top: 0,
+  left: 0,
+  right: 0,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 8
+});
+
+export const playerController = css({
   ...mixins.flexSpaceBetween,
+  width: 300,
   ...mixins.flexMiddleAlign,
-  color: colors.white.base,
-  i: {
-    cursor: "pointer",
-    fontSize: 14
-  }
+  padding: "10px 20px",
+  borderRadius: 4,
+  backgroundColor: "rgba(37, 37, 37, 0.83)"
 });
 
 export const progressBar = css({
@@ -31,5 +33,32 @@ export const progressBar = css({
     backgroundColor: colors.yellow.base,
     height: "inherit",
     borderRadius: 3
+  }
+});
+
+export const loadButton = css({
+  color: colors.gray.darker,
+  backgroundColor: colors.white.base,
+  padding: "12px 20px 12px 16px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: 4,
+  fontSize: 14,
+  cursor: "pointer",
+  userSelect: "none",
+  marginTop: 50,
+  maxWidth: 200
+});
+
+export const loadFileWrapper = css({
+  color: colors.white.base,
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  textAlign: "center",
+  h3: {
+    lineHeight: "35px",
+    fontWeight: "normal"
   }
 });

@@ -8,10 +8,9 @@ import {
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@config/piano";
-import { Track } from "midiconvert";
+import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { NoteWithEvent, CanvasWorkerInterface } from "@utils/typings/Player";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { connect } from "react-redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
@@ -19,6 +18,10 @@ import { css, cx } from "emotion";
 import Header from "@components/Header";
 import CanvasWorker from "@workers/canvas.worker";
 import { getInstrumentById, instruments } from "midi-instruments";
+import PlayerController from "@components/PlayerController";
+import { ReducersType } from "@enums/reducers";
+import { Transition } from "react-spring";
+import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -38,7 +41,6 @@ class SoundPlayer extends React.PureComponent<
     loading: false,
     activeMidis: [],
     keyboardRange: range,
-    mode: VISUALIZER_MODE.WRITE,
     isPlaying: false
   };
 
@@ -58,17 +60,7 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private preparePlayerForNewTrack = async (selectedTrack: Track) => {
-    const { notes } = selectedTrack;
-
-    // change instrument if info present in midi.
-    if (selectedTrack.instrumentNumber) {
-      const instrument = getInstrumentById(selectedTrack.instrumentNumber);
-      await this.changeInstrument(instrument.value);
-    } else {
-      await this.changeInstrument();
-    }
-
+  private setRange = notes => {
     // change piano range.
     const requiredRange = getMidiRange(notes);
     if (!isWithinRange(requiredRange, [range.first, range.last])) {
@@ -84,6 +76,22 @@ class SoundPlayer extends React.PureComponent<
     }
   };
 
+  private preparePlayerForNewTrack = async (selectedTrack: Track) => {
+    const { notes } = selectedTrack;
+    this.setRange(notes);
+
+    // change instrument if info present in midi.
+    if (selectedTrack.instrumentNumber) {
+      const { value } = getInstrumentById(selectedTrack.instrumentNumber);
+      if (value === this.state.instrument) return;
+
+      await this.changeInstrument(value);
+    } else {
+      if (this.state.instrument === instruments[0].value) return;
+      await this.changeInstrument();
+    }
+  };
+
   componentDidMount() {
     this.changeInstrument();
   }
@@ -92,7 +100,6 @@ class SoundPlayer extends React.PureComponent<
     if (isComplete) {
       this.player.stopTrack();
       this.setState({
-        mode: VISUALIZER_MODE.WRITE,
         activeMidis: []
       });
     } else {
@@ -121,24 +128,6 @@ class SoundPlayer extends React.PureComponent<
     }));
   };
 
-  async componentDidUpdate(prevProps: SoundPlayerProps) {
-    const { loadedMidi, selectedTrack } = this.props;
-
-    if (selectedTrack !== prevProps.selectedTrack && selectedTrack) {
-      this.resetPlayer();
-      await this.preparePlayerForNewTrack(selectedTrack);
-
-      this.setState(
-        {
-          mode: VISUALIZER_MODE.READ
-        },
-        () => {
-          this.player.playTrack(loadedMidi, selectedTrack, this.onRecordPlay);
-        }
-      );
-    }
-  }
-
   private onTogglePlay = () => {
     this.player.toggle();
 
@@ -147,15 +136,41 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
+  private selectTrack = (midi: MIDI, i: number) => {
+    const track = midi.tracks[i];
+
+    this.props.dispatch({
+      type: ReducersType.LOADED_MIDI,
+      payload: midi
+    });
+    this.props.dispatch({
+      type: ReducersType.SET_SELECTED_TRACK,
+      payload: track
+    });
+
+    this.resetPlayer();
+    this.preparePlayerForNewTrack(track);
+  };
+
+  private startPlayingTrack = async (track = this.props.selectedTrack) => {
+    // in case the sound-fonts are not yet loaded.
+    await this.preparePlayerForNewTrack(track);
+
+    this.player.playTrack(this.props.loadedMidi, track, this.onRecordPlay);
+  };
+
   render() {
     const {
       instrument,
       loading,
       activeMidis,
       keyboardRange,
-      mode,
       isPlaying
     } = this.state;
+
+    const {
+      settings: { mode }
+    } = this.props;
 
     return (
       <>
@@ -166,6 +181,28 @@ class SoundPlayer extends React.PureComponent<
             instrument={instrument}
             mode={mode}
           />
+          <Transition
+            native
+            items={mode === VISUALIZER_MODE.READ}
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0, pointerEvents: "none" }}
+          >
+            {show =>
+              show &&
+              (styles => (
+                <PlayerController
+                  style={styles}
+                  onTogglePlay={this.onTogglePlay}
+                  isPlaying={isPlaying}
+                  midi={this.props.loadedMidi}
+                  onTrackSelect={this.selectTrack}
+                  onComplete={this.startPlayingTrack}
+                />
+              ))
+            }
+          </Transition>
+
           <Visualizer
             range={keyboardRange}
             mode={mode}

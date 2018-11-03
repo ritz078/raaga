@@ -1,157 +1,143 @@
-import * as React from "react";
-import { cx } from "emotion";
-import Tone from "tone";
-import Draggable from "react-draggable";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import {
-  playerController,
-  progressBar
-} from "@components/styles/PlayerController.styles";
-import { labelClass, popperClass } from "@components/styles/Settings.styles";
-import { Popper, Option, OptionGroupRadio, utils } from "@anarock/pebble";
-
 // @ts-ignore
-import instruments from "soundfont-player/instruments.json";
+import React, { memo, useState, useEffect } from "react";
+import { MIDI } from "midiconvert";
+import { animated, Transition } from "react-spring";
+import { Icon } from "@assets/svgs";
+import { colors } from "@anarock/pebble";
+import ProgressBar from "@components/ProgressBar";
+import {
+  loadButton,
+  loadFileWrapper,
+  playerController,
+  playerWrapper
+} from "@components/styles/PlayerController.styles";
+import { isEmpty } from "lodash";
+import TrackSelectionModal from "@components/TrackSelectionModal";
+import MidiLoadWorker from "@workers/midiload.worker";
+import ProgressCircle from "@components/ProgressCircle";
+import Draggable from "react-draggable";
 
-export interface PlayerControllerProps {
+interface PlayerControllerProps {
+  midi: MIDI;
   isPlaying: boolean;
-  mode: VISUALIZER_MODE;
-  instrument: string;
-  onInstrumentChange: (id: string) => void;
+  onTogglePlay: () => void;
+  onTrackSelect: (midi: MIDI, i: number) => void;
+  onComplete: () => void;
+  style: {};
 }
 
-interface PlayerControllerState {
-  progress: number;
-  mute: boolean;
-}
+let worker: Worker;
 
-export default class extends React.PureComponent<
-  PlayerControllerProps,
-  PlayerControllerState
-> {
-  progressInterval: number;
+const fileRef: React.RefObject<HTMLInputElement> = React.createRef();
 
-  state = {
-    mute: false,
-    progress: 0
-  };
+const PlayerController: React.SFC<PlayerControllerProps> = ({
+  midi,
+  isPlaying,
+  onTogglePlay,
+  onTrackSelect,
+  onComplete,
+  style = {}
+}) => {
+  const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
+  const [loadedMidi, setLoadedMidi] = useState(midi);
+  const [showCountdown, toggleCountdown] = useState(false);
 
-  private clean = (str: string) => utils.capitalize(str.replace(/_/g, " "));
+  useEffect(() => {
+    if (!worker) {
+      worker = new MidiLoadWorker();
+      worker.onmessage = e => {
+        if (e.data.error) {
+          alert(e.data.error);
+          return;
+        }
 
-  private reportProgress = () => {
-    if (this.props.mode === VISUALIZER_MODE.READ) {
-      this.progressInterval = window.setInterval(
-        () =>
-          this.setState({
-            progress: Tone.Transport.seconds / Tone.Transport.duration
-          }),
-        500
-      );
-    } else {
-      this.clearInterval();
+        setLoadedMidi(e.data.data);
+        toggleTrackSelectionModal(true);
+      };
     }
-  };
+  });
 
-  private clearInterval = () =>
-    this.progressInterval && window.clearInterval(this.progressInterval);
-
-  componentDidUpdate(prevProps: PlayerControllerProps) {
-    if (prevProps.mode !== this.props.mode) {
-      this.reportProgress();
-    }
+  function loadFile(e) {
+    const file = e.target.files[0];
+    worker.postMessage(file);
+    fileRef.current.value = "";
   }
 
-  componentWillMount() {
-    this.clearInterval();
-  }
+  return (
+    <animated.div style={style} className={playerWrapper}>
+      {!isEmpty(midi) && (
+        <Transition
+          native
+          items={!showCountdown}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0, pointerEvents: "none" }}
+        >
+          {show =>
+            show &&
+            (styles => (
+              <Draggable bounds="parent">
+                <animated.div style={styles} className={playerController}>
+                  <Icon
+                    name={isPlaying ? "pause" : "play"}
+                    color={colors.white.base}
+                    onClick={onTogglePlay}
+                  />
 
-  private toggleMute = () => {
-    this.setState(
-      {
-        mute: !this.state.mute
-      },
-      () => {
-        Tone.Master.mute = this.state.mute;
-      }
-    );
-  };
+                  <ProgressBar />
+                </animated.div>
+              </Draggable>
+            ))
+          }
+        </Transition>
+      )}
 
-  render() {
-    const {
-      isPlaying,
-      instrument = instruments[0],
-      onInstrumentChange
-    } = this.props;
-    const { mute, progress } = this.state;
-
-    const className = cx({
-      "icon-play": isPlaying,
-      "icon-pause": !isPlaying
-    });
-
-    const volumeClass = cx({
-      "icon-volume": !mute,
-      "icon-volume-mute": mute
-    });
-
-    return (
-      <Draggable bounds="parent">
-        <div className={playerController}>
-          <i className={className} />
-
-          <div className={progressBar}>
-            <div
-              className={"__track__"}
-              style={{
-                width: `${progress * 100}%`
-              }}
+      {isEmpty(midi) &&
+        !showCountdown && (
+          <div className={loadFileWrapper}>
+            <h3>
+              You need to load a MIDI file and then <br /> select a track you
+              want to play.
+            </h3>
+            <label htmlFor="upload-midi" style={{ display: "flex" }}>
+              <div className={loadButton}>Load a MIDI file</div>
+            </label>
+            <input
+              onChange={loadFile}
+              hidden
+              type="file"
+              name="photo"
+              id="upload-midi"
+              accept=".mid"
+              ref={fileRef}
             />
           </div>
+        )}
 
-          <i className={volumeClass} onClick={this.toggleMute} />
+      <TrackSelectionModal
+        visible={showTrackSelectionModal}
+        midi={loadedMidi}
+        onSelectTrack={i => {
+          toggleTrackSelectionModal(false);
+          toggleCountdown(true);
+          onTrackSelect(loadedMidi, i);
+        }}
+        onClose={() => {
+          toggleTrackSelectionModal(false);
+        }}
+      />
 
-          <i
-            className="icon-upload"
-            style={{
-              fontSize: 16,
-              marginLeft: 20
-            }}
-          />
+      {showCountdown && (
+        <ProgressCircle
+          onComplete={() => {
+            toggleCountdown(false);
+            toggleTrackSelectionModal(false);
+            onComplete();
+          }}
+        />
+      )}
+    </animated.div>
+  );
+};
 
-          <i
-            className="icon-midi"
-            style={{
-              fontSize: 16,
-              marginLeft: 20
-            }}
-          />
-
-          <Popper
-            label={({ toggle }) => (
-              <span className={labelClass} onClick={toggle}>
-                {this.clean(instrument)} &nbsp;
-                <span style={{ fontSize: 8 }}>▶</span>
-              </span>
-            )}
-            placement="auto"
-            popperClassName={popperClass}
-          >
-            {({ toggle }) => (
-              <OptionGroupRadio
-                onChange={id => {
-                  id && onInstrumentChange(id as string);
-                  toggle();
-                }}
-                selected={instrument}
-              >
-                {instruments.map(name => (
-                  <Option key={name} value={name} label={this.clean(name)} />
-                ))}
-              </OptionGroupRadio>
-            )}
-          </Popper>
-        </div>
-      </Draggable>
-    );
-  }
-}
+export default memo(PlayerController);

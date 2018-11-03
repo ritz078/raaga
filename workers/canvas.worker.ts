@@ -33,7 +33,7 @@ self.onmessage = e => {
 
   if (message === VISUALIZER_MESSAGES.INIT) {
     clearInterval(intervalId);
-    visualizer = new Visualizer(canvas, dimensions, range);
+    visualizer = new Visualizer(canvas, dimensions, range, mode);
   } else if (message === VISUALIZER_MESSAGES.UPDATE_DIMENSIONS) {
     visualizer.setDimensions(dimensions);
   } else if (message === VISUALIZER_MESSAGES.UPDATE_RANGE) {
