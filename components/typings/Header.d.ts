@@ -14,7 +14,5 @@ export interface HeaderProps {
 }
 
 export interface HeaderState {
-  showTrackSelectionModal: boolean;
-  tempLoadedMidi: MIDI;
   mute: boolean;
 }

@@ -84,12 +84,3 @@ export const headerRight = css({
     fill: colors.white.base
   }
 });
-
-export const playPause = css({
-  ...mixins.flexSpaceBetween,
-  width: 300,
-  ...mixins.flexMiddleAlign,
-  padding: "10px 20px",
-  borderRadius: 4,
-  backgroundColor: "rgba(37, 37, 37, 0.83)"
-});

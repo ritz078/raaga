@@ -24,17 +24,23 @@ const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
   onSelectTrack,
   onClose
 }) => {
+  console.log(visible);
   return (
     <Transition
       native
+      items={visible}
       from={{ opacity: 0, marginTop: 40 }}
       enter={{ opacity: 1, marginTop: 0 }}
       leave={{ opacity: 0, marginTop: 40, pointerEvents: "none" }}
     >
-      {visible &&
+      {show =>
+        show &&
         (styles => (
-          <animated.div style={styles} className={trackSelectionModal}>
-            <OutsideClick onOutsideClick={onClose}>
+          <animated.div style={styles}>
+            <OutsideClick
+              onOutsideClick={onClose}
+              className={trackSelectionModal}
+            >
               <div className={modalTop}>
                 <h2>{(midi.header && midi.header.name) || "Unnamed"}</h2>
               </div>
@@ -67,7 +73,8 @@ const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
               </div>
             </OutsideClick>
           </animated.div>
-        ))}
+        ))
+      }
     </Transition>
   );
 };

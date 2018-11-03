@@ -3,7 +3,7 @@ import React, { SFC, useEffect, useState, memo } from "react";
 import { progressBar } from "./styles/PlayerController.styles";
 import Tone from "tone";
 
-const ProgressBar: SFC<{}> = () => {
+const ProgressBar: SFC = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const ProgressBar: SFC<{}> = () => {
       setProgress(Tone.Transport.seconds / Tone.Transport.duration);
     });
 
-    return () => {
+    return function cleanup() {
       clearInterval(id);
     };
   });

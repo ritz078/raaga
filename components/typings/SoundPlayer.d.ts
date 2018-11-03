@@ -1,9 +1,9 @@
 import { MIDI, Track } from "midiconvert";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { Dispatch } from "redux";
+import { Settings } from "@reducers/settings";
 
 export interface SoundPlayerProps {
-  settings: any;
+  settings: Settings;
   dispatch: Dispatch;
   loadedMidi: MIDI;
   selectedTrack: Track;
@@ -17,6 +17,5 @@ export interface SoundPlayerState {
     first: number;
     last: number;
   };
-  mode: VISUALIZER_MODE;
   isPlaying: boolean;
 }
