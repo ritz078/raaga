@@ -181,14 +181,27 @@ class SoundPlayer extends React.PureComponent<
             instrument={instrument}
             mode={mode}
           />
-
-          <PlayerController
-            onTogglePlay={this.onTogglePlay}
-            isPlaying={isPlaying}
-            midi={this.props.loadedMidi}
-            onTrackSelect={this.selectTrack}
-            onComplete={this.startPlayingTrack}
-          />
+          <Transition
+            native
+            items={mode === VISUALIZER_MODE.READ}
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0, pointerEvents: "none" }}
+          >
+            {show =>
+              show &&
+              (styles => (
+                <PlayerController
+                  style={styles}
+                  onTogglePlay={this.onTogglePlay}
+                  isPlaying={isPlaying}
+                  midi={this.props.loadedMidi}
+                  onTrackSelect={this.selectTrack}
+                  onComplete={this.startPlayingTrack}
+                />
+              ))
+            }
+          </Transition>
 
           <Visualizer
             range={keyboardRange}

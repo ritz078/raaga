@@ -18,20 +18,20 @@ const config = {
 const ProgressCircle: React.SFC<ProgressCircleProps> = ({ onComplete }) => {
   return (
     <Spring
-      from={{ number: 3 }}
-      to={{ number: 0 }}
+      from={{ number: 0 }}
+      to={{ number: 1 }}
       config={config}
       onRest={onComplete}
     >
       {({ number }) => {
         return (
           <div className={progressWrapper}>
-            <div className={progressCircle}>{Math.round(number)}</div>
+            <div className={progressCircle}>{3 - Math.round(number * 3)}</div>
             <Progress
               diameter={200}
               strokeWidth={4}
               stroke={colors.white.base}
-              completed={(4 - number) / number}
+              completed={number}
             />
           </div>
         );

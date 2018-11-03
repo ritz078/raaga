@@ -28,10 +28,7 @@ interface PlayerControllerProps {
 
 let worker: Worker;
 
-function loadFile(e) {
-  const file = e.target.files[0];
-  worker.postMessage(file);
-}
+const fileRef: React.RefObject<HTMLInputElement> = React.createRef();
 
 const PlayerController: React.SFC<PlayerControllerProps> = ({
   midi,
@@ -59,6 +56,12 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
       };
     }
   });
+
+  function loadFile(e) {
+    const file = e.target.files[0];
+    worker.postMessage(file);
+    fileRef.current.value = "";
+  }
 
   return (
     <animated.div style={style} className={playerWrapper}>
@@ -106,6 +109,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
               name="photo"
               id="upload-midi"
               accept=".mid"
+              ref={fileRef}
             />
           </div>
         )}
@@ -123,30 +127,17 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
         }}
       />
 
-      <Transition
-        native
-        items={showCountdown}
-        from={{ opacity: 0 }}
-        enter={{ opacity: 1 }}
-        leave={{ opacity: 0, pointerEvents: "none" }}
-      >
-        {show =>
-          show &&
-          (styles => (
-            <animated.div style={styles}>
-              <ProgressCircle
-                onComplete={() => {
-                  toggleCountdown(false);
-                  toggleTrackSelectionModal(false);
-                  onComplete();
-                }}
-              />
-            </animated.div>
-          ))
-        }
-      </Transition>
+      {showCountdown && (
+        <ProgressCircle
+          onComplete={() => {
+            toggleCountdown(false);
+            toggleTrackSelectionModal(false);
+            onComplete();
+          }}
+        />
+      )}
     </animated.div>
   );
 };
 
-export default PlayerController;
+export default memo(PlayerController);
