@@ -76,6 +76,13 @@ class SoundPlayer extends React.PureComponent<
     }
   };
 
+  componentDidUpdate(prevProps: Readonly<SoundPlayerProps>): void {
+    // reset player if mode changes.
+    if (prevProps.settings.mode !== this.props.settings.mode) {
+      this.resetPlayer();
+    }
+  }
+
   private preparePlayerForNewTrack = async (selectedTrack: Track) => {
     const { notes } = selectedTrack;
     this.setRange(notes);
