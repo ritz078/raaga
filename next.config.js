@@ -8,22 +8,13 @@ module.exports = withCSS(
       if (options.isServer && options.dev)
         config.plugins.push(new ForkTsCheckerWebpackPlugin());
 
-      config.module.rules.unshift(
-        {
-          test: /\.worker\.ts/,
-          use: {
-            loader: "worker-loader",
-            options: { fallback: true, inline: true }
-          }
-        },
-        {
-          test: /\.svg$/,
-          // issuer: {
-          //   test: /\.tsx?$/
-          // },
-          use: ["@svgr/webpack"]
+      config.module.rules.unshift({
+        test: /\.worker\.ts/,
+        use: {
+          loader: "worker-loader",
+          options: { fallback: true, inline: true }
         }
-      );
+      });
 
       config.output.globalObject = `this`;
 
