@@ -24,7 +24,6 @@ const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
   onSelectTrack,
   onClose
 }) => {
-  console.log(visible);
   return (
     <Transition
       native

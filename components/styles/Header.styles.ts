@@ -78,6 +78,7 @@ export const headerClass = css({
 
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
+  alignItems: "center",
   svg: {
     margin: 15,
     cursor: "pointer",
@@ -94,6 +95,7 @@ export const instrumentLabel = css({
   fontSize: 13,
   cursor: "pointer",
   marginLeft: 20,
+  marginRight: 10,
   span: {
     fontSize: 8,
     marginLeft: 8,

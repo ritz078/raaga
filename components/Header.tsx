@@ -1,11 +1,5 @@
 import React, { useState, useCallback, memo } from "react";
-import {
-  colors,
-  Popper,
-  OptionGroupRadio,
-  Option,
-  mixins
-} from "@anarock/pebble";
+import { colors, Popper, OptionGroupRadio, Option } from "@anarock/pebble";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
@@ -46,14 +40,25 @@ const Header: React.SFC<HeaderProps> = ({
 
   return (
     <header className={headerClass}>
-      <div style={mixins.flexSpaceBetween}>
+      <span
+        style={{
+          fontSize: 24,
+          display: "inline-flex",
+          marginRight: 30,
+          alignItems: "center"
+        }}
+      >
+        🎹
+      </span>
+
+      <div className={headerRight}>
         <ModeToggle mode={mode} onToggle={toggleMode} />
 
         <Popper
           label={({ toggle, isOpen }) => (
             <div className={instrumentLabel} onClick={toggle}>
               {getInstrumentByValue(instrument).name}{" "}
-              <span className={isOpen && "__open__"}>▼</span>
+              <span className={isOpen ? "__open__" : undefined}>▼</span>
             </div>
           )}
           placement="bottom"
@@ -73,9 +78,6 @@ const Header: React.SFC<HeaderProps> = ({
             </OptionGroupRadio>
           )}
         </Popper>
-      </div>
-
-      <div className={headerRight}>
         <Icon
           name={volumeName}
           color={colors.white.base}
