@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { memo } from "react";
 import { modeBackground, modeToggleWrapper } from "./styles/ModeToggle.styles";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { cx } from "emotion";
@@ -27,5 +27,4 @@ const ModeToggle: React.SFC<{
   );
 };
 
-// @ts-ignore
-export default React.memo(ModeToggle);
+export default memo(ModeToggle);

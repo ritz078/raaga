@@ -1,6 +1,6 @@
 import { AnyAction, Dispatch } from "redux";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import { MIDI } from "midiconvert";
+import * as React from "react";
 
 export interface HeaderProps {
   dispatch: Dispatch<AnyAction>;
@@ -8,11 +8,5 @@ export interface HeaderProps {
   instrument: string;
   isPlaying: boolean;
   onTogglePlay: () => void;
-  settings: {
-    mode: VISUALIZER_MODE;
-  };
-}
-
-export interface HeaderState {
-  mute: boolean;
+  onInstrumentChange: (instrument: React.ReactText) => void;
 }

@@ -24,4 +24,5 @@ declare module "react" {
   ): void;
   const useMutationEffect: typeof useEffect;
   const useLayoutEffect: typeof useEffect;
+  function memo(comp: any): any;
 }

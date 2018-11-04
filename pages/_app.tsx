@@ -16,7 +16,7 @@ class MyApp extends App<AppProps> {
     return (
       <>
         <Head>
-          <title>With Emotion</title>
+          <title>Piano</title>
         </Head>
         <Container>
           <Provider store={reduxStore}>

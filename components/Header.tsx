@@ -1,79 +1,92 @@
-import * as React from "react";
-import { colors } from "@anarock/pebble";
-import { connect } from "react-redux";
+import React, { useState, useCallback, memo } from "react";
+import { colors, Popper, OptionGroupRadio, Option } from "@anarock/pebble";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 
 import { Icon } from "@assets/svgs";
-import { headerRight, headerClass } from "@components/styles/Header.styles";
-import ModeToggle from "@components/ModeToggle";
-import { HeaderProps, HeaderState } from "./typings/Header";
+import {
+  headerRight,
+  headerClass,
+  instrumentLabel
+} from "./styles/Header.styles";
+import ModeToggle from "./ModeToggle";
+import { HeaderProps } from "./typings/Header";
+import { getInstrumentByValue, instruments } from "midi-instruments";
 
-class Header extends React.Component<HeaderProps, HeaderState> {
-  state = {
-    mute: false
-  };
+const Header: React.SFC<HeaderProps> = ({
+  dispatch,
+  mode,
+  instrument,
+  onInstrumentChange
+}) => {
+  const [mute, toggleMute] = useState(false);
 
-  private toggleMute = () => {
-    this.setState(
-      {
-        mute: !this.state.mute
-      },
-      () => {
-        Tone.Master.mute = this.state.mute;
-      }
-    );
-  };
+  const _toggleMute = useCallback(() => {
+    Tone.Master.mute = !mute;
+    toggleMute(!mute);
+  });
 
-  toggleMode = (mode: VISUALIZER_MODE) =>
-    this.props.dispatch({
+  const toggleMode = useCallback((mode: VISUALIZER_MODE) =>
+    dispatch({
       type: ReducersType.CHANGE_SETTINGS,
       payload: {
         mode
       }
-    });
+    })
+  );
 
-  render() {
-    const { mute } = this.state;
-    const { settings } = this.props;
-    const { mode } = settings;
+  const volumeName = mute ? "volume-mute" : "volume";
 
-    const volumeName = mute ? "volume-mute" : "volume";
+  return (
+    <header className={headerClass}>
+      <span
+        style={{
+          fontSize: 24,
+          display: "inline-flex",
+          marginRight: 30,
+          alignItems: "center"
+        }}
+      >
+        🎹
+      </span>
 
-    return (
-      <>
-        <header className={headerClass}>
-          <ModeToggle mode={mode} onToggle={this.toggleMode} />
+      <div className={headerRight}>
+        <ModeToggle mode={mode} onToggle={toggleMode} />
 
-          <div className={headerRight}>
-            <Icon
-              name={volumeName}
-              color={colors.white.base}
-              onClick={this.toggleMute}
-            />
-            {/*{!isEmpty(this.state.tempLoadedMidi) && (*/}
-            {/*<Icon*/}
-            {/*name="tracks"*/}
-            {/*color={colors.white.base}*/}
-            {/*onClick={() =>*/}
-            {/*this.setState({*/}
-            {/*showTrackSelectionModal: true*/}
-            {/*})*/}
-            {/*}*/}
-            {/*/>*/}
-            {/*)}*/}
-            <Icon name="midi" color={colors.white.base} />
-          </div>
-        </header>
-      </>
-    );
-  }
-}
+        <Popper
+          label={({ toggle, isOpen }) => (
+            <div className={instrumentLabel} onClick={toggle}>
+              {getInstrumentByValue(instrument).name}{" "}
+              <span className={isOpen ? "__open__" : undefined}>▼</span>
+            </div>
+          )}
+          placement="bottom"
+        >
+          {({ toggle }) => (
+            <OptionGroupRadio
+              onChange={value => {
+                onInstrumentChange(value);
+                toggle();
+              }}
+              selected={instrument}
+            >
+              {Object.keys(instruments).map(id => {
+                const { value, name } = instruments[id];
+                return <Option key={value} value={value} label={name} />;
+              })}
+            </OptionGroupRadio>
+          )}
+        </Popper>
+        <Icon
+          name={volumeName}
+          color={colors.white.base}
+          onClick={_toggleMute}
+        />
+        <Icon name="midi" color={colors.white.base} />
+      </div>
+    </header>
+  );
+};
 
-const mapStateToProps = ({ settings }) => ({
-  settings
-});
-
-// @ts-ignore
-export default connect(mapStateToProps)(Header);
+export default memo(Header);

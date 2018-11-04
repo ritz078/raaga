@@ -176,17 +176,20 @@ class SoundPlayer extends React.PureComponent<
     } = this.state;
 
     const {
-      settings: { mode }
+      settings: { mode },
+      dispatch
     } = this.props;
 
     return (
       <>
         <div className={flexOne}>
           <Header
+            dispatch={dispatch}
             onTogglePlay={this.onTogglePlay}
             isPlaying={isPlaying}
             instrument={instrument}
             mode={mode}
+            onInstrumentChange={this.changeInstrument}
           />
           <Transition
             native
