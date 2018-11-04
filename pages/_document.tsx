@@ -39,7 +39,11 @@ export default class MyDocument extends Document<{
             href="https://fonts.googleapis.com/css?family=Lato"
           />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
-
+          <link
+            rel="shortcut icon"
+            type="image/png"
+            href="/static/images/favicon.png"
+          />
           <script src="https://cdn.polyfill.io/v2/polyfill.js?features=AudioContext,Map,Set,Array.prototype.includes,fetch" />
         </Head>
         <body>
