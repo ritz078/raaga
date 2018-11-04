@@ -84,3 +84,23 @@ export const headerRight = css({
     fill: colors.white.base
   }
 });
+
+export const instrumentLabel = css({
+  display: "block",
+  color: colors.white.base,
+  backgroundColor: "rgba(47,47,47,0.58)",
+  padding: "12px 20px",
+  borderRadius: 4,
+  fontSize: 13,
+  cursor: "pointer",
+  marginLeft: 20,
+  span: {
+    fontSize: 8,
+    marginLeft: 8,
+    transition: "transform 200ms",
+    display: "inline-block",
+    "&.__open__": {
+      transform: "rotate(180deg)"
+    }
+  }
+});

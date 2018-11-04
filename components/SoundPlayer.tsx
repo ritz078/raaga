@@ -189,6 +189,7 @@ class SoundPlayer extends React.PureComponent<
             isPlaying={isPlaying}
             instrument={instrument}
             mode={mode}
+            onInstrumentChange={this.changeInstrument}
           />
           <Transition
             native

@@ -4249,6 +4249,10 @@ just-range@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/just-range/-/just-range-2.1.0.tgz#b8738839878f80670e5a41ba9bfdc5ea7ebde273"
 
+just-values@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/just-values/-/just-values-1.1.0.tgz#67d97562d84cd3faa002dabf59644f49c5b302bb"
+
 kind-of@^2.0.1:
   version "2.0.1"
   resolved "http://registry.npmjs.org/kind-of/-/kind-of-2.0.1.tgz#018ec7a4ce7e3a86cb9141be519d24c8faa981b5"
@@ -4739,9 +4743,11 @@ midi-file-parser@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/midi-file-parser/-/midi-file-parser-1.0.0.tgz#175a013f277e9d26acf94cfe6c03b13abb0a1e9e"
 
-midi-instruments@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.0.3.tgz#b2991d9ebc763f6785d242f2f67d9a3177b30f04"
+midi-instruments@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.1.0.tgz#758485207a36da653bca21bdac4ffbf8045b81d0"
+  dependencies:
+    just-values "^1.1.0"
 
 midiconvert@^0.4.7:
   version "0.4.7"
@@ -5833,9 +5839,9 @@ react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react-piano@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-piano/-/react-piano-3.1.0.tgz#312571395b5c4d216e9e51023e5c0143c7aa9288"
+react-piano@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-piano/-/react-piano-3.1.1.tgz#2a1d146b5275f9ce660388ec693b9e5ec3f0ee7e"
   dependencies:
     classnames "^2.2.6"
     just-range "^2.1.0"
