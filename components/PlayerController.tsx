@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useRef } from "react";
 import { MIDI } from "midiconvert";
 import { animated, Transition } from "react-spring";
 import { Icon } from "@assets/svgs";
@@ -16,6 +16,8 @@ import TrackSelectionModal from "@components/TrackSelectionModal";
 import MidiLoadWorker from "@workers/midiload.worker";
 import ProgressCircle from "@components/ProgressCircle";
 import Draggable from "react-draggable";
+import StartAudioContext from "startaudiocontext";
+import Tone from "tone";
 
 interface PlayerControllerProps {
   midi: MIDI;
@@ -38,6 +40,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   onComplete,
   style = {}
 }) => {
+  const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
   const [showCountdown, toggleCountdown] = useState(false);
@@ -55,6 +58,8 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
         toggleTrackSelectionModal(true);
       };
     }
+
+    return () => console.log("unmounted");
   });
 
   function loadFile(e) {
@@ -116,18 +121,27 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
           </div>
         )}
 
-      <TrackSelectionModal
-        visible={showTrackSelectionModal}
-        midi={loadedMidi}
-        onSelectTrack={i => {
-          toggleTrackSelectionModal(false);
-          toggleCountdown(true);
-          onTrackSelect(loadedMidi, i);
+      <div
+        ref={safariContextStartClickRef}
+        onClick={() => {
+          // On iOS, the Web Audio API requires sounds to be triggered from an explicit user action,
+          // such as a tap. Calling noteOn() from an onload event will not play sound.
+          StartAudioContext(Tone.context, safariContextStartClickRef.current);
         }}
-        onClose={() => {
-          toggleTrackSelectionModal(false);
-        }}
-      />
+      >
+        <TrackSelectionModal
+          visible={showTrackSelectionModal}
+          midi={loadedMidi}
+          onSelectTrack={i => {
+            toggleTrackSelectionModal(false);
+            toggleCountdown(true);
+            onTrackSelect(loadedMidi, i);
+          }}
+          onClose={() => {
+            toggleTrackSelectionModal(false);
+          }}
+        />
+      </div>
 
       {showCountdown && (
         <ProgressCircle
