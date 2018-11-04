@@ -34,12 +34,13 @@
     "react-redux": "^5.1.0",
     "react-spring": "^6.1.6",
     "redux": "^3.7.2",
+    "startaudiocontext": "^1.2.1",
     "tone": "^0.12.80",
     "webmidi": "^2.2.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.0.0",
-    "@svgr/webpack": "^3.1.0",
+    "@svgr/webpack": "^4.0.0",
     "@types/lodash": "^4.14.117",
     "@types/next": "^7.0.3",
     "@types/react": "^16.4.18",

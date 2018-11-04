@@ -76,7 +76,11 @@ export default class extends React.PureComponent<VisualizerProps> {
       canvas = this.canvasRef.current;
     }
 
-    const dimensions = this.visualizerRef.current.getBoundingClientRect();
+    // This has been done because it wasn't getting correctly transferred
+    // in firefox.
+    const dimensions = JSON.parse(
+      JSON.stringify(this.visualizerRef.current.getBoundingClientRect())
+    );
     this.props.canvasWorker.postMessage(
       {
         canvas,
