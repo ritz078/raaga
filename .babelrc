@@ -16,7 +16,8 @@
         "@enums": "./enums",
         "@reducers": "./reducers",
         "@typings": "./typings",
-        "@assets":  "./assets"
+        "@assets":  "./assets",
+        "@controllers": "./controllers"
       }
     }]
   ]

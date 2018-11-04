@@ -10,13 +10,15 @@ import { colors, Loader } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
-import { NoteWithEvent, CanvasWorkerInterface } from "@utils/typings/Player";
+import { NoteWithEvent } from "@utils/typings/Player";
 import { connect } from "react-redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
 import { css, cx } from "emotion";
 import Header from "@components/Header";
-import CanvasWorker from "@workers/canvas.worker";
+import CanvasWorker, {
+  CanvasWorkerFallback
+} from "@controllers/visualizer.controller";
 import { getInstrumentById, instruments } from "midi-instruments";
 import PlayerController from "@components/PlayerController";
 import { ReducersType } from "@enums/reducers";
@@ -25,7 +27,7 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
-const canvasWorker: CanvasWorkerInterface = new CanvasWorker();
+const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 
 class SoundPlayer extends React.PureComponent<
   SoundPlayerProps,

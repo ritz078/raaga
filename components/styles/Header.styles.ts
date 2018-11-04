@@ -89,7 +89,7 @@ export const headerRight = css({
 export const instrumentLabel = css({
   display: "block",
   color: colors.white.base,
-  backgroundColor: "rgba(47,47,47,0.58)",
+  backgroundColor: "rgba(47,47,47,0.8)",
   padding: "12px 20px",
   borderRadius: 4,
   fontSize: 13,

@@ -22,7 +22,7 @@
     "hex-to-rgba": "^1.0.2",
     "idb-keyval": "^3.1.0",
     "lodash": "^4.17.11",
-    "midi-instruments": "^1.1.0",
+    "midi-instruments": "^1.1.1",
     "midiconvert": "^0.4.7",
     "next": "7.0.2",
     "pretty-ms": "^4.0.0",

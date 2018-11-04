@@ -2,17 +2,14 @@ import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
-import {
-  CanvasWorkerInterface,
-  NoteWithEvent,
-  Sampler
-} from "@utils/typings/Player";
+import { NoteWithEvent, Sampler } from "@utils/typings/Player";
 import Tone from "tone";
 import { instruments } from "midi-instruments";
 import { MIDI, Note, Track } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
 import { get, set } from "idb-keyval";
+import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -59,13 +56,13 @@ export class Player {
   private sampler: Sampler;
   public isPlaying = false;
   private notesPlayer: any;
-  private canvasWorker: CanvasWorkerInterface;
+  private canvasWorker: CanvasWorkerFallback;
 
   constructor({
     canvasWorker,
     range
   }: {
-    canvasWorker: CanvasWorkerInterface;
+    canvasWorker: CanvasWorkerFallback;
     range: Range;
   }) {
     this.range = range;
@@ -75,7 +72,7 @@ export class Player {
   }
 
   private fetchInstrumentFromRemote = async instrument => {
-    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-ogg.js`;
+    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
     const response = await fetch(url);
     const data = await response.text();
     const audio = midiJsToJson(data);

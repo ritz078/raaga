@@ -12,11 +12,13 @@ import {
   visualizerWrapper
 } from "@components/styles/Visualizer.styles";
 import { css, cx } from "emotion";
+import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
+import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 
 interface VisualizerProps {
   range: Range;
   mode: VISUALIZER_MODE;
-  canvasWorker: Worker;
+  canvasWorker: CanvasWorkerFallback;
 }
 
 export default class extends React.PureComponent<VisualizerProps> {
@@ -66,19 +68,24 @@ export default class extends React.PureComponent<VisualizerProps> {
   componentDidMount() {
     this.setDimensions(null, false);
 
-    // @ts-ignore
-    const offscreen = this.canvasRef.current.transferControlToOffscreen();
+    let canvas;
+    if (offScreenCanvasIsSupported) {
+      // @ts-ignore
+      canvas = this.canvasRef.current.transferControlToOffscreen();
+    } else {
+      canvas = this.canvasRef.current;
+    }
 
     const dimensions = this.visualizerRef.current.getBoundingClientRect();
     this.props.canvasWorker.postMessage(
       {
-        canvas: offscreen,
+        canvas,
         message: VISUALIZER_MESSAGES.INIT,
         dimensions,
         range: this.props.range,
         mode: this.props.mode
       },
-      [offscreen]
+      [canvas]
     );
 
     // @ts-ignore
