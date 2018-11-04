@@ -79,4 +79,5 @@ const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
   );
 };
 
-export default TrackSelectionModal;
+// @ts-ignore
+export default React.memo(TrackSelectionModal);

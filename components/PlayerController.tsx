@@ -60,7 +60,9 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   function loadFile(e) {
     const file = e.target.files[0];
     worker.postMessage(file);
-    fileRef.current.value = "";
+    if (fileRef.current) {
+      fileRef.current.value = "";
+    }
   }
 
   return (
