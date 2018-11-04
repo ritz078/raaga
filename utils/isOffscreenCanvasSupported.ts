@@ -1,7 +1,22 @@
-const ab = ArrayBuffer && new ArrayBuffer(1);
+import CanvasWorker from "@workers/canvas.worker";
+
+const worker = new CanvasWorker();
+
+let isTranferableSupported = true;
+
+const isOffscreenCanvasSupported = !!// @ts-ignore
+HTMLCanvasElement.prototype.transferControlToOffscreen;
+
+try {
+  const _canvas = document.createElement("canvas");
+  if (isOffscreenCanvasSupported) {
+    // @ts-ignore
+    const canvas = _canvas.transferControlToOffscreen();
+    worker.postMessage({ canvas }, [canvas]);
+  }
+} catch (e) {
+  isTranferableSupported = false;
+}
 
 export const offScreenCanvasIsSupported =
-  // @ts-ignore
-  !!HTMLCanvasElement.prototype.transferControlToOffscreen &&
-  ab &&
-  !ab.byteLength;
+  isOffscreenCanvasSupported && isTranferableSupported;
