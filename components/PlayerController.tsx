@@ -2,7 +2,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { MIDI } from "midiconvert";
 import { animated, Transition } from "react-spring";
-import { Icon } from "@assets/svgs";
+import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
 import {

@@ -4,7 +4,7 @@ import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 
-import { Icon } from "@assets/svgs";
+import Icon from "@components/Icon";
 import {
   headerRight,
   headerClass,

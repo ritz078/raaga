@@ -1,0 +1,43 @@
+@font-face {
+  font-family: "synth";
+  src: url("synth.eot?a3c3dfafeb1c91a31268ad7f7f979dba?#iefix")
+      format("embedded-opentype"),
+    url("synth.woff2?a3c3dfafeb1c91a31268ad7f7f979dba") format("woff2"),
+    url("synth.woff?a3c3dfafeb1c91a31268ad7f7f979dba") format("woff");
+}
+
+.icon {
+  line-height: 1;
+}
+
+.icon:before {
+  font-family: synth !important;
+  font-style: normal;
+  font-weight: normal !important;
+  vertical-align: top;
+}
+
+.icon-midi:before {
+  content: "\f101";
+}
+.icon-play:before {
+  content: "\f102";
+}
+.icon-settings:before {
+  content: "\f103";
+}
+.icon-pause:before {
+  content: "\f104";
+}
+.icon-tracks:before {
+  content: "\f105";
+}
+.icon-upload:before {
+  content: "\f106";
+}
+.icon-volume-mute:before {
+  content: "\f107";
+}
+.icon-volume:before {
+  content: "\f108";
+}
