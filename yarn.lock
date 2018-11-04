@@ -4743,9 +4743,9 @@ midi-file-parser@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/midi-file-parser/-/midi-file-parser-1.0.0.tgz#175a013f277e9d26acf94cfe6c03b13abb0a1e9e"
 
-midi-instruments@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.1.0.tgz#758485207a36da653bca21bdac4ffbf8045b81d0"
+midi-instruments@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.1.1.tgz#43d3a2a327d7e6cd75216f39e688ae4531b6cd17"
   dependencies:
     just-values "^1.1.0"
 
