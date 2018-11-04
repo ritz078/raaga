@@ -59,7 +59,8 @@ const Header: React.SFC<HeaderProps> = ({
             name={isRecording ? "stop" : "record"}
             size={12}
             color={colors.red.base}
-          />
+          />{" "}
+          &nbsp;&nbsp;&nbsp;
           {isRecording ? "Stop" : "Record"}
         </button>
 

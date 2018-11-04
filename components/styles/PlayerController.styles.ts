@@ -10,7 +10,7 @@ export const playerWrapper = css({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  zIndex: 10
+  zIndex: 8
 });
 
 export const playerController = css({

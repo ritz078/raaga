@@ -63,17 +63,7 @@ export const headerClass = css({
   zIndex: 9,
   ...mixins.flexSpaceBetween,
   alignItems: "center",
-  padding: "0 30px",
-  i: {
-    cursor: "pointer",
-    padding: "28px 20px",
-    color: "#e7e7e7",
-    fontSize: 20,
-    transition: "all 200ms",
-    "&:hover": {
-      color: colors.white.base
-    }
-  }
+  padding: "0 30px"
 });
 
 export const headerRight = css({
