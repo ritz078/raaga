@@ -1,7 +1,4 @@
-import {
-  VISUALIZER_MESSAGES,
-  VISUALIZER_MODE
-} from "@enums/visualizerMessages";
+import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
 import { NoteWithEvent, Sampler } from "@utils/typings/Player";
 import Tone from "tone";
 import { instruments } from "midi-instruments";
@@ -10,6 +7,7 @@ import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
 import { get, set } from "idb-keyval";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
+import Recorder from "@utils/Recorder";
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -57,6 +55,7 @@ export class Player {
   public isPlaying = false;
   private notesPlayer: any;
   private canvasWorker: CanvasWorkerFallback;
+  private recorder = new Recorder();
 
   constructor({
     canvasWorker,
@@ -110,6 +109,8 @@ export class Player {
    * @param midi
    */
   public playNote = (midi: number) => {
+    this.recorder.startNote(midi);
+
     this.sampler.triggerAttack(this.getNoteName(midi));
 
     this.canvasWorker.postMessage({
@@ -123,6 +124,8 @@ export class Player {
    * @param midi
    */
   public stopNote = (midi: number) => {
+    this.recorder.endNote(midi);
+
     this.sampler.triggerRelease(this.getNoteName(midi));
 
     this.canvasWorker.postMessage({
@@ -196,26 +199,21 @@ export class Player {
    * Toggle play/pause of track. Only works in read mode.
    * Is no-op in write mode.
    */
-  public toggle = () => {
+  public togglePlay = () => {
     if (this.isPlaying) {
       Tone.Transport.pause();
-      this.isPlaying = false;
     } else {
       Tone.Transport.start();
-      this.isPlaying = true;
     }
+
+    this.isPlaying = !this.isPlaying;
 
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.TOGGLE
     });
   };
 
-  public setMode = (mode: VISUALIZER_MODE) => {
-    this.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.SET_MODE,
-      mode
-    });
-  };
+  public toggleRecording = () => this.recorder.toggleRecorder();
 
   public setRange = (range: Range) => {
     this.range = range;

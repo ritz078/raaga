@@ -6,7 +6,8 @@ export interface HeaderProps {
   dispatch: Dispatch<AnyAction>;
   mode: VISUALIZER_MODE;
   instrument: string;
-  isPlaying: boolean;
   onTogglePlay: () => void;
   onInstrumentChange: (instrument: React.ReactText) => void;
+  isRecording: boolean;
+  toggleRecording: () => void;
 }

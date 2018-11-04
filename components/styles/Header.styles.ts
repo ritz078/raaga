@@ -78,12 +78,13 @@ export const headerClass = css({
 
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
-  alignItems: "center",
-  svg: {
-    margin: 15,
-    cursor: "pointer",
-    fill: colors.white.base
-  }
+  alignItems: "center"
+});
+
+export const iconClass = css({
+  margin: 15,
+  cursor: "pointer",
+  fill: colors.white.base
 });
 
 export const instrumentLabel = css({
@@ -105,4 +106,27 @@ export const instrumentLabel = css({
       transform: "rotate(180deg)"
     }
   }
+});
+
+export const recordBtn = css({
+  color: colors.red.base,
+  fontSize: 13,
+  backgroundColor: colors.white.base,
+  height: 40,
+  padding: "0 15px",
+  borderRadius: 20,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: "0 20px",
+  cursor: "pointer",
+  outline: 0,
+  border: 0
+});
+
+export const headerLogo = css({
+  fontSize: 24,
+  display: "inline-flex",
+  marginRight: 30,
+  alignItems: "center"
 });

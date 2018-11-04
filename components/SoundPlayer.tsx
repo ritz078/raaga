@@ -43,7 +43,8 @@ class SoundPlayer extends React.PureComponent<
     loading: false,
     activeMidis: [],
     keyboardRange: range,
-    isPlaying: false
+    isPlaying: false,
+    isRecording: false
   };
 
   private resetPlayer = () => {
@@ -138,7 +139,7 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private onTogglePlay = () => {
-    this.player.toggle();
+    this.player.togglePlay();
 
     this.setState({
       isPlaying: !this.state.isPlaying
@@ -168,13 +169,25 @@ class SoundPlayer extends React.PureComponent<
     this.player.playTrack(this.props.loadedMidi, track, this.onRecordPlay);
   };
 
+  private toggleRecording = () => {
+    this.setState(
+      {
+        isRecording: !this.state.isRecording
+      },
+      () => {
+        console.log(this.player.toggleRecording());
+      }
+    );
+  };
+
   render() {
     const {
       instrument,
       loading,
       activeMidis,
       keyboardRange,
-      isPlaying
+      isPlaying,
+      isRecording
     } = this.state;
 
     const {
@@ -188,10 +201,11 @@ class SoundPlayer extends React.PureComponent<
           <Header
             dispatch={dispatch}
             onTogglePlay={this.onTogglePlay}
-            isPlaying={isPlaying}
             instrument={instrument}
             mode={mode}
             onInstrumentChange={this.changeInstrument}
+            isRecording={isRecording}
+            toggleRecording={this.toggleRecording}
           />
           <Transition
             native

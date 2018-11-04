@@ -1,5 +1,11 @@
 import React, { useState, useCallback, memo } from "react";
-import { colors, Popper, OptionGroupRadio, Option } from "@anarock/pebble";
+import {
+  colors,
+  Popper,
+  OptionGroupRadio,
+  Option,
+  SideBar
+} from "@anarock/pebble";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
@@ -8,7 +14,10 @@ import { Icon } from "@assets/svgs";
 import {
   headerRight,
   headerClass,
-  instrumentLabel
+  instrumentLabel,
+  iconClass,
+  recordBtn,
+  headerLogo
 } from "./styles/Header.styles";
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
@@ -18,7 +27,9 @@ const Header: React.SFC<HeaderProps> = ({
   dispatch,
   mode,
   instrument,
-  onInstrumentChange
+  onInstrumentChange,
+  isRecording,
+  toggleRecording
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -40,18 +51,18 @@ const Header: React.SFC<HeaderProps> = ({
 
   return (
     <header className={headerClass}>
-      <span
-        style={{
-          fontSize: 24,
-          display: "inline-flex",
-          marginRight: 30,
-          alignItems: "center"
-        }}
-      >
-        🎹
-      </span>
+      <span className={headerLogo}>🎹</span>
 
       <div className={headerRight}>
+        <button className={recordBtn} onClick={toggleRecording}>
+          <Icon
+            name={isRecording ? "stop" : "record"}
+            size={12}
+            color={colors.red.base}
+          />
+          {isRecording ? "Stop" : "Record"}
+        </button>
+
         <ModeToggle mode={mode} onToggle={toggleMode} />
 
         <Popper
@@ -79,11 +90,16 @@ const Header: React.SFC<HeaderProps> = ({
           )}
         </Popper>
         <Icon
+          className={iconClass}
           name={volumeName}
           color={colors.white.base}
           onClick={_toggleMute}
         />
-        <Icon name="midi" color={colors.white.base} />
+        <Icon className={iconClass} name="tracks" color={colors.white.base} />
+        <Icon className={iconClass} name="midi" color={colors.white.base} />
+        <SideBar isOpen={false} width={500} closeOnOutsideClick>
+          <div />
+        </SideBar>
       </div>
     </header>
   );

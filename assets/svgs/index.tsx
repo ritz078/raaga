@@ -7,6 +7,8 @@ import VolumeMute from "./volume-mute.svg";
 import Play from "./play.svg";
 import Pause from "./pause.svg";
 import Settings from "./settings.svg";
+import Record from "./record.svg";
+import Stop from "./stop.svg";
 import { colors } from "@anarock/pebble";
 
 const mapping = {
@@ -17,7 +19,9 @@ const mapping = {
   "volume-mute": VolumeMute,
   play: Play,
   pause: Pause,
-  settings: Settings
+  settings: Settings,
+  record: Record,
+  stop: Stop
 };
 
 interface IconProps extends React.SVGProps<React.ReactSVGElement> {

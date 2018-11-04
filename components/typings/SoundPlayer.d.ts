@@ -18,4 +18,5 @@ export interface SoundPlayerState {
     last: number;
   };
   isPlaying: boolean;
+  isRecording: boolean;
 }
