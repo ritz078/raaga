@@ -4,12 +4,12 @@ const worker = new CanvasWorker();
 
 let isTranferableSupported = true;
 
-const isOffscreenCanvasSupported = !!// @ts-ignore
-HTMLCanvasElement.prototype.transferControlToOffscreen;
+// @ts-ignore
+const isOSSupported = !!HTMLCanvasElement.prototype.transferControlToOffscreen;
 
 try {
   const _canvas = document.createElement("canvas");
-  if (isOffscreenCanvasSupported) {
+  if (isOSSupported) {
     // @ts-ignore
     const canvas = _canvas.transferControlToOffscreen();
     worker.postMessage({ canvas }, [canvas]);
@@ -19,4 +19,4 @@ try {
 }
 
 export const offScreenCanvasIsSupported =
-  isOffscreenCanvasSupported && isTranferableSupported;
+  isOSSupported && isTranferableSupported;

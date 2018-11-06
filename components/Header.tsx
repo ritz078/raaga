@@ -13,6 +13,7 @@ import {
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
+import MidiSelect from "@components/MidiSelect";
 
 const Header: React.SFC<HeaderProps> = ({
   dispatch,
@@ -80,10 +81,11 @@ const Header: React.SFC<HeaderProps> = ({
         </Popper>
         <Icon
           name={volumeName}
+          className="icon-padding"
           color={colors.white.base}
           onClick={_toggleMute}
         />
-        <Icon name="midi" color={colors.white.base} />
+        <MidiSelect />
       </div>
     </header>
   );

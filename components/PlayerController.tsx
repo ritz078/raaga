@@ -58,9 +58,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
         toggleTrackSelectionModal(true);
       };
     }
-
-    return () => console.log("unmounted");
-  });
+  }, []);
 
   function loadFile(e) {
     const file = e.target.files[0];

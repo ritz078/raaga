@@ -64,7 +64,7 @@ export const headerClass = css({
   ...mixins.flexSpaceBetween,
   alignItems: "center",
   padding: "0 30px",
-  i: {
+  ".icon-padding": {
     cursor: "pointer",
     padding: "28px 20px",
     color: "#e7e7e7",
