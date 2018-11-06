@@ -108,9 +108,10 @@ export class Player {
   /**
    * Plays a single note
    * @param midi
+   * @param velocity
    */
-  public playNote = (midi: number) => {
-    this.sampler.triggerAttack(this.getNoteName(midi));
+  public playNote = (midi: number, velocity = 1) => {
+    this.sampler.triggerAttack(this.getNoteName(midi), undefined, velocity);
 
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.PLAY_NOTE,

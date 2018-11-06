@@ -123,8 +123,8 @@ class SoundPlayer extends React.PureComponent<
   //   this.player.playRecording(this.props.selectedTrack, this.onRecordPlay);
   // };
 
-  private onNoteStart = midi => {
-    this.player.playNote(midi);
+  private onNoteStart = (midi, velocity = 1) => {
+    this.player.playNote(midi, velocity);
     this.setState(state => ({
       activeMidis: state.activeMidis.concat(midi)
     }));

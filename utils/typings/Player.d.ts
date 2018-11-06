@@ -23,7 +23,7 @@ export interface CanvasWorkerInterface extends Worker {
 
 export interface Sampler {
   connect: (master: any) => void;
-  triggerAttack: (note: string) => void;
+  triggerAttack: (note: string, time?: number, velocity?: number) => void;
   triggerRelease: (note: string) => void;
   add: (key: string, buffer: ArrayBuffer, cb: () => void) => void;
   context: AudioContext;
