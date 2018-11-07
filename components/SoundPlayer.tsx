@@ -19,11 +19,16 @@ import Header from "@components/Header";
 import CanvasWorker, {
   CanvasWorkerFallback
 } from "@controllers/visualizer.controller";
-import { getInstrumentById, instruments } from "midi-instruments";
+import {
+  getInstrumentById,
+  getInstrumentNames,
+  instruments
+} from "midi-instruments";
 import PlayerController from "@components/PlayerController";
 import { ReducersType } from "@enums/reducers";
 import { Transition } from "react-spring";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import RecordingModal from "@components/RecordingModal";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -44,7 +49,8 @@ class SoundPlayer extends React.PureComponent<
     activeMidis: [],
     keyboardRange: range,
     isPlaying: false,
-    isRecording: false
+    isRecording: false,
+    recordedNotes: undefined
   };
 
   private resetPlayer = () => {
@@ -170,14 +176,10 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private toggleRecording = () => {
-    this.setState(
-      {
-        isRecording: !this.state.isRecording
-      },
-      () => {
-        console.log(this.player.toggleRecording());
-      }
-    );
+    this.setState({
+      isRecording: !this.state.isRecording,
+      recordedNotes: this.player.toggleRecording()
+    });
   };
 
   render() {
@@ -187,7 +189,8 @@ class SoundPlayer extends React.PureComponent<
       activeMidis,
       keyboardRange,
       isPlaying,
-      isRecording
+      isRecording,
+      recordedNotes
     } = this.state;
 
     const {
@@ -207,6 +210,21 @@ class SoundPlayer extends React.PureComponent<
             isRecording={isRecording}
             toggleRecording={this.toggleRecording}
           />
+
+          <RecordingModal
+            visible={!isRecording && !!recordedNotes}
+            dispatch={dispatch}
+            notes={recordedNotes}
+            instrumentId={getInstrumentNames().findIndex(
+              _instrument => _instrument === _instrument
+            )}
+            onActionComplete={() =>
+              this.setState({
+                recordedNotes: undefined
+              })
+            }
+          />
+
           <Transition
             native
             items={mode === VISUALIZER_MODE.READ}

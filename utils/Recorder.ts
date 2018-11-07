@@ -38,8 +38,8 @@ export default class Recorder {
   public endNote = (midiNumber: number) => {
     if (!this.isRecording) return;
     const index = this.getPlayingNoteIndex(midiNumber);
-    this.notes[index].duration =
-      Date.now() / 1000 - this.baseTime - this.notes[index].time;
+    const note = this.notes[index];
+    note.duration = Date.now() / 1000 - this.baseTime - this.notes[index].time;
   };
 
   public toggleRecorder = () =>

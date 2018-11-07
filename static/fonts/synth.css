@@ -1,9 +1,9 @@
 @font-face {
   font-family: "synth";
-  src: url("synth.eot?4afc3db008c5b4110912d616525b5684?#iefix")
+  src: url("synth.eot?dfbd059233dcbd8f0e9a6a2707c7c929?#iefix")
       format("embedded-opentype"),
-    url("synth.woff2?4afc3db008c5b4110912d616525b5684") format("woff2"),
-    url("synth.woff?4afc3db008c5b4110912d616525b5684") format("woff");
+    url("synth.woff2?dfbd059233dcbd8f0e9a6a2707c7c929") format("woff2"),
+    url("synth.woff?dfbd059233dcbd8f0e9a6a2707c7c929") format("woff");
 }
 
 .icon {
@@ -17,36 +17,42 @@
   vertical-align: top;
 }
 
-.icon-midi:before {
+.icon-close:before {
   content: "\f101";
 }
-.icon-play:before {
+.icon-midi:before {
   content: "\f102";
 }
 .icon-pause:before {
   content: "\f103";
 }
-.icon-record:before {
+.icon-play:before {
   content: "\f104";
 }
-.icon-settings:before {
+.icon-download:before {
   content: "\f105";
 }
 .icon-play1:before {
   content: "\f106";
 }
-.icon-stop:before {
+.icon-record:before {
   content: "\f107";
 }
-.icon-tracks:before {
+.icon-settings:before {
   content: "\f108";
 }
-.icon-upload:before {
+.icon-tracks:before {
   content: "\f109";
 }
-.icon-volume-mute:before {
+.icon-upload:before {
   content: "\f10a";
 }
-.icon-volume:before {
+.icon-stop:before {
   content: "\f10b";
+}
+.icon-volume:before {
+  content: "\f10c";
+}
+.icon-volume-mute:before {
+  content: "\f10d";
 }

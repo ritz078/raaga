@@ -4,8 +4,8 @@ const worker = new CanvasWorker();
 
 let isTranferableSupported = true;
 
-const isOffscreenCanvasSupported = !!// @ts-ignore
-HTMLCanvasElement.prototype.transferControlToOffscreen;
+const isOffscreenCanvasSupported = !!HTMLCanvasElement.prototype
+  .transferControlToOffscreen;
 
 try {
   const _canvas = document.createElement("canvas");

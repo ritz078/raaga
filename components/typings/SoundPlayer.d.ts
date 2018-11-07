@@ -1,4 +1,4 @@
-import { MIDI, Track } from "midiconvert";
+import { MIDI, Note, Track } from "midiconvert";
 import { Dispatch } from "redux";
 import { Settings } from "@reducers/settings";
 
@@ -19,4 +19,5 @@ export interface SoundPlayerState {
   };
   isPlaying: boolean;
   isRecording: boolean;
+  recordedNotes?: Partial<Note>[] | void;
 }

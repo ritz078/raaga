@@ -24,6 +24,7 @@ const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
   onSelectTrack,
   onClose
 }) => {
+  if (!midi) return null;
   return (
     <Transition
       native

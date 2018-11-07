@@ -32,6 +32,7 @@ const Header: React.SFC<HeaderProps> = ({
   toggleRecording
 }) => {
   const [mute, toggleMute] = useState(false);
+  const [showRecordings, toggleRecordingsSidebar] = useState(false);
 
   const _toggleMute = useCallback(() => {
     Tone.Master.mute = !mute;
@@ -59,7 +60,7 @@ const Header: React.SFC<HeaderProps> = ({
             name={isRecording ? "stop" : "record"}
             size={12}
             color={colors.red.base}
-          />{" "}
+          />
           &nbsp;&nbsp;&nbsp;
           {isRecording ? "Stop" : "Record"}
         </button>
@@ -96,9 +97,19 @@ const Header: React.SFC<HeaderProps> = ({
           color={colors.white.base}
           onClick={_toggleMute}
         />
-        <Icon className={iconClass} name="tracks" color={colors.white.base} />
+        <Icon
+          onClick={() => toggleRecordingsSidebar(true)}
+          className={iconClass}
+          name="tracks"
+          color={colors.white.base}
+        />
         <Icon className={iconClass} name="midi" color={colors.white.base} />
-        <SideBar isOpen={false} width={500} closeOnOutsideClick>
+        <SideBar
+          onClose={() => toggleRecordingsSidebar(false)}
+          isOpen={showRecordings}
+          width={500}
+          closeOnOutsideClick
+        >
           <div />
         </SideBar>
       </div>

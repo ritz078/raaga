@@ -5,7 +5,7 @@ import { instruments } from "midi-instruments";
 import { MIDI, Note, Track } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
-import { get, set } from "idb-keyval";
+import { get as getFromIDB, set as setInIDB } from "idb-keyval";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import Recorder from "@utils/Recorder";
 
@@ -75,7 +75,7 @@ export class Player {
     const response = await fetch(url);
     const data = await response.text();
     const audio = midiJsToJson(data);
-    await set(instrument, audio);
+    await setInIDB(instrument, audio);
     return audio;
   };
 
@@ -86,7 +86,7 @@ export class Player {
   public loadSoundFont = async (instrument = instruments[0].value) => {
     let audio;
     try {
-      audio = await get(instrument);
+      audio = await getFromIDB(instrument);
       if (!audio) audio = await this.fetchInstrumentFromRemote(instrument);
     } catch (e) {
       audio = await this.fetchInstrumentFromRemote(instrument);
