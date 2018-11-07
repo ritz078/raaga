@@ -9,7 +9,6 @@ import {
   headerClass,
   headerLogo,
   headerRight,
-  iconClass,
   iconNotifier,
   instrumentLabel,
   recordBtn

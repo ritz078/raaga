@@ -15,4 +15,5 @@ export interface HeaderProps {
   notes?: Note[];
   recordings: Store["recordings"];
   onTrackSelect: (midi: MIDI, i) => void;
+  midiDeviceId: string;
 }
