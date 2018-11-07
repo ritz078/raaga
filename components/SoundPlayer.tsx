@@ -26,7 +26,6 @@ import {
 } from "midi-instruments";
 import PlayerController from "@components/PlayerController";
 import { ReducersType } from "@enums/reducers";
-import { Transition } from "react-spring";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webmidi from "webmidi";
@@ -264,27 +263,15 @@ class SoundPlayer extends React.PureComponent<
             }
           />
 
-          <Transition
-            native
-            items={mode === VISUALIZER_MODE.READ}
-            from={{ opacity: 0 }}
-            enter={{ opacity: 1 }}
-            leave={{ opacity: 0, pointerEvents: "none" }}
-          >
-            {show =>
-              show &&
-              (styles => (
-                <PlayerController
-                  style={styles}
-                  onTogglePlay={this.onTogglePlay}
-                  isPlaying={isPlaying}
-                  midi={this.props.loadedMidi}
-                  onTrackSelect={this.selectTrack}
-                  onComplete={this.startPlayingTrack}
-                />
-              ))
-            }
-          </Transition>
+          {mode === VISUALIZER_MODE.READ && (
+            <PlayerController
+              onTogglePlay={this.onTogglePlay}
+              isPlaying={isPlaying}
+              midi={this.props.loadedMidi}
+              onTrackSelect={this.selectTrack}
+              onComplete={this.startPlayingTrack}
+            />
+          )}
 
           <Visualizer
             range={keyboardRange}
