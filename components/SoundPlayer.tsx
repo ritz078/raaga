@@ -29,6 +29,7 @@ import { ReducersType } from "@enums/reducers";
 import { Transition } from "react-spring";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
+import { selectedTrack } from "../reducers/selectedTrack";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -154,6 +155,14 @@ class SoundPlayer extends React.PureComponent<
 
   private selectTrack = (midi: MIDI, i: number) => {
     const track = midi.tracks[i];
+    debugger;
+
+    this.props.dispatch({
+      type: ReducersType.CHANGE_SETTINGS,
+      payload: {
+        mode: VISUALIZER_MODE.READ
+      }
+    });
 
     this.props.dispatch({
       type: ReducersType.LOADED_MIDI,
@@ -195,7 +204,8 @@ class SoundPlayer extends React.PureComponent<
 
     const {
       settings: { mode },
-      dispatch
+      dispatch,
+      recordings
     } = this.props;
 
     return (
@@ -209,6 +219,11 @@ class SoundPlayer extends React.PureComponent<
             onInstrumentChange={this.changeInstrument}
             isRecording={isRecording}
             toggleRecording={this.toggleRecording}
+            recordings={recordings}
+            onTrackSelect={(midi, i) => {
+              this.selectTrack(midi, i);
+              this.startPlayingTrack(midi.tracks[i]);
+            }}
           />
 
           <RecordingModal
@@ -275,8 +290,11 @@ class SoundPlayer extends React.PureComponent<
   }
 }
 
-export default connect(({ settings, loadedMidi, selectedTrack }: Store) => ({
-  settings,
-  loadedMidi,
-  selectedTrack
-}))(SoundPlayer);
+export default connect(
+  ({ settings, loadedMidi, selectedTrack, recordings }: Store) => ({
+    settings,
+    loadedMidi,
+    selectedTrack,
+    recordings
+  })
+)(SoundPlayer);

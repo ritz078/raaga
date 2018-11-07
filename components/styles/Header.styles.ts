@@ -19,19 +19,12 @@ export const trackRow = css({
 
 export const trackSelectionModal = css({
   maxHeight: 500,
-  width: 600,
   backgroundColor: "#333",
-  position: "absolute",
-  left: "50%",
-  transform: "translateX(-50%)",
-  top: 70,
-  borderRadius: 4,
-  zIndex: 99,
   color: "#dadada",
   fontSize: 13,
-  overflow: "hidden",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "column",
+  borderRadius: 4
 });
 
 export const modalTop = css({
@@ -119,4 +112,19 @@ export const headerLogo = css({
   display: "inline-flex",
   marginRight: 30,
   alignItems: "center"
+});
+
+export const iconNotifier = css({
+  backgroundColor: colors.red.base,
+  color: colors.white.base,
+  display: "inline-flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: 10,
+  borderRadius: 10,
+  width: 20,
+  height: 20,
+  position: "absolute",
+  top: "14px",
+  transform: "translateX(27px)"
 });

@@ -1,27 +1,24 @@
-import React, { useState, useCallback, memo } from "react";
-import {
-  colors,
-  Popper,
-  OptionGroupRadio,
-  Option,
-  SideBar
-} from "@anarock/pebble";
+import React, { useCallback, useState, memo } from "react";
+import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 
 import Icon from "@components/Icon";
 import {
-  headerRight,
   headerClass,
-  instrumentLabel,
+  headerLogo,
+  headerRight,
   iconClass,
-  recordBtn,
-  headerLogo
+  iconNotifier,
+  instrumentLabel,
+  recordBtn
 } from "./styles/Header.styles";
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
+import RecordingsSidebar from "@components/RecordingsSidebar";
+import { Transition, animated } from "react-spring";
 
 const Header: React.SFC<HeaderProps> = ({
   dispatch,
@@ -29,7 +26,9 @@ const Header: React.SFC<HeaderProps> = ({
   instrument,
   onInstrumentChange,
   isRecording,
-  toggleRecording
+  toggleRecording,
+  recordings,
+  onTrackSelect
 }) => {
   const [mute, toggleMute] = useState(false);
   const [showRecordings, toggleRecordingsSidebar] = useState(false);
@@ -55,15 +54,32 @@ const Header: React.SFC<HeaderProps> = ({
       <span className={headerLogo}>🎹</span>
 
       <div className={headerRight}>
-        <button className={recordBtn} onClick={toggleRecording}>
-          <Icon
-            name={isRecording ? "stop" : "record"}
-            size={12}
-            color={colors.red.base}
-          />
-          &nbsp;&nbsp;&nbsp;
-          {isRecording ? "Stop" : "Record"}
-        </button>
+        <Transition
+          native
+          items={mode === VISUALIZER_MODE.WRITE}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0, pointerEvents: "none" }}
+        >
+          {show =>
+            show &&
+            (styles => (
+              <animated.button
+                style={styles}
+                className={recordBtn}
+                onClick={toggleRecording}
+              >
+                <Icon
+                  name={isRecording ? "stop" : "record"}
+                  size={12}
+                  color={colors.red.base}
+                />
+                &nbsp;&nbsp;&nbsp;
+                {isRecording ? "Stop" : "Record"}
+              </animated.button>
+            ))
+          }
+        </Transition>
 
         <ModeToggle mode={mode} onToggle={toggleMode} />
 
@@ -97,21 +113,26 @@ const Header: React.SFC<HeaderProps> = ({
           color={colors.white.base}
           onClick={_toggleMute}
         />
-        <Icon
-          onClick={() => toggleRecordingsSidebar(true)}
-          className={iconClass}
-          name="tracks"
-          color={colors.white.base}
-        />
+        <div>
+          {!!recordings.length && (
+            <span className={iconNotifier}>{recordings.length}</span>
+          )}
+          <Icon
+            onClick={() => toggleRecordingsSidebar(true)}
+            className={iconClass}
+            name="tracks"
+            color={colors.white.base}
+          />
+        </div>
+
         <Icon className={iconClass} name="midi" color={colors.white.base} />
-        <SideBar
+        <RecordingsSidebar
+          visible={showRecordings}
           onClose={() => toggleRecordingsSidebar(false)}
-          isOpen={showRecordings}
-          width={500}
-          closeOnOutsideClick
-        >
-          <div />
-        </SideBar>
+          recordings={recordings}
+          dispatch={dispatch}
+          onTrackSelect={onTrackSelect}
+        />
       </div>
     </header>
   );

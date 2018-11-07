@@ -25,23 +25,36 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
 }) => {
   const [name, setName] = useState("");
 
-  const saveFile = useCallback(() => {
-    const midi = create();
-    // @ts-ignore
-    const tracks = midi.track(name);
-    tracks.patch(instrumentId);
+  const saveFile = useCallback(
+    () => {
+      const midi = create();
+      // @ts-ignore
+      const tracks = midi.track(name);
+      tracks.patch(instrumentId);
 
-    notes.forEach(({ midi, time, duration, velocity }) =>
-      tracks.note(midi, time, duration, velocity)
-    );
+      notes.forEach(({ midi, time, duration, velocity }) =>
+        tracks.note(midi, time, duration, velocity)
+      );
 
-    dispatch({
-      type: ReducersType.SAVE_RECORDING,
-      payload: midi.toJSON()
-    });
+      const midiJson = midi.toJSON();
+      midiJson.header.name = name;
 
-    onActionComplete();
-  }, []);
+      dispatch({
+        type: ReducersType.SAVE_RECORDING,
+        payload: {
+          ...midiJson,
+          id:
+            "_" +
+            Math.random()
+              .toString(36)
+              .substr(2, 9)
+        }
+      });
+
+      onActionComplete();
+    },
+    [name]
+  );
 
   const lastNote = notes[notes.length - 1];
   return (
@@ -51,12 +64,20 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
         size={15}
         color={colors.gray.dark}
         className={iconClose}
+        onClick={onActionComplete}
       />
       <h4 className={title}>Save</h4>
 
       <span className={description}>
         The recording is saved in your local storage. So in case you change the
-        browser or clear your storage, it will be gone.
+        browser or clear your storage, it will be gone. <br />
+        {!notes.length && (
+          <span style={{ color: colors.red.base }}>
+            <br />
+            There are no notes in this recording. You might want to discard this
+            recording.
+          </span>
+        )}
       </span>
 
       {lastNote && (
