@@ -19,7 +19,14 @@ export const playerController = css({
   ...mixins.flexMiddleAlign,
   padding: "10px 20px",
   borderRadius: 4,
-  backgroundColor: "rgba(37, 37, 37, 0.83)"
+  backgroundColor: "rgba(37, 37, 37, 0.83)",
+  left: 80,
+  top: 20,
+  position: "absolute",
+  cursor: "move",
+  svg: {
+    cursor: "pointer"
+  }
 });
 
 export const progressBar = css({

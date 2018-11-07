@@ -1,27 +1,39 @@
-import React, { useState, useCallback, memo } from "react";
-import { colors, Popper, OptionGroupRadio, Option } from "@anarock/pebble";
+import React, { useCallback, useState, memo } from "react";
+import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 
 import Icon from "@components/Icon";
 import {
-  headerRight,
   headerClass,
-  instrumentLabel
+  headerLogo,
+  headerRight,
+  iconClass,
+  iconNotifier,
+  instrumentLabel,
+  recordBtn
 } from "./styles/Header.styles";
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
+import RecordingsSidebar from "@components/RecordingsSidebar";
+import { Transition, animated } from "react-spring";
 import MidiSelect from "@components/MidiSelect";
 
 const Header: React.SFC<HeaderProps> = ({
   dispatch,
   mode,
   instrument,
-  onInstrumentChange
+  onInstrumentChange,
+  isRecording,
+  toggleRecording,
+  recordings,
+  onTrackSelect,
+  midiDeviceId
 }) => {
   const [mute, toggleMute] = useState(false);
+  const [showRecordings, toggleRecordingsSidebar] = useState(false);
 
   const _toggleMute = useCallback(() => {
     Tone.Master.mute = !mute;
@@ -41,18 +53,36 @@ const Header: React.SFC<HeaderProps> = ({
 
   return (
     <header className={headerClass}>
-      <span
-        style={{
-          fontSize: 24,
-          display: "inline-flex",
-          marginRight: 30,
-          alignItems: "center"
-        }}
-      >
-        🎹
-      </span>
+      <span className={headerLogo}>🎹</span>
 
       <div className={headerRight}>
+        <Transition
+          native
+          items={mode === VISUALIZER_MODE.WRITE}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0, pointerEvents: "none" }}
+        >
+          {show =>
+            show &&
+            (styles => (
+              <animated.button
+                style={styles}
+                className={recordBtn}
+                onClick={toggleRecording}
+              >
+                <Icon
+                  name={isRecording ? "stop" : "record"}
+                  size={12}
+                  color={colors.red.base}
+                />
+                &nbsp;&nbsp;&nbsp;
+                {isRecording ? "Stop" : "Record"}
+              </animated.button>
+            ))
+          }
+        </Transition>
+
         <ModeToggle mode={mode} onToggle={toggleMode} />
 
         <Popper
@@ -79,13 +109,34 @@ const Header: React.SFC<HeaderProps> = ({
             </OptionGroupRadio>
           )}
         </Popper>
-        <Icon
-          name={volumeName}
-          className="icon-padding"
-          color={colors.white.base}
-          onClick={_toggleMute}
+        <div>
+          <Icon
+            className="icon-padding"
+            name={volumeName}
+            color={colors.white.base}
+            onClick={_toggleMute}
+          />
+        </div>
+        <div>
+          {!!recordings.length && (
+            <span className={iconNotifier}>{recordings.length}</span>
+          )}
+          <Icon
+            onClick={() => toggleRecordingsSidebar(true)}
+            className="icon-padding"
+            name="tracks"
+            color={colors.white.base}
+          />
+        </div>
+
+        <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
+        <RecordingsSidebar
+          visible={showRecordings}
+          onClose={() => toggleRecordingsSidebar(false)}
+          recordings={recordings}
+          dispatch={dispatch}
+          onTrackSelect={onTrackSelect}
         />
-        <MidiSelect />
       </div>
     </header>
   );

@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import { Store as S } from "redux";
 import Head from "next/head";
 import { Store } from "@typings/store";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 
 interface AppProps {
   reduxStore: S<Store>;
@@ -13,6 +15,7 @@ interface AppProps {
 class MyApp extends App<AppProps> {
   render() {
     const { Component, pageProps, reduxStore } = this.props;
+    const persistor = persistStore(reduxStore);
     return (
       <>
         <Head>
@@ -20,7 +23,9 @@ class MyApp extends App<AppProps> {
         </Head>
         <Container>
           <Provider store={reduxStore}>
-            <Component {...pageProps} />
+            <PersistGate loading={null} persistor={persistor}>
+              <Component {...pageProps} />
+            </PersistGate>
           </Provider>
         </Container>
       </>

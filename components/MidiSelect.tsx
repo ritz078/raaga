@@ -3,20 +3,35 @@ import { colors, Popper, Option, OptionGroupRadio } from "@anarock/pebble";
 import Icon from "@components/Icon";
 import webMidi from "webmidi";
 import {
+  deviceAvailable,
   midiWrapper,
   noMidiIconWrapper
 } from "@components/styles/MidiSelect.styles";
+import { ReducersType } from "@enums/reducers";
+import { css } from "emotion";
 
-const MidiSelect = () => {
+const MidiSelect = ({ dispatch, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
   const [error, setError] = useState("");
 
   const handleMidiDeviceChange = useCallback(() => {
     setInputMidis(webMidi.inputs);
+
+    if (!webMidi.inputs.length) {
+      dispatch({
+        type: ReducersType.SET_MIDI_DEVICE,
+        payload: null
+      });
+    }
   });
 
   useEffect(() => {
     let enabled = false;
+
+    if (!webMidi.supported) {
+      setError("Your Device doesn't support the WebMIDI API.");
+    }
+
     webMidi.enable(err => {
       if (err) {
         setError(err.message);
@@ -40,16 +55,46 @@ const MidiSelect = () => {
   return (
     <Popper
       label={({ toggle }) => (
-        <Icon className="icon-padding" name="midi" onClick={toggle} />
+        <div>
+          <Icon className="icon-padding" name="midi" onClick={toggle} />
+          {inputMidis.length && (
+            <Icon
+              name="record"
+              size={10}
+              color={colors.green.base}
+              className={deviceAvailable}
+            />
+          )}
+        </div>
       )}
       placement="bottom-end"
-      isOpen
+      popperClassName={css({
+        width: 300
+      })}
     >
-      {() =>
+      {({ toggle }) =>
         inputMidis.length ? (
-          <OptionGroupRadio onChange={console.log} selected={""}>
-            {webMidi.inputs.map(input => (
-              <Option label={input.name} value={input.name} />
+          <OptionGroupRadio
+            onChange={id => {
+              dispatch({
+                type: ReducersType.SET_MIDI_DEVICE,
+                payload: id
+              });
+              toggle();
+            }}
+            selected={midiDeviceId}
+          >
+            {inputMidis.map(input => (
+              <Option
+                key={input.id}
+                label={input.name}
+                value={input.id}
+                rightElement={() =>
+                  input.id === midiDeviceId ? (
+                    <Icon name="record" size={14} color={colors.green.base} />
+                  ) : null
+                }
+              />
             ))}
           </OptionGroupRadio>
         ) : (

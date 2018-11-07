@@ -1,6 +1,6 @@
 import React from "react";
 import { colors } from "@anarock/pebble";
-import { cx } from "emotion";
+import { css, cx } from "emotion";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -17,15 +17,20 @@ const Icon: React.SFC<IconProps> = ({
   size = 20,
   color = colors.white.base,
   className,
+  style = {},
   ...props
 }) => {
   return (
-    <span
-      className={cx(`icon icon-${name}`, className)}
-      style={{
-        fontSize: size,
-        color
-      }}
+    <i
+      className={cx(
+        `icon icon-${name}`,
+        css({
+          ...style,
+          fontSize: size,
+          color
+        }),
+        className
+      )}
       {...props}
     />
   );

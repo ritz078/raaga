@@ -11,6 +11,22 @@ box-sizing: border-box;
 font-family: "Lato";
 -webkit-font-smoothing: antialiased;
 }
+
+.ReactModal__Overlay {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ReactModal__Overlay--before-close{
+    opacity: 0;
+    transform: translateY(10px);
+}
 `;
 
 export default class MyDocument extends Document<{
@@ -39,6 +55,10 @@ export default class MyDocument extends Document<{
             href="https://fonts.googleapis.com/css?family=Lato"
           />
           <link rel="stylesheet" href={"/static/fonts/synth.css"} />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/@anarock/pebble/dist/pebble.css"
+          />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <link
             rel="shortcut icon"

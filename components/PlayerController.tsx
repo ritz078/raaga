@@ -97,27 +97,29 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
         </Transition>
       )}
 
-      {isEmpty(midi) &&
-        !showCountdown && (
-          <div className={loadFileWrapper}>
-            <h3>
-              You need to load a MIDI file and then <br /> select a track you
-              want to play.
-            </h3>
-            <label htmlFor="upload-midi" style={{ display: "flex" }}>
-              <div className={loadButton}>Load a MIDI file</div>
-            </label>
-            <input
-              onChange={loadFile}
-              hidden
-              type="file"
-              name="photo"
-              id="upload-midi"
-              accept=".mid"
-              ref={fileRef}
-            />
-          </div>
-        )}
+      {isEmpty(midi) && !showCountdown && (
+        <div className={loadFileWrapper}>
+          <h3>
+            You need to load a MIDI file and then <br /> select a track you want
+            to play.
+          </h3>
+          <label htmlFor="upload-midi" style={{ display: "flex" }}>
+            <div className={loadButton}>
+              <Icon name="upload" color={colors.gray.darker} size={12} />
+              &nbsp;&nbsp; Load a MIDI file
+            </div>
+          </label>
+          <input
+            onChange={loadFile}
+            hidden
+            type="file"
+            name="photo"
+            id="upload-midi"
+            accept=".mid"
+            ref={fileRef}
+          />
+        </div>
+      )}
 
       <div
         ref={safariContextStartClickRef}
