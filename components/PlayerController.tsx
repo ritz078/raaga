@@ -107,7 +107,10 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
               want to play.
             </h3>
             <label htmlFor="upload-midi" style={{ display: "flex" }}>
-              <div className={loadButton}>Load a MIDI file</div>
+              <div className={loadButton}>
+                <Icon name="upload" color={colors.gray.darker} size={12} />
+                &nbsp;&nbsp; Load a MIDI file
+              </div>
             </label>
             <input
               onChange={loadFile}

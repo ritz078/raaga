@@ -19,19 +19,12 @@ export const trackRow = css({
 
 export const trackSelectionModal = css({
   maxHeight: 500,
-  width: 600,
   backgroundColor: "#333",
-  position: "absolute",
-  left: "50%",
-  transform: "translateX(-50%)",
-  top: 70,
-  borderRadius: 4,
-  zIndex: 99,
   color: "#dadada",
   fontSize: 13,
-  overflow: "hidden",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "column",
+  borderRadius: 4
 });
 
 export const modalTop = css({
@@ -63,27 +56,18 @@ export const headerClass = css({
   zIndex: 9,
   ...mixins.flexSpaceBetween,
   alignItems: "center",
-  padding: "0 30px",
-  i: {
-    cursor: "pointer",
-    padding: "28px 20px",
-    color: "#e7e7e7",
-    fontSize: 20,
-    transition: "all 200ms",
-    "&:hover": {
-      color: colors.white.base
-    }
-  }
+  padding: "0 30px"
 });
 
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
-  alignItems: "center",
-  svg: {
-    margin: 15,
-    cursor: "pointer",
-    fill: colors.white.base
-  }
+  alignItems: "center"
+});
+
+export const iconClass = css({
+  margin: 15,
+  cursor: "pointer",
+  fill: colors.white.base
 });
 
 export const instrumentLabel = css({
@@ -105,4 +89,42 @@ export const instrumentLabel = css({
       transform: "rotate(180deg)"
     }
   }
+});
+
+export const recordBtn = css({
+  color: colors.red.base,
+  fontSize: 13,
+  backgroundColor: colors.white.base,
+  height: 40,
+  padding: "0 15px",
+  borderRadius: 20,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: "0 20px",
+  cursor: "pointer",
+  outline: 0,
+  border: 0
+});
+
+export const headerLogo = css({
+  fontSize: 24,
+  display: "inline-flex",
+  marginRight: 30,
+  alignItems: "center"
+});
+
+export const iconNotifier = css({
+  backgroundColor: colors.red.base,
+  color: colors.white.base,
+  display: "inline-flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: 10,
+  borderRadius: 10,
+  width: 20,
+  height: 20,
+  position: "absolute",
+  top: "14px",
+  transform: "translateX(27px)"
 });

@@ -7,4 +7,7 @@ export interface Store {
   settings: {
     mode: VISUALIZER_MODE;
   };
+  recordings: (MIDI & {
+    id: string;
+  })[];
 }

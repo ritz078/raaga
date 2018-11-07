@@ -19,11 +19,17 @@ import Header from "@components/Header";
 import CanvasWorker, {
   CanvasWorkerFallback
 } from "@controllers/visualizer.controller";
-import { getInstrumentById, instruments } from "midi-instruments";
+import {
+  getInstrumentById,
+  getInstrumentNames,
+  instruments
+} from "midi-instruments";
 import PlayerController from "@components/PlayerController";
 import { ReducersType } from "@enums/reducers";
 import { Transition } from "react-spring";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import RecordingModal from "@components/RecordingModal";
+import { selectedTrack } from "../reducers/selectedTrack";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -43,7 +49,9 @@ class SoundPlayer extends React.PureComponent<
     loading: false,
     activeMidis: [],
     keyboardRange: range,
-    isPlaying: false
+    isPlaying: false,
+    isRecording: false,
+    recordedNotes: undefined
   };
 
   private resetPlayer = () => {
@@ -138,7 +146,7 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private onTogglePlay = () => {
-    this.player.toggle();
+    this.player.togglePlay();
 
     this.setState({
       isPlaying: !this.state.isPlaying
@@ -147,6 +155,14 @@ class SoundPlayer extends React.PureComponent<
 
   private selectTrack = (midi: MIDI, i: number) => {
     const track = midi.tracks[i];
+    debugger;
+
+    this.props.dispatch({
+      type: ReducersType.CHANGE_SETTINGS,
+      payload: {
+        mode: VISUALIZER_MODE.READ
+      }
+    });
 
     this.props.dispatch({
       type: ReducersType.LOADED_MIDI,
@@ -168,18 +184,28 @@ class SoundPlayer extends React.PureComponent<
     this.player.playTrack(this.props.loadedMidi, track, this.onRecordPlay);
   };
 
+  private toggleRecording = () => {
+    this.setState({
+      isRecording: !this.state.isRecording,
+      recordedNotes: this.player.toggleRecording()
+    });
+  };
+
   render() {
     const {
       instrument,
       loading,
       activeMidis,
       keyboardRange,
-      isPlaying
+      isPlaying,
+      isRecording,
+      recordedNotes
     } = this.state;
 
     const {
       settings: { mode },
-      dispatch
+      dispatch,
+      recordings
     } = this.props;
 
     return (
@@ -188,11 +214,32 @@ class SoundPlayer extends React.PureComponent<
           <Header
             dispatch={dispatch}
             onTogglePlay={this.onTogglePlay}
-            isPlaying={isPlaying}
             instrument={instrument}
             mode={mode}
             onInstrumentChange={this.changeInstrument}
+            isRecording={isRecording}
+            toggleRecording={this.toggleRecording}
+            recordings={recordings}
+            onTrackSelect={(midi, i) => {
+              this.selectTrack(midi, i);
+              this.startPlayingTrack(midi.tracks[i]);
+            }}
           />
+
+          <RecordingModal
+            visible={!isRecording && !!recordedNotes}
+            dispatch={dispatch}
+            notes={recordedNotes}
+            instrumentId={getInstrumentNames().findIndex(
+              _instrument => _instrument === _instrument
+            )}
+            onActionComplete={() =>
+              this.setState({
+                recordedNotes: undefined
+              })
+            }
+          />
+
           <Transition
             native
             items={mode === VISUALIZER_MODE.READ}
@@ -243,8 +290,11 @@ class SoundPlayer extends React.PureComponent<
   }
 }
 
-export default connect(({ settings, loadedMidi, selectedTrack }: Store) => ({
-  settings,
-  loadedMidi,
-  selectedTrack
-}))(SoundPlayer);
+export default connect(
+  ({ settings, loadedMidi, selectedTrack, recordings }: Store) => ({
+    settings,
+    loadedMidi,
+    selectedTrack,
+    recordings
+  })
+)(SoundPlayer);

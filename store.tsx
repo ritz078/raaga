@@ -3,6 +3,15 @@ import { createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import reducers from "@reducers";
 import { ReducersType } from "@enums/reducers";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "synth",
+  storage
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 // Transform actions-type to a string if the action type is a
 // number and there's we defined an actiontype for that.
@@ -19,7 +28,7 @@ const actionTypeEnumToString = (action: any): any =>
 
 export function initializeStore(initialState = {}) {
   return createStore(
-    reducers,
+    persistedReducer,
     initialState,
     composeWithDevTools({ actionSanitizer: actionTypeEnumToString })()
   );
