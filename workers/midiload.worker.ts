@@ -11,10 +11,6 @@ file.onload = () => {
     // heavy computation
     const parsedMidi = parse(file.result);
 
-    debugger;
-
-    console.log(parsedMidi);
-
     _self.postMessage({
       data: parsedMidi.toJSON()
     });
