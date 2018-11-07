@@ -1,30 +1,14 @@
 import React, { memo, useState } from "react";
-import { colors, mixins, SideBar } from "@anarock/pebble";
-import { MIDI } from "midiconvert";
-import { css } from "emotion";
+import { colors, SideBar } from "@anarock/pebble";
 import Icon from "@components/Icon";
-import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
 import TrackSelectionModal from "@components/TrackSelectionModal";
-
-interface RecordingsSidebarProps {
-  visible: boolean;
-  onClose: () => void;
-  recordings: (MIDI & {
-    id: string;
-  })[];
-  dispatch: Dispatch<AnyAction>;
-  onTrackSelect: (midi: MIDI, i) => void;
-}
-
-const iconClass = css({
-  display: "inline-block",
-  padding: "0 14px",
-  cursor: "pointer",
-  "&:hover": {
-    color: colors.gray.darker
-  }
-});
+import { RecordingsSidebarProps } from "@components/typings/RecordingSidebar";
+import {
+  iconClass,
+  recordingRow,
+  recordingRowBottom
+} from "@components/styles/RecordingSidebar.styles";
 
 const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
   visible,
@@ -49,28 +33,10 @@ const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
         {recordings.map((recording, i) => {
           const track = recording.tracks[0];
           return (
-            <div
-              key={recording.id}
-              style={{
-                borderBottom: `1px solid ${colors.gray.lightest}`,
-                fontSize: 14,
-                padding: "15px 0",
-                ...mixins.flexSpaceBetween,
-                alignItems: "center"
-              }}
-            >
+            <div key={recording.id} className={recordingRow}>
               <div>
                 <div>{recording.header.name || "Unnamed"}</div>
-                <div
-                  className={css({
-                    color: "#888",
-                    marginTop: 8,
-                    span: {
-                      display: "inline-block",
-                      margin: "0 8px"
-                    }
-                  })}
-                >
+                <div className={recordingRowBottom}>
                   {recording.duration.toFixed(2)}s <span>&bull;</span>
                   {recording.tracks.length} track
                   <span>&bull;</span>

@@ -15,7 +15,6 @@ file.onload = () => {
       data: parsedMidi.toJSON()
     });
   } catch (e) {
-    debugger;
     _self.postMessage({
       error: e.message
     });

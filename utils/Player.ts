@@ -107,11 +107,12 @@ export class Player {
   /**
    * Plays a single note
    * @param midi
+   * @param velocity
    */
-  public playNote = (midi: number) => {
+  public playNote = (midi: number, velocity = 1) => {
     this.recorder.startNote(midi);
 
-    this.sampler.triggerAttack(this.getNoteName(midi));
+    this.sampler.triggerAttack(this.getNoteName(midi), undefined, velocity);
 
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.PLAY_NOTE,
@@ -225,7 +226,9 @@ export class Player {
 
   public clear = () => {
     if (this.notesPlayer) {
-      this.notesPlayer.dispose();
+      if (this.notesPlayer._state) {
+        this.notesPlayer.dispose();
+      }
       this.notesPlayer = null;
     }
     this.isPlaying = false;

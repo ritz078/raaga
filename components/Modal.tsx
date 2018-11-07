@@ -6,7 +6,8 @@ const Modal = ({
   children,
   visible,
   contentStyles = {},
-  overlayStyles = {}
+  overlayStyles = {},
+  ...props
 }) => {
   const styles = {
     overlay: {
@@ -33,6 +34,7 @@ const Modal = ({
       closeTimeoutMS={500}
       isOpen={visible}
       style={styles}
+      {...props}
     >
       {children}
     </Modal_>

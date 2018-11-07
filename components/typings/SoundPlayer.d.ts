@@ -9,6 +9,7 @@ export interface SoundPlayerProps {
   loadedMidi: MIDI;
   selectedTrack: Track;
   recordings: Store["recordings"];
+  midiDevice: string;
 }
 
 export interface SoundPlayerState {

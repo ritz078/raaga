@@ -56,12 +56,31 @@ export const headerClass = css({
   zIndex: 9,
   ...mixins.flexSpaceBetween,
   alignItems: "center",
-  padding: "0 30px"
+  padding: "0 30px",
+  ".icon-padding": {
+    cursor: "pointer",
+    padding: "28px 20px",
+    color: "#e7e7e7",
+    fontSize: 20,
+    width: 50,
+    height: 50,
+    transition: "all 200ms",
+    "&:hover": {
+      color: colors.white.base
+    }
+  }
 });
 
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
-  alignItems: "center"
+  alignItems: "center",
+  svg: {
+    padding: 15,
+    width: 50,
+    height: 50,
+    cursor: "pointer",
+    fill: colors.white.base
+  }
 });
 
 export const iconClass = css({

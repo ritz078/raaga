@@ -2,10 +2,14 @@ import React from "react";
 import { colors } from "@anarock/pebble";
 import { css, cx } from "emotion";
 
-interface IconProps extends React.HTMLAttributes<HTMLElement> {
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+interface IconProps
+  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "unselectable"> {
   name: string;
   size?: number;
   color?: string;
+  className?: string;
 }
 
 const Icon: React.SFC<IconProps> = ({

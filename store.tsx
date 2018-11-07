@@ -8,7 +8,8 @@ import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
   key: "synth",
-  storage
+  storage,
+  blacklist: ["selectedTrack", "midiDevice"]
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

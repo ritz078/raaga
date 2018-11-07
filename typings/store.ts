@@ -10,4 +10,5 @@ export interface Store {
   recordings: (MIDI & {
     id: string;
   })[];
+  midiDevice: string;
 }

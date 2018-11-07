@@ -29,7 +29,7 @@ import { ReducersType } from "@enums/reducers";
 import { Transition } from "react-spring";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
-import { selectedTrack } from "../reducers/selectedTrack";
+import webmidi from "webmidi";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -91,6 +91,10 @@ class SoundPlayer extends React.PureComponent<
     if (prevProps.settings.mode !== this.props.settings.mode) {
       this.resetPlayer();
     }
+
+    if (prevProps.midiDevice !== this.props.midiDevice) {
+      this.setMidiDevice();
+    }
   }
 
   private preparePlayerForNewTrack = async (selectedTrack: Track) => {
@@ -111,7 +115,25 @@ class SoundPlayer extends React.PureComponent<
 
   componentDidMount() {
     this.changeInstrument();
+
+    this.setMidiDevice();
   }
+
+  setMidiDevice = () => {
+    if (this.props.midiDevice) {
+      const input = webmidi.getInputById(this.props.midiDevice);
+
+      if (input) {
+        input.addListener("noteon", "all", e => {
+          this.onNoteStart(e.note.number, e.velocity);
+        });
+
+        input.addListener("noteoff", "all", e => {
+          this.onNoteStop(e.note.number);
+        });
+      }
+    }
+  };
 
   onRecordPlay = (notesPlaying: NoteWithEvent[], isComplete) => {
     if (isComplete) {
@@ -131,8 +153,8 @@ class SoundPlayer extends React.PureComponent<
   //   this.player.playRecording(this.props.selectedTrack, this.onRecordPlay);
   // };
 
-  private onNoteStart = midi => {
-    this.player.playNote(midi);
+  private onNoteStart = (midi, velocity = 1) => {
+    this.player.playNote(midi, velocity);
     this.setState(state => ({
       activeMidis: state.activeMidis.concat(midi)
     }));
@@ -205,7 +227,8 @@ class SoundPlayer extends React.PureComponent<
     const {
       settings: { mode },
       dispatch,
-      recordings
+      recordings,
+      midiDevice
     } = this.props;
 
     return (
@@ -224,6 +247,7 @@ class SoundPlayer extends React.PureComponent<
               this.selectTrack(midi, i);
               this.startPlayingTrack(midi.tracks[i]);
             }}
+            midiDeviceId={midiDevice}
           />
 
           <RecordingModal
@@ -291,10 +315,11 @@ class SoundPlayer extends React.PureComponent<
 }
 
 export default connect(
-  ({ settings, loadedMidi, selectedTrack, recordings }: Store) => ({
+  ({ settings, loadedMidi, selectedTrack, recordings, midiDevice }: Store) => ({
     settings,
     loadedMidi,
     selectedTrack,
-    recordings
+    recordings,
+    midiDevice
   })
 )(SoundPlayer);

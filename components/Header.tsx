@@ -19,6 +19,7 @@ import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import RecordingsSidebar from "@components/RecordingsSidebar";
 import { Transition, animated } from "react-spring";
+import MidiSelect from "@components/MidiSelect";
 
 const Header: React.SFC<HeaderProps> = ({
   dispatch,
@@ -28,7 +29,8 @@ const Header: React.SFC<HeaderProps> = ({
   isRecording,
   toggleRecording,
   recordings,
-  onTrackSelect
+  onTrackSelect,
+  midiDeviceId
 }) => {
   const [mute, toggleMute] = useState(false);
   const [showRecordings, toggleRecordingsSidebar] = useState(false);
@@ -107,25 +109,27 @@ const Header: React.SFC<HeaderProps> = ({
             </OptionGroupRadio>
           )}
         </Popper>
-        <Icon
-          className={iconClass}
-          name={volumeName}
-          color={colors.white.base}
-          onClick={_toggleMute}
-        />
+        <div>
+          <Icon
+            className="icon-padding"
+            name={volumeName}
+            color={colors.white.base}
+            onClick={_toggleMute}
+          />
+        </div>
         <div>
           {!!recordings.length && (
             <span className={iconNotifier}>{recordings.length}</span>
           )}
           <Icon
             onClick={() => toggleRecordingsSidebar(true)}
-            className={iconClass}
+            className="icon-padding"
             name="tracks"
             color={colors.white.base}
           />
         </div>
 
-        <Icon className={iconClass} name="midi" color={colors.white.base} />
+        <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
         <RecordingsSidebar
           visible={showRecordings}
           onClose={() => toggleRecordingsSidebar(false)}
