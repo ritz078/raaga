@@ -3,9 +3,7 @@ const withTypescript = require("@zeit/next-typescript");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const withCSS = require("@zeit/next-css");
 
-if (process.env.NODE_ENV !== "production") {
-  require("now-env");
-}
+require("now-env");
 
 module.exports = withCSS(
   withTypescript({

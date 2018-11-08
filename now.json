@@ -3,6 +3,6 @@
   "alias": ["synth-beta"],
   "type": "static",
   "env": {
-    "CLOUDINARY_CLOUD_NAME": "@cloudinary-cloud-name"
+    "CLOUDINARY_CLOUD_NAME": "dqryno6nz"
   }
 }
