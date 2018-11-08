@@ -3,6 +3,6 @@
   "alias": ["synth-beta"],
   "type": "static",
   "static": {
-    "public": "out"
+    "public": "./out"
   }
 }
