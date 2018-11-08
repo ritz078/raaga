@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
+    "export": "next export -o public",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
     "build:fonts": "node ./scripts/generate-fonts"
   },
