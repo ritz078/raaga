@@ -30,6 +30,7 @@ import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webmidi from "webmidi";
+import Tone from "tone";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -138,7 +139,8 @@ class SoundPlayer extends React.PureComponent<
     if (isComplete) {
       this.player.stopTrack();
       this.setState({
-        activeMidis: []
+        activeMidis: [],
+        isPlaying: false
       });
     } else {
       this.setState({
@@ -167,7 +169,11 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private onTogglePlay = () => {
-    this.player.togglePlay();
+    if (Tone.Transport.state === "stopped") {
+      this.startPlayingTrack();
+    } else {
+      this.player.togglePlay();
+    }
 
     this.setState({
       isPlaying: !this.state.isPlaying
@@ -176,7 +182,6 @@ class SoundPlayer extends React.PureComponent<
 
   private selectTrack = (midi: MIDI, i: number) => {
     const track = midi.tracks[i];
-    debugger;
 
     this.props.dispatch({
       type: ReducersType.CHANGE_SETTINGS,
@@ -212,6 +217,19 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
+  private toggleMode = (mode: VISUALIZER_MODE) => {
+    this.resetPlayer();
+    this.props.dispatch({
+      type: ReducersType.CHANGE_SETTINGS,
+      payload: {
+        mode
+      }
+    });
+    this.setState({
+      isPlaying: false
+    });
+  };
+
   render() {
     const {
       instrument,
@@ -244,6 +262,7 @@ class SoundPlayer extends React.PureComponent<
             isRecording={isRecording}
             toggleRecording={this.toggleRecording}
             recordings={recordings}
+            onToggleMode={this.toggleMode}
             onTrackSelect={(midi, i) => {
               this.selectTrack(midi, i);
               this.startPlayingTrack(midi.tracks[i]);
@@ -271,7 +290,7 @@ class SoundPlayer extends React.PureComponent<
               isPlaying={isPlaying}
               midi={this.props.loadedMidi}
               onTrackSelect={this.selectTrack}
-              onComplete={this.startPlayingTrack}
+              onStartPlay={this.startPlayingTrack}
             />
           )}
 

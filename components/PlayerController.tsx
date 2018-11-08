@@ -1,72 +1,39 @@
 // @ts-ignore
 import React, { memo, useState, useEffect, useRef } from "react";
-import { MIDI } from "midiconvert";
 import { animated, Transition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
 import {
+  controllerBottom,
   loadButton,
+  loadFileIcon,
   loadFileWrapper,
+  midiNameStyle,
   playerController,
   playerWrapper
 } from "@components/styles/PlayerController.styles";
 import { isEmpty } from "lodash";
 import TrackSelectionModal from "@components/TrackSelectionModal";
-import MidiLoadWorker from "@workers/midiload.worker";
 import ProgressCircle from "@components/ProgressCircle";
 import Draggable from "react-draggable";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
-
-interface PlayerControllerProps {
-  midi: MIDI;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-  onTrackSelect: (midi: MIDI, i: number) => void;
-  onComplete: () => void;
-  style: {};
-}
-
-let worker: Worker;
-
-const fileRef: React.RefObject<HTMLInputElement> = React.createRef();
+import { PlayerControllerProps } from "@components/typings/PlayerController";
+import FileLoad from "@components/FileLoad";
 
 const PlayerController: React.SFC<PlayerControllerProps> = ({
   midi,
   isPlaying,
   onTogglePlay,
   onTrackSelect,
-  onComplete,
+  onStartPlay,
   style = {}
 }) => {
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
   const [showCountdown, toggleCountdown] = useState(false);
-
-  useEffect(() => {
-    if (!worker) {
-      worker = new MidiLoadWorker();
-      worker.onmessage = e => {
-        if (e.data.error) {
-          alert(e.data.error);
-          return;
-        }
-
-        setLoadedMidi(e.data.data);
-        toggleTrackSelectionModal(true);
-      };
-    }
-  }, []);
-
-  function loadFile(e) {
-    const file = e.target.files[0];
-    worker.postMessage(file);
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
-  }
 
   return (
     <animated.div style={style} className={playerWrapper}>
@@ -81,15 +48,44 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
           {show =>
             show &&
             (styles => (
-              <Draggable bounds="parent">
+              <Draggable bounds="parent" axis="x">
                 <animated.div style={styles} className={playerController}>
-                  <Icon
-                    name={isPlaying ? "pause" : "play"}
-                    color={colors.white.base}
-                    onClick={onTogglePlay}
-                  />
+                  <div style={{ flex: 1 }}>
+                    <div className={midiNameStyle}>
+                      {midi.header.name || "Unknown"}{" "}
+                    </div>
+                    <div className={controllerBottom}>
+                      <Icon
+                        name={isPlaying ? "pause" : "play"}
+                        color={colors.white.base}
+                        onClick={onTogglePlay}
+                        size={16}
+                      />
 
-                  <ProgressBar />
+                      <ProgressBar />
+
+                      <Icon
+                        name="replay"
+                        color={colors.white.base}
+                        onClick={() => onStartPlay()}
+                      />
+                    </div>
+                  </div>
+                  <div className={loadFileIcon}>
+                    <FileLoad
+                      onMidiLoad={data => {
+                        setLoadedMidi(data.data);
+                        toggleTrackSelectionModal(true);
+                      }}
+                      label={
+                        <Icon
+                          name="midi-file"
+                          size={30}
+                          color={colors.white.base}
+                        />
+                      }
+                    />
+                  </div>
                 </animated.div>
               </Draggable>
             ))
@@ -103,20 +99,18 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
             You need to load a MIDI file and then <br /> select a track you want
             to play.
           </h3>
-          <label htmlFor="upload-midi" style={{ display: "flex" }}>
-            <div className={loadButton}>
-              <Icon name="upload" color={colors.gray.darker} size={12} />
-              &nbsp;&nbsp; Load a MIDI file
-            </div>
-          </label>
-          <input
-            onChange={loadFile}
-            hidden
-            type="file"
-            name="photo"
-            id="upload-midi"
-            accept=".mid"
-            ref={fileRef}
+
+          <FileLoad
+            onMidiLoad={data => {
+              setLoadedMidi(data.data);
+              toggleTrackSelectionModal(true);
+            }}
+            label={
+              <div className={loadButton}>
+                <Icon name="upload" color={colors.gray.darker} size={12} />
+                &nbsp;&nbsp; Load a MIDI file
+              </div>
+            }
           />
         </div>
       )}
@@ -148,7 +142,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
           onComplete={() => {
             toggleCountdown(false);
             toggleTrackSelectionModal(false);
-            onComplete();
+            onStartPlay();
           }}
         />
       )}
@@ -156,5 +150,4 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   );
 };
 
-// @ts-ignore
 export default memo(PlayerController);

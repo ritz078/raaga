@@ -29,7 +29,8 @@ const Header: React.SFC<HeaderProps> = ({
   toggleRecording,
   recordings,
   onTrackSelect,
-  midiDeviceId
+  midiDeviceId,
+  onToggleMode
 }) => {
   const [mute, toggleMute] = useState(false);
   const [showRecordings, toggleRecordingsSidebar] = useState(false);
@@ -38,15 +39,6 @@ const Header: React.SFC<HeaderProps> = ({
     Tone.Master.mute = !mute;
     toggleMute(!mute);
   });
-
-  const toggleMode = useCallback((mode: VISUALIZER_MODE) =>
-    dispatch({
-      type: ReducersType.CHANGE_SETTINGS,
-      payload: {
-        mode
-      }
-    })
-  );
 
   const volumeName = mute ? "volume-mute" : "volume";
 
@@ -82,7 +74,7 @@ const Header: React.SFC<HeaderProps> = ({
           }
         </Transition>
 
-        <ModeToggle mode={mode} onToggle={toggleMode} />
+        <ModeToggle mode={mode} onToggle={onToggleMode} />
 
         <Popper
           label={({ toggle, isOpen }) => (

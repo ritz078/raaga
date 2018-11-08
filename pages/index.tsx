@@ -1,6 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { bodyClass, playerWrapper } from "./styles/main.styles";
+import { betaBanner, bodyClass, playerWrapper } from "./styles/main.styles";
 
 // @ts-ignore
 const SoundPlayer = dynamic(() => import("@components/SoundPlayer"), {
@@ -10,6 +10,12 @@ const SoundPlayer = dynamic(() => import("@components/SoundPlayer"), {
 function App() {
   return (
     <div className={bodyClass}>
+      <div className={betaBanner}>
+        This is a beta release. Please report bugs{" "}
+        <a href="https://github.com/ritz078/synth/issues" target="_blank">
+          on GitHub.
+        </a>
+      </div>
       <div className={playerWrapper}>
         <SoundPlayer />
       </div>
