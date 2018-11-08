@@ -211,6 +211,16 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
+  private toggleMode = (mode: VISUALIZER_MODE) => {
+    this.resetPlayer();
+    this.props.dispatch({
+      type: ReducersType.CHANGE_SETTINGS,
+      payload: {
+        mode
+      }
+    });
+  };
+
   render() {
     const {
       instrument,
@@ -243,6 +253,7 @@ class SoundPlayer extends React.PureComponent<
             isRecording={isRecording}
             toggleRecording={this.toggleRecording}
             recordings={recordings}
+            onToggleMode={this.toggleMode}
             onTrackSelect={(midi, i) => {
               this.selectTrack(midi, i);
               this.startPlayingTrack(midi.tracks[i]);

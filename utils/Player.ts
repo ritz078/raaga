@@ -234,5 +234,9 @@ export class Player {
       this.notesPlayer = null;
     }
     this.isPlaying = false;
+    Tone.Transport.stop();
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.STOP_TRACK
+    });
   };
 }

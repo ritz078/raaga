@@ -1,9 +1,9 @@
 @font-face {
   font-family: "synth";
-  src: url("synth.eot?388354381a225636514fd74f4d7f4296?#iefix")
+  src: url("synth.eot?5c6763802bc9db9a07c1f04592dfa623?#iefix")
       format("embedded-opentype"),
-    url("synth.woff2?388354381a225636514fd74f4d7f4296") format("woff2"),
-    url("synth.woff?388354381a225636514fd74f4d7f4296") format("woff");
+    url("synth.woff2?5c6763802bc9db9a07c1f04592dfa623") format("woff2"),
+    url("synth.woff?5c6763802bc9db9a07c1f04592dfa623") format("woff");
 }
 
 .icon {
@@ -23,39 +23,42 @@
 .icon-download:before {
   content: "\f102";
 }
-.icon-midi:before {
+.icon-midi-file:before {
   content: "\f103";
 }
 .icon-pause:before {
   content: "\f104";
 }
-.icon-play:before {
+.icon-midi:before {
   content: "\f105";
 }
-.icon-play1:before {
+.icon-play:before {
   content: "\f106";
 }
-.icon-record:before {
+.icon-play1:before {
   content: "\f107";
 }
-.icon-replay:before {
+.icon-record:before {
   content: "\f108";
 }
-.icon-settings:before {
+.icon-replay:before {
   content: "\f109";
 }
-.icon-stop:before {
+.icon-settings:before {
   content: "\f10a";
 }
-.icon-tracks:before {
+.icon-stop:before {
   content: "\f10b";
 }
-.icon-volume-mute:before {
+.icon-tracks:before {
   content: "\f10c";
 }
 .icon-upload:before {
   content: "\f10d";
 }
-.icon-volume:before {
+.icon-volume-mute:before {
   content: "\f10e";
+}
+.icon-volume:before {
+  content: "\f10f";
 }

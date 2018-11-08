@@ -15,9 +15,8 @@ export const playerWrapper = css({
 
 export const playerController = css({
   ...mixins.flexSpaceBetween,
-  width: 300,
-  ...mixins.flexMiddleAlign,
-  padding: "10px 20px",
+  width: 350,
+  padding: 14,
   borderRadius: 4,
   backgroundColor: "rgba(37, 37, 37, 0.83)",
   right: 80,
@@ -68,4 +67,33 @@ export const loadFileWrapper = css({
     lineHeight: "35px",
     fontWeight: "normal"
   }
+});
+
+export const midiNameStyle = css({
+  fontSize: 14,
+  color: colors.white.base,
+  marginBottom: 10,
+  borderBottom: `1px solid #2b2b2b`,
+  paddingBottom: 10,
+  ...mixins.flexSpaceBetween
+});
+
+export const controllerBottom = css({
+  ...mixins.flexSpaceBetween,
+  flex: 1,
+  alignItems: "center",
+  width: "100%"
+});
+
+export const loadFileIcon = css({
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  borderRadius: 2,
+  width: 58,
+  marginLeft: 20,
+  cursor: "pointer",
+  display: "flex",
+  flexDirection: "column",
+  fontSize: 12,
+  color: colors.white.base,
+  ...mixins.flexMiddleAlign
 });
