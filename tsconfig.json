@@ -29,12 +29,5 @@
       "@controllers/*": ["./controllers/*"]
     },
     "lib": ["dom", "es2016", "webworker"]
-  },
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ]
+  }
 }
