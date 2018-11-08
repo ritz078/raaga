@@ -9,11 +9,6 @@ export const trackRow = css({
   cursor: "pointer",
   "&:hover": {
     backgroundColor: "#2a2a2a"
-  },
-  "&.__disabled__": {
-    pointerEvents: "none",
-    cursor: "not-allowed",
-    opacity: 0.6
   }
 });
 

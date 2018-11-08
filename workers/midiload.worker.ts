@@ -6,13 +6,20 @@ const file = new FileReader();
 
 const _self = self as any;
 
+let name;
+
 file.onload = () => {
   try {
     // heavy computation
     const parsedMidi = parse(file.result);
+    const json = parsedMidi.toJSON();
+
+    console.log(JSON.stringify(json));
+
+    if (!json.header.name) json.header.name = name;
 
     _self.postMessage({
-      data: parsedMidi.toJSON()
+      data: json
     });
   } catch (e) {
     _self.postMessage({
@@ -23,4 +30,5 @@ file.onload = () => {
 
 self.onmessage = e => {
   file.readAsArrayBuffer(e.data);
+  name = e.data.name;
 };

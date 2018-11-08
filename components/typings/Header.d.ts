@@ -17,4 +17,5 @@ export interface HeaderProps {
   onTrackSelect: (midi: MIDI, i) => void;
   midiDeviceId: string;
   onToggleMode: (mode: VISUALIZER_MODE) => void;
+  onToggleSidebar: () => void;
 }

@@ -1,6 +1,6 @@
+// @ts-ignore
 import React, { useCallback, useState, memo } from "react";
 import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
-import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 
@@ -16,7 +16,6 @@ import {
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
-import RecordingsSidebar from "@components/RecordingsSidebar";
 import { Transition, animated } from "react-spring";
 import MidiSelect from "@components/MidiSelect";
 
@@ -28,12 +27,11 @@ const Header: React.SFC<HeaderProps> = ({
   isRecording,
   toggleRecording,
   recordings,
-  onTrackSelect,
   midiDeviceId,
-  onToggleMode
+  onToggleMode,
+  onToggleSidebar
 }) => {
   const [mute, toggleMute] = useState(false);
-  const [showRecordings, toggleRecordingsSidebar] = useState(false);
 
   const _toggleMute = useCallback(() => {
     Tone.Master.mute = !mute;
@@ -113,7 +111,7 @@ const Header: React.SFC<HeaderProps> = ({
             <span className={iconNotifier}>{recordings.length}</span>
           )}
           <Icon
-            onClick={() => toggleRecordingsSidebar(true)}
+            onClick={onToggleSidebar}
             className="icon-padding"
             name="tracks"
             color={colors.white.base}
@@ -121,13 +119,6 @@ const Header: React.SFC<HeaderProps> = ({
         </div>
 
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
-        <RecordingsSidebar
-          visible={showRecordings}
-          onClose={() => toggleRecordingsSidebar(false)}
-          recordings={recordings}
-          dispatch={dispatch}
-          onTrackSelect={onTrackSelect}
-        />
       </div>
     </header>
   );

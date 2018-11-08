@@ -2,7 +2,7 @@
 import React, { memo, useState, useEffect, useRef } from "react";
 import { animated, Transition } from "react-spring";
 import Icon from "@components/Icon";
-import { colors } from "@anarock/pebble";
+import { colors, mixins } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
 import {
   controllerBottom,
@@ -28,7 +28,8 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   onTogglePlay,
   onTrackSelect,
   onStartPlay,
-  style = {}
+  style = {},
+  onToggleSidebar
 }) => {
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
@@ -100,18 +101,24 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
             to play.
           </h3>
 
-          <FileLoad
-            onMidiLoad={data => {
-              setLoadedMidi(data.data);
-              toggleTrackSelectionModal(true);
-            }}
-            label={
-              <div className={loadButton}>
-                <Icon name="upload" color={colors.gray.darker} size={12} />
-                &nbsp;&nbsp; Load a MIDI file
-              </div>
-            }
-          />
+          <div style={mixins.flexSpaceBetween}>
+            <FileLoad
+              onMidiLoad={data => {
+                setLoadedMidi(data.data);
+                toggleTrackSelectionModal(true);
+              }}
+              label={
+                <button className={loadButton}>
+                  <Icon name="upload" color={colors.gray.darker} size={12} />
+                  &nbsp;&nbsp; Load a MIDI file
+                </button>
+              }
+            />
+
+            <button className={loadButton} onClick={onToggleSidebar}>
+              Open Saved MIDI
+            </button>
+          </div>
         </div>
       )}
 
