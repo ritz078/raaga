@@ -8,7 +8,8 @@
     "start": "next start",
     "build": "next build",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
-    "build:fonts": "node ./scripts/generate-fonts"
+    "build:fonts": "node ./scripts/generate-fonts",
+    "now-build": "yarn build && yarn export"
   },
   "lint-staged": {
     "./assets/*/*.svg": [

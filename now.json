@@ -1,4 +1,6 @@
 {
   "name": "synth",
-  "alias": ["synth-beta"]
+  "alias": ["synth-beta"],
+  "type": "static",
+  "public": "out"
 }

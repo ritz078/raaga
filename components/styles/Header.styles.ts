@@ -62,8 +62,7 @@ export const headerClass = css({
     padding: "28px 20px",
     color: "#e7e7e7",
     fontSize: 20,
-    width: 50,
-    height: 50,
+    width: 60,
     transition: "all 200ms",
     "&:hover": {
       color: colors.white.base

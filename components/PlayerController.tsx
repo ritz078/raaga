@@ -156,4 +156,5 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   );
 };
 
+// @ts-ignore
 export default memo(PlayerController);
