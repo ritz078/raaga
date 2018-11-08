@@ -23,5 +23,14 @@ export const pianoWrapper = css([
 
 export const flexOne = css({
   display: "flex",
-  flex: 1
+  flex: 1,
+  position: "relative"
+});
+
+export const toastStyle = css({
+  position: "absolute",
+  bottom: 20,
+  right: 20,
+  left: "auto",
+  transform: "translateX(0) !important"
 });

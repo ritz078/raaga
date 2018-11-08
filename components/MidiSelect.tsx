@@ -1,5 +1,11 @@
 import React, { useState, useCallback, useEffect, memo } from "react";
-import { colors, Popper, Option, OptionGroupRadio } from "@anarock/pebble";
+import {
+  colors,
+  Popper,
+  Option,
+  OptionGroupRadio,
+  Toast
+} from "@anarock/pebble";
 import Icon from "@components/Icon";
 import webMidi from "webmidi";
 import {
@@ -80,6 +86,11 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
                 type: ReducersType.SET_MIDI_DEVICE,
                 payload: id
               });
+              // @ts-ignore
+              Toast.show(
+                `Connected to ${webMidi.getInputById(id as string).name}`,
+                "success"
+              );
               toggle();
             }}
             selected={midiDeviceId}
