@@ -1,9 +1,7 @@
-const webpack = require("webpack");
 const withTypescript = require("@zeit/next-typescript");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const withCSS = require("@zeit/next-css");
-
-require("now-env");
+const webpack = require("webpack");
 
 module.exports = withCSS(
   withTypescript({
@@ -13,9 +11,6 @@ module.exports = withCSS(
 
       config.plugins.push(
         new webpack.DefinePlugin({
-          "process.env.CLOUDINARY_CLOUD_NAME": JSON.stringify(
-            process.env.CLOUDINARY_CLOUD_NAME
-          ),
           "process.env.DEV": JSON.stringify(options.dev)
         })
       );

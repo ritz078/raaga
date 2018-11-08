@@ -1,8 +1,5 @@
 {
   "name": "synth",
   "alias": ["synth-beta"],
-  "type": "static",
-  "env": {
-    "CLOUDINARY_CLOUD_NAME": "dqryno6nz"
-  }
+  "type": "static"
 }
