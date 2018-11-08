@@ -4,9 +4,10 @@ import { getMidiRange, isWithinRange, Player } from "@utils";
 import {
   flexOne,
   loaderClass,
-  pianoWrapper
+  pianoWrapper,
+  toastStyle
 } from "@components/styles/SoundPlayer.styles";
-import { colors, Loader } from "@anarock/pebble";
+import { colors, Loader, Toast } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@config/piano";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
@@ -114,7 +115,6 @@ class SoundPlayer extends React.PureComponent<
 
   componentDidMount() {
     this.changeInstrument();
-
     this.setMidiDevice();
   }
 
@@ -233,6 +233,8 @@ class SoundPlayer extends React.PureComponent<
     return (
       <>
         <div className={flexOne}>
+          <Toast className={toastStyle} />
+
           <Header
             dispatch={dispatch}
             onTogglePlay={this.onTogglePlay}
