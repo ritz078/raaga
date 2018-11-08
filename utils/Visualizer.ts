@@ -33,6 +33,7 @@ export class Visualizer {
     this.notes = [];
     this.setDimensions(dimensions);
     this.setMode(mode);
+    debugger;
   }
 
   /**

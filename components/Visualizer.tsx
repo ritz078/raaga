@@ -66,6 +66,7 @@ export default class extends React.PureComponent<VisualizerProps> {
   };
 
   componentDidMount() {
+    debugger;
     this.setDimensions(null, false);
 
     let canvas;
