@@ -35,11 +35,12 @@ import dynamic from "next/dynamic";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
-// @ts-ignore
 const RecordingsSidebar = dynamic(
+  // @ts-ignore
   () => import("@components/RecordingsSidebar"),
   {
-    ssr: false
+    ssr: false,
+    loading: () => null
   }
 );
 
