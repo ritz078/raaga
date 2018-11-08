@@ -176,7 +176,6 @@ class SoundPlayer extends React.PureComponent<
 
   private selectTrack = (midi: MIDI, i: number) => {
     const track = midi.tracks[i];
-    debugger;
 
     this.props.dispatch({
       type: ReducersType.CHANGE_SETTINGS,
@@ -271,7 +270,7 @@ class SoundPlayer extends React.PureComponent<
               isPlaying={isPlaying}
               midi={this.props.loadedMidi}
               onTrackSelect={this.selectTrack}
-              onComplete={this.startPlayingTrack}
+              onStartPlay={this.startPlayingTrack}
             />
           )}
 

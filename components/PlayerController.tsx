@@ -1,6 +1,5 @@
 // @ts-ignore
 import React, { memo, useState, useEffect, useRef } from "react";
-import { MIDI } from "midiconvert";
 import { animated, Transition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
@@ -18,15 +17,7 @@ import ProgressCircle from "@components/ProgressCircle";
 import Draggable from "react-draggable";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
-
-interface PlayerControllerProps {
-  midi: MIDI;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-  onTrackSelect: (midi: MIDI, i: number) => void;
-  onComplete: () => void;
-  style: {};
-}
+import { PlayerControllerProps } from "@components/typings/PlayerController";
 
 let worker: Worker;
 
@@ -37,7 +28,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   isPlaying,
   onTogglePlay,
   onTrackSelect,
-  onComplete,
+  onStartPlay,
   style = {}
 }) => {
   const safariContextStartClickRef = useRef(null);
@@ -81,15 +72,22 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
           {show =>
             show &&
             (styles => (
-              <Draggable bounds="parent">
+              <Draggable bounds="parent" axis="x">
                 <animated.div style={styles} className={playerController}>
                   <Icon
                     name={isPlaying ? "pause" : "play"}
                     color={colors.white.base}
                     onClick={onTogglePlay}
+                    size={16}
                   />
 
                   <ProgressBar />
+
+                  <Icon
+                    name="replay"
+                    color={colors.white.base}
+                    onClick={() => onStartPlay()}
+                  />
                 </animated.div>
               </Draggable>
             ))
@@ -148,7 +146,7 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
           onComplete={() => {
             toggleCountdown(false);
             toggleTrackSelectionModal(false);
-            onComplete();
+            onStartPlay();
           }}
         />
       )}
@@ -156,5 +154,4 @@ const PlayerController: React.SFC<PlayerControllerProps> = ({
   );
 };
 
-// @ts-ignore
 export default memo(PlayerController);

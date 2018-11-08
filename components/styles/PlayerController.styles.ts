@@ -20,8 +20,8 @@ export const playerController = css({
   padding: "10px 20px",
   borderRadius: 4,
   backgroundColor: "rgba(37, 37, 37, 0.83)",
-  left: 80,
-  top: 20,
+  right: 80,
+  top: 100,
   position: "absolute",
   cursor: "move",
   svg: {

@@ -1,9 +1,9 @@
 @font-face {
   font-family: "synth";
-  src: url("synth.eot?dfbd059233dcbd8f0e9a6a2707c7c929?#iefix")
+  src: url("synth.eot?388354381a225636514fd74f4d7f4296?#iefix")
       format("embedded-opentype"),
-    url("synth.woff2?dfbd059233dcbd8f0e9a6a2707c7c929") format("woff2"),
-    url("synth.woff?dfbd059233dcbd8f0e9a6a2707c7c929") format("woff");
+    url("synth.woff2?388354381a225636514fd74f4d7f4296") format("woff2"),
+    url("synth.woff?388354381a225636514fd74f4d7f4296") format("woff");
 }
 
 .icon {
@@ -20,16 +20,16 @@
 .icon-close:before {
   content: "\f101";
 }
-.icon-midi:before {
+.icon-download:before {
   content: "\f102";
 }
-.icon-pause:before {
+.icon-midi:before {
   content: "\f103";
 }
-.icon-play:before {
+.icon-pause:before {
   content: "\f104";
 }
-.icon-download:before {
+.icon-play:before {
   content: "\f105";
 }
 .icon-play1:before {
@@ -38,21 +38,24 @@
 .icon-record:before {
   content: "\f107";
 }
-.icon-settings:before {
+.icon-replay:before {
   content: "\f108";
 }
-.icon-tracks:before {
+.icon-settings:before {
   content: "\f109";
 }
-.icon-upload:before {
+.icon-stop:before {
   content: "\f10a";
 }
-.icon-stop:before {
+.icon-tracks:before {
   content: "\f10b";
 }
-.icon-volume:before {
+.icon-volume-mute:before {
   content: "\f10c";
 }
-.icon-volume-mute:before {
+.icon-upload:before {
   content: "\f10d";
+}
+.icon-volume:before {
+  content: "\f10e";
 }
