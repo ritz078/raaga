@@ -31,17 +31,8 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webmidi from "webmidi";
 import Tone from "tone";
-import dynamic from "next/dynamic";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
-
-// @ts-ignore
-const RecordingsSidebar = dynamic(
-  () => import("@components/RecordingsSidebar"),
-  {
-    ssr: false
-  }
-);
 
 const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 
@@ -61,8 +52,7 @@ class SoundPlayer extends React.PureComponent<
     keyboardRange: range,
     isPlaying: false,
     isRecording: false,
-    recordedNotes: undefined,
-    showSidebar: false
+    recordedNotes: undefined
   };
 
   private resetPlayer = () => {
@@ -240,12 +230,6 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private toggleSidebar = () => {
-    this.setState({
-      showSidebar: !this.state.showSidebar
-    });
-  };
-
   render() {
     const {
       instrument,
@@ -254,33 +238,20 @@ class SoundPlayer extends React.PureComponent<
       keyboardRange,
       isPlaying,
       isRecording,
-      recordedNotes,
-      showSidebar
+      recordedNotes
     } = this.state;
 
     const {
       settings: { mode },
       dispatch,
       recordings,
-      midiDevice,
-      midiHistory
+      midiDevice
     } = this.props;
 
     return (
       <>
         <div className={flexOne}>
           <Toast className={toastStyle} />
-
-          <RecordingsSidebar
-            visible={showSidebar}
-            onClose={this.toggleSidebar}
-            midis={midiHistory.concat(recordings)}
-            dispatch={dispatch}
-            onTrackSelect={(midi, i) => {
-              this.selectTrack(midi, i);
-              this.startPlayingTrack(midi.tracks[i]);
-            }}
-          />
 
           <Header
             dispatch={dispatch}
@@ -292,8 +263,11 @@ class SoundPlayer extends React.PureComponent<
             toggleRecording={this.toggleRecording}
             recordings={recordings}
             onToggleMode={this.toggleMode}
+            onTrackSelect={(midi, i) => {
+              this.selectTrack(midi, i);
+              this.startPlayingTrack(midi.tracks[i]);
+            }}
             midiDeviceId={midiDevice}
-            onToggleSidebar={this.toggleSidebar}
           />
 
           <RecordingModal
@@ -317,7 +291,6 @@ class SoundPlayer extends React.PureComponent<
               midi={this.props.loadedMidi}
               onTrackSelect={this.selectTrack}
               onStartPlay={this.startPlayingTrack}
-              onToggleSidebar={this.toggleSidebar}
             />
           )}
 
@@ -350,19 +323,11 @@ class SoundPlayer extends React.PureComponent<
 }
 
 export default connect(
-  ({
+  ({ settings, loadedMidi, selectedTrack, recordings, midiDevice }: Store) => ({
     settings,
     loadedMidi,
     selectedTrack,
     recordings,
-    midiDevice,
-    midiHistory
-  }: Store) => ({
-    settings,
-    loadedMidi,
-    selectedTrack,
-    recordings,
-    midiDevice,
-    midiHistory
+    midiDevice
   })
 )(SoundPlayer);

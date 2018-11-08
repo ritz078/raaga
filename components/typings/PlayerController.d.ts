@@ -8,5 +8,4 @@ export interface PlayerControllerProps {
   onStartPlay: () => void;
   style: {};
   onReplay: () => void;
-  onToggleSidebar: () => void;
 }

@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useState, useCallback, useEffect, memo } from "react";
 import {
   colors,
@@ -87,8 +86,8 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
                 type: ReducersType.SET_MIDI_DEVICE,
                 payload: id
               });
+              // @ts-ignore
               Toast.show(
-                // @ts-ignore
                 `Connected to ${webMidi.getInputById(id as string).name}`,
                 "success"
               );

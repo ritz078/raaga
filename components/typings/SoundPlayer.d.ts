@@ -9,7 +9,6 @@ export interface SoundPlayerProps {
   loadedMidi: MIDI;
   selectedTrack: Track;
   recordings: Store["recordings"];
-  midiHistory: Store["midiHistory"];
   midiDevice: string;
 }
 
@@ -24,5 +23,4 @@ export interface SoundPlayerState {
   isPlaying: boolean;
   isRecording: boolean;
   recordedNotes?: Partial<Note>[] | void;
-  showSidebar: boolean;
 }

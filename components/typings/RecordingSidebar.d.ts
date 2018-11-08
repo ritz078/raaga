@@ -4,7 +4,7 @@ import { AnyAction, Dispatch } from "redux";
 export interface RecordingsSidebarProps {
   visible: boolean;
   onClose: () => void;
-  midis: (MIDI & {
+  recordings: (MIDI & {
     id: string;
   })[];
   dispatch: Dispatch<AnyAction>;

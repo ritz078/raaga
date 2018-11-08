@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { memo, useState } from "react";
 import { colors, SideBar } from "@anarock/pebble";
 import Icon from "@components/Icon";
@@ -14,7 +13,7 @@ import {
 const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
   visible,
   onClose,
-  midis,
+  recordings,
   dispatch,
   onTrackSelect
 }) => {
@@ -28,10 +27,10 @@ const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
             marginBottom: 20
           }}
         >
-          Saved MIDIs
+          Recordings
         </h3>
 
-        {midis.map((recording, i) => {
+        {recordings.map((recording, i) => {
           const track = recording.tracks[0];
           return (
             <div key={recording.id} className={recordingRow}>
