@@ -9,7 +9,7 @@
     "build": "next build",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
     "build:fonts": "node ./scripts/generate-fonts",
-    "now-build": "yarn build && yarn export"
+    "now-build": "next build && next export"
   },
   "lint-staged": {
     "./assets/*/*.svg": [

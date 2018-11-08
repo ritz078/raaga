@@ -19,6 +19,12 @@ module.exports = withCSS(
       config.output.globalObject = `this`;
 
       return config;
+    },
+
+    exportPathMap: async function() {
+      return {
+        "/": { page: "/" }
+      };
     }
   })
 );
