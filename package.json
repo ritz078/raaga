@@ -5,11 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "start": "next start",
     "build": "next build",
+    "export": "next export",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
-    "build:fonts": "node ./scripts/generate-fonts",
-    "now-build": "next build && next export"
+    "build:fonts": "node ./scripts/generate-fonts"
   },
   "lint-staged": {
     "./assets/*/*.svg": [

@@ -1,9 +1,5 @@
 {
   "name": "synth",
   "alias": ["synth-beta"],
-  "type": "static",
-  "static": {
-    "public": "out"
-  },
-  "files": ["out"]
+  "type": "static"
 }
