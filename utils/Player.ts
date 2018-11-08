@@ -71,7 +71,11 @@ export class Player {
   }
 
   private fetchInstrumentFromRemote = async instrument => {
-    const url = `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
+    const url = !process.env.DEV
+      ? `https://res.cloudinary.com/${
+          process.env.CLOUDINARY_CLOUD_NAME
+        }/raw/upload/v1541347481/${instrument}-mp3.js`
+      : `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
     const response = await fetch(url);
     const data = await response.text();
     const audio = midiJsToJson(data);

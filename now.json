@@ -1,5 +1,8 @@
 {
   "name": "synth",
   "alias": ["synth-beta"],
-  "type": "static"
+  "type": "static",
+  "env": {
+    "CLOUDINARY_CLOUD_NAME": "@cloudinary-cloud-name"
+  }
 }
