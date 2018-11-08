@@ -30,6 +30,7 @@ import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webmidi from "webmidi";
+import Tone from "tone";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -138,7 +139,8 @@ class SoundPlayer extends React.PureComponent<
     if (isComplete) {
       this.player.stopTrack();
       this.setState({
-        activeMidis: []
+        activeMidis: [],
+        isPlaying: false
       });
     } else {
       this.setState({
@@ -167,7 +169,11 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private onTogglePlay = () => {
-    this.player.togglePlay();
+    if (Tone.Transport.state === "stopped") {
+      this.startPlayingTrack();
+    } else {
+      this.player.togglePlay();
+    }
 
     this.setState({
       isPlaying: !this.state.isPlaying
@@ -218,6 +224,9 @@ class SoundPlayer extends React.PureComponent<
       payload: {
         mode
       }
+    });
+    this.setState({
+      isPlaying: false
     });
   };
 
