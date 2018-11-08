@@ -53,8 +53,10 @@ export const loadButton = css({
   fontSize: 14,
   cursor: "pointer",
   userSelect: "none",
-  marginTop: 50,
-  maxWidth: 200
+  maxWidth: 200,
+  outline: "none",
+  border: 0,
+  margin: "50px 10px"
 });
 
 export const loadFileWrapper = css({
