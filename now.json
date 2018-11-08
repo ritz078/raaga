@@ -2,5 +2,7 @@
   "name": "synth",
   "alias": ["synth-beta"],
   "type": "static",
-  "public": "out"
+  "static": {
+    "public": "out"
+  }
 }
