@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Circle } from "rc-progress";
 import { colors } from "@anarock/pebble";
-import { useSpring } from "react-spring/hooks";
+import { useSpring } from "react-spring";
 
 interface CountdownProps {
   onComplete: () => void;

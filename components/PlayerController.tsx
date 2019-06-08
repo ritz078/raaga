@@ -1,5 +1,5 @@
 import React, { memo, useState, useRef } from "react";
-import { animated, Transition } from "react-spring";
+import { animated, useTransition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors, mixins } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
@@ -32,22 +32,20 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
+  const transitions = useTransition(showTrackSelectionModal, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0, pointerEvents: "none" }
+  });
 
   return (
     <animated.div style={style} className={playerWrapper}>
-      {!isEmpty(midi) && (
-        <Transition
-          native
-          items={showTrackSelectionModal}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0, pointerEvents: "none" }}
-        >
-          {show =>
-            show &&
-            (styles => (
+      {!isEmpty(midi) &&
+        transitions.map(
+          ({ item, props }) =>
+            item && (
               <Draggable bounds="parent" axis="x">
-                <animated.div style={styles} className={playerController}>
+                <animated.div style={props} className={playerController}>
                   <div style={{ flex: 1 }}>
                     <div className={midiNameStyle}>
                       {midi.header.name || "Unknown"}{" "}
@@ -86,10 +84,8 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                   </div>
                 </animated.div>
               </Draggable>
-            ))
-          }
-        </Transition>
-      )}
+            )
+        )}
 
       {isEmpty(midi) && (
         <div className={loadFileWrapper}>
