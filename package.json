@@ -5,10 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "export": "next export",
+    "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
-    "build:fonts": "node ./scripts/generate-fonts"
+    "build:fonts": "node ./scripts/generate-fonts",
+    "now-build": "next build && next export -o dist"
   },
   "lint-staged": {
     "./assets/*/*.svg": [
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.2.0",
+    "@now/static-build": "^0.5.8",
     "@types/lodash": "^4.14.134",
     "@types/next": "^8.0.5",
     "@types/react": "^16.8.19",
