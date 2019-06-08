@@ -14,7 +14,6 @@ import {
 } from "@components/styles/PlayerController.styles";
 import { isEmpty } from "lodash";
 import TrackSelectionModal from "@components/TrackSelectionModal";
-import ProgressCircle from "@components/ProgressCircle";
 import Draggable from "react-draggable";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
@@ -33,14 +32,13 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
-  const [showCountdown, toggleCountdown] = useState(false);
 
   return (
     <animated.div style={style} className={playerWrapper}>
       {!isEmpty(midi) && (
         <Transition
           native
-          items={!showCountdown}
+          items={showTrackSelectionModal}
           from={{ opacity: 0 }}
           enter={{ opacity: 1 }}
           leave={{ opacity: 0, pointerEvents: "none" }}
@@ -93,7 +91,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
         </Transition>
       )}
 
-      {isEmpty(midi) && !showCountdown && (
+      {isEmpty(midi) && (
         <div className={loadFileWrapper}>
           <h3>
             You need to load a MIDI file and then <br /> select a track you want
@@ -134,7 +132,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           midi={loadedMidi}
           onSelectTrack={i => {
             toggleTrackSelectionModal(false);
-            toggleCountdown(true);
+            onStartPlay();
             onTrackSelect(loadedMidi, i);
           }}
           onClose={() => {
@@ -142,16 +140,6 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           }}
         />
       </div>
-
-      {showCountdown && (
-        <ProgressCircle
-          onComplete={() => {
-            toggleCountdown(false);
-            toggleTrackSelectionModal(false);
-            onStartPlay();
-          }}
-        />
-      )}
     </animated.div>
   );
 };
