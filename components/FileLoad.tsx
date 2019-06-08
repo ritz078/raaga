@@ -6,17 +6,15 @@ let worker: Worker;
 const fileRef: React.RefObject<HTMLInputElement> = React.createRef();
 const FileLoad = ({ onMidiLoad, label }) => {
   useEffect(() => {
-    if (!worker) {
-      worker = new MidiLoadWorker();
-      worker.onmessage = e => {
-        if (e.data.error) {
-          alert(e.data.error);
-          return;
-        }
+    worker = new MidiLoadWorker();
+    worker.onmessage = e => {
+      if (e.data.error) {
+        alert(e.data.error);
+        return;
+      }
 
-        onMidiLoad(e.data);
-      };
-    }
+      onMidiLoad(e.data);
+    };
   }, []);
 
   function loadFile(e) {
