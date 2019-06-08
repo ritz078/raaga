@@ -32,7 +32,8 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
-  const transitions = useTransition(showTrackSelectionModal, null, {
+
+  const transitions = useTransition(!showTrackSelectionModal, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0, pointerEvents: "none" }
@@ -128,8 +129,8 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           midi={loadedMidi}
           onSelectTrack={i => {
             toggleTrackSelectionModal(false);
-            onStartPlay();
             onTrackSelect(loadedMidi, i);
+            onStartPlay();
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);

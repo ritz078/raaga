@@ -1,5 +1,6 @@
 import { css } from "emotion";
 import { colors } from "@anarock/pebble";
+import { HORIZONTAL_GAP_BETWEEN_NOTES, PIANO_HEIGHT } from "@config/piano";
 
 export const keys = css({
   display: "flex",
@@ -10,7 +11,7 @@ export const keys = css({
 export const accidentalKeys = css({
   height: "8em",
   zIndex: 1,
-  border: "1px solid #000",
+  border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #000`,
   borderRadius: "0 0 3px 3px",
   boxShadow:
     "-1px -1px 2px rgba(255, 255, 255, 0.2) inset,0 -5px 2px 3px rgba(0, 0, 0, 0.6) inset, 0 2px 4px rgba(0, 0, 0, 0.5)",
@@ -28,9 +29,9 @@ export const accidentalKeys = css({
 });
 
 export const naturalKeys = css({
-  height: 295,
+  height: PIANO_HEIGHT - 5,
   zIndex: 0,
-  border: "1px solid #4a4a4a",
+  border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #4a4a4a`,
   borderTopWidth: 0,
   borderRadius: "0 0 5px 5px",
   backgroundColor: "#fff",
@@ -39,7 +40,7 @@ export const naturalKeys = css({
   cursor: "pointer",
   borderBottom: "4px solid #90caf9",
   "&.__active__": {
-    height: 280,
+    height: PIANO_HEIGHT,
     backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
     borderBottomColor: "#42C9FF"
   }

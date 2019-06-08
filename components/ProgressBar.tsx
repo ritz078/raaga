@@ -1,9 +1,8 @@
-// @ts-ignore
-import React, { SFC, useEffect, useState, memo } from "react";
+import React, { FunctionComponent, useEffect, useState, memo } from "react";
 import { progressBar } from "./styles/PlayerController.styles";
 import Tone from "tone";
 
-const ProgressBar: SFC = () => {
+const ProgressBar: FunctionComponent<{}> = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

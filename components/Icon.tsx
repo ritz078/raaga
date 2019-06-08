@@ -12,7 +12,7 @@ interface IconProps
   className?: string;
 }
 
-const Icon: React.SFC<IconProps> = ({
+const Icon: React.FunctionComponent<IconProps> = ({
   name,
   size = 20,
   color = colors.white.base,

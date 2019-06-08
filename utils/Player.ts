@@ -8,6 +8,7 @@ import { Range } from "@utils/typings/Visualizer";
 import { get as getFromIDB, set as setInIDB } from "idb-keyval";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import Recorder from "@utils/Recorder";
+import { PIANO_HEIGHT, TRACK_PLAYING_SPEED } from "@config/piano";
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -17,20 +18,22 @@ function midiJsToJson(data) {
   return JSON.parse(data.slice(begin, end) + "}");
 }
 
-function getNotesWithNoteEnd(notes: Note[]) {
+function getNotesWithNoteEnd(notes: Note[], delay: number = 0) {
   const _notes = [];
 
   notes.forEach((note, i) => {
     const id = Symbol(note.name);
+    const time = note.time + note.duration + delay;
     _notes.push(
       {
         ...note,
+        time: note.time + delay,
         event: EVENT_TYPE.NOTE_START,
         id
       },
       {
         ...note,
-        time: note.time + note.duration,
+        time,
         event: EVENT_TYPE.NOTE_STOP,
         id
       }
@@ -39,7 +42,7 @@ function getNotesWithNoteEnd(notes: Note[]) {
     if (i === notes.length - 1) {
       _notes.push({
         ...note,
-        time: note.time + note.duration,
+        time,
         event: EVENT_TYPE.PLAYING_COMPLETE,
         id
       });
@@ -144,7 +147,9 @@ export class Player {
    * @param cb
    */
   public playTrack = (midi: MIDI, track: Track, cb) => {
-    const notes = getNotesWithNoteEnd(track.notes);
+    const delay = (window.innerHeight - PIANO_HEIGHT) / TRACK_PLAYING_SPEED;
+
+    const notes = getNotesWithNoteEnd(track.notes, delay);
     Tone.Transport.bpm.value = midi.header.bpm;
     Tone.Transport.duration = track.duration;
     Tone.Transport.seconds = 0;
@@ -173,9 +178,18 @@ export class Player {
 
     Tone.Transport.start();
 
+    const _track: Track = {
+      ...track,
+      notes: track.notes.map(_note => ({
+        ..._note,
+        time: _note.time + delay
+      })),
+      duration: track.duration + delay
+    };
+
     // start playing on the visualizer
     this.canvasWorker.postMessage({
-      track,
+      track: JSON.parse(JSON.stringify(_track)),
       range: this.range,
       message: VISUALIZER_MESSAGES.PLAY_TRACK
     });

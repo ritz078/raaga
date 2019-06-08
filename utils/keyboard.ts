@@ -1,5 +1,5 @@
 import { Note } from "midiconvert";
-import { MidiNumbers } from "react-piano";
+import { MidiNumbers, KeyboardShortcuts } from "react-piano";
 import { range } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
 
@@ -56,4 +56,15 @@ export function getRelativeKeyPosition(
   return (
     getAbsoluteKeyPosition(midiNumber) - getAbsoluteKeyPosition(range.first)
   );
+}
+
+export function getPianoRangeAndShortcuts(range: number[]) {
+  const [first, last] = range;
+  const keyboardShortcuts = KeyboardShortcuts.create({
+    firstNote: first,
+    lastNote: last,
+    keyboardConfig: KeyboardShortcuts.HOME_ROW
+  });
+
+  return { keyboardShortcuts, range: { first, last } };
 }

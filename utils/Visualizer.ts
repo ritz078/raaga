@@ -9,10 +9,11 @@ import {
 import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { Clock } from "@utils/Clock";
-
-const SPEED = 250;
-const HORIZONTAL_GAP_BETWEEN_NOTES = 2;
-const MS_PER_SECOND = 10;
+import {
+  HORIZONTAL_GAP_BETWEEN_NOTES,
+  MS_PER_SECOND,
+  TRACK_PLAYING_SPEED
+} from "@config/piano";
 
 function now() {
   return Date.now() / 1000;
@@ -108,11 +109,18 @@ export class Visualizer {
     return { left, width, isAccidental };
   };
 
-  private getCoordinates = (note: Partial<Note>) => {
+  private getVerticalCoordinatesInWriteMode = (
+    note: Partial<Note>
+  ): {
+    top: number;
+    height: number;
+  } => {
     const canvasHeight = this.ctx.canvas.height;
 
-    const top = (note.time - now()) * SPEED + canvasHeight;
-    const height = (note.duration || Number.MAX_SAFE_INTEGER / SPEED) * SPEED;
+    const top = (note.time - now()) * TRACK_PLAYING_SPEED + canvasHeight;
+    const height =
+      (note.duration || Number.MAX_SAFE_INTEGER / TRACK_PLAYING_SPEED) *
+      TRACK_PLAYING_SPEED;
 
     return {
       top,
@@ -136,11 +144,13 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const { top, height } = this.getCoordinates(note);
+        const { top, height } = this.getVerticalCoordinatesInWriteMode(note);
 
         if (top + height < 0) {
           this.notes = this.notes.filter(_note => {
-            const { top, height } = this.getCoordinates(_note);
+            const { top, height } = this.getVerticalCoordinatesInWriteMode(
+              _note
+            );
             return top + height >= 0;
           });
           continue;
@@ -217,8 +227,8 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time - timeElapsed) * SPEED;
-        const height = note.duration * SPEED;
+        const top = (note.time - timeElapsed) * TRACK_PLAYING_SPEED;
+        const height = note.duration * TRACK_PLAYING_SPEED;
 
         // These are past notes which have been shown.
         if (top + height < 0) {

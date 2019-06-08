@@ -8,7 +8,7 @@ import {
   toastStyle
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader, Toast } from "@anarock/pebble";
-import { getPianoRangeAndShortcuts } from "@config/piano";
+import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { NoteWithEvent } from "@utils/typings/Player";
