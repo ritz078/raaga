@@ -25,36 +25,33 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
 }) => {
   const [name, setName] = useState("");
 
-  const saveFile = useCallback(
-    () => {
-      const midi = create();
-      // @ts-ignore
-      const tracks = midi.track(name);
-      tracks.patch(instrumentId);
+  const saveFile = useCallback(() => {
+    const midi = create();
+    // @ts-ignore
+    const tracks = midi.track(name);
+    tracks.patch(instrumentId);
 
-      notes.forEach(({ midi, time, duration, velocity }) =>
-        tracks.note(midi, time, duration, velocity)
-      );
+    notes.forEach(({ midi, time, duration, velocity }) =>
+      tracks.note(midi, time, duration, velocity)
+    );
 
-      const midiJson = midi.toJSON();
-      midiJson.header.name = name;
+    const midiJson = midi.toJSON();
+    midiJson.header.name = name;
 
-      dispatch({
-        type: ReducersType.SAVE_RECORDING,
-        payload: {
-          ...midiJson,
-          id:
-            "_" +
-            Math.random()
-              .toString(36)
-              .substr(2, 9)
-        }
-      });
+    dispatch({
+      type: ReducersType.SAVE_RECORDING,
+      payload: {
+        ...midiJson,
+        id:
+          "_" +
+          Math.random()
+            .toString(36)
+            .substr(2, 9)
+      }
+    });
 
-      onActionComplete();
-    },
-    [name]
-  );
+    onActionComplete();
+  }, [name]);
 
   const lastNote = notes[notes.length - 1];
   return (
@@ -88,8 +85,8 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
           }}
         >
           {getInstrumentById(instrumentId).name}
-          &nbsp;&nbsp; &bull;&nbsp;&nbsp;
-          {notes.length} Notes &nbsp;&nbsp;&bull;&nbsp;&nbsp;{" "}
+          {"  "}&bull;{"  "}
+          {notes.length} Notes {"    "}&bull;{"   "}
           {(lastNote.time + lastNote.duration).toFixed(2)}s
         </span>
       )}

@@ -3,35 +3,40 @@ import { colors, Tooltip } from "@anarock/pebble";
 import { recordingButton, recordingWrapper } from "./styles/Recorder.styles";
 import { RecorderProps } from "./typings/Recorder";
 
-export default class extends React.PureComponent<RecorderProps> {
+interface State {
+  isRecording: boolean;
+}
+
+export default class extends React.PureComponent<RecorderProps, State> {
   state = {
     isRecording: false
   };
 
   private toggle = () => {
+    const { isRecording } = this.state;
+    const { onRecordingEnd, onRecordingStart } = this.props;
     this.setState(
       {
-        isRecording: !this.state.isRecording
+        isRecording: !isRecording
       },
       () => {
-        this.state.isRecording
-          ? this.props.onRecordingStart()
-          : this.props.onRecordingEnd();
+        this.state.isRecording ? onRecordingStart() : onRecordingEnd();
       }
     );
   };
 
   render() {
     const { isRecording } = this.state;
+    const tooltipModifier = {
+      preventOverflow: {
+        padding: 40
+      }
+    };
 
     return (
       <div className={recordingWrapper}>
         <Tooltip
-          modifiers={{
-            preventOverflow: {
-              padding: 40
-            }
-          }}
+          modifiers={tooltipModifier}
           label={({ ref }) => (
             <div
               className={recordingButton}

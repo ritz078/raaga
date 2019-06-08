@@ -366,4 +366,5 @@ export default connect(
     midiDevice,
     midiHistory
   })
+  // @ts-ignore
 )(SoundPlayer);

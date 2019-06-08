@@ -15,13 +15,17 @@ const config = {
   duration: 4000
 };
 
-const ProgressCircle: React.SFC<ProgressCircleProps> = ({ onComplete }) => {
+const ProgressCircle: React.FunctionComponent<ProgressCircleProps> = ({
+  onComplete
+}) => {
   return (
+    // @ts-ignore
     <Spring
       from={{ number: 0 }}
       to={{ number: 1 }}
       config={config}
       onRest={onComplete}
+      native
     >
       {({ number }) => {
         return (

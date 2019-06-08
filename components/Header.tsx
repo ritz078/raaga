@@ -36,7 +36,7 @@ const Header: React.SFC<HeaderProps> = ({
   const _toggleMute = useCallback(() => {
     Tone.Master.mute = !mute;
     toggleMute(!mute);
-  });
+  }, []);
 
   const volumeName = mute ? "volume-mute" : "volume";
 
