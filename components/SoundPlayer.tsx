@@ -29,15 +29,15 @@ import PlayerController from "@components/PlayerController";
 import { ReducersType } from "@enums/reducers";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
-import webmidi from "webmidi";
+import webMidi from "webmidi";
 import Tone from "tone";
 import dynamic from "next/dynamic";
+import { RecordingsSidebarProps } from "@components/typings/RecordingSidebar";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
-const RecordingsSidebar = dynamic(
-  // @ts-ignore
-  () => import("@components/RecordingsSidebar"),
+const RecordingsSidebar = dynamic<RecordingsSidebarProps>(
+  (() => import("@components/RecordingsSidebar")) as any,
   {
     ssr: false,
     loading: () => null
@@ -132,7 +132,7 @@ class SoundPlayer extends React.PureComponent<
 
   setMidiDevice = () => {
     if (this.props.midiDevice) {
-      const input = webmidi.getInputById(this.props.midiDevice);
+      const input = webMidi.getInputById(this.props.midiDevice);
 
       if (input) {
         input.addListener("noteon", "all", e => {
@@ -300,9 +300,9 @@ class SoundPlayer extends React.PureComponent<
           <RecordingModal
             visible={!isRecording && !!recordedNotes}
             dispatch={dispatch}
-            notes={recordedNotes}
+            notes={recordedNotes as any}
             instrumentId={getInstrumentNames().findIndex(
-              _instrument => _instrument === _instrument
+              _instrument => _instrument === instrument
             )}
             onActionComplete={() =>
               this.setState({
@@ -366,5 +366,4 @@ export default connect(
     midiDevice,
     midiHistory
   })
-  // @ts-ignore
 )(SoundPlayer);

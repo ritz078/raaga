@@ -17,12 +17,9 @@ interface TrackSelectionModalProps {
   onClose: () => void;
 }
 
-const TrackSelectionModal: React.SFC<TrackSelectionModalProps> = ({
-  visible,
-  midi,
-  onSelectTrack,
-  onClose
-}) => {
+const TrackSelectionModal: React.FunctionComponent<
+  TrackSelectionModalProps
+> = ({ visible, midi, onSelectTrack, onClose }) => {
   if (!midi) return null;
   return (
     <Modal

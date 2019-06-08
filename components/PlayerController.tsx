@@ -1,5 +1,4 @@
-// @ts-ignore
-import React, { memo, useState, useEffect, useRef } from "react";
+import React, { memo, useState, useRef } from "react";
 import { animated, Transition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors, mixins } from "@anarock/pebble";
@@ -22,7 +21,7 @@ import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
 
-const PlayerController: React.SFC<PlayerControllerProps> = ({
+const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
   isPlaying,
   onTogglePlay,

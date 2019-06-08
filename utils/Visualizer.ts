@@ -71,7 +71,8 @@ export class Visualizer {
 
     this.ctx.fillStyle = isAccidental ? "#ffdc66" : "#42C9FF";
 
-    (<any>this.ctx.fillRect)(...dimensions);
+    // @ts-ignore
+    this.ctx.fillRect(...dimensions);
     this.ctx.closePath();
   };
 

@@ -2,12 +2,11 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import { bodyClass, playerWrapper } from "./styles/main.styles";
 
-// @ts-ignore
-const SoundPlayer = dynamic(() => import("@components/SoundPlayer"), {
+const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
   ssr: false
 });
 
-function App() {
+export default function() {
   return (
     <div className={bodyClass}>
       <div className={playerWrapper}>
@@ -16,5 +15,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
