@@ -11,8 +11,7 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { Clock } from "@utils/Clock";
 
 const SPEED = 250;
-const RADIUS = 5;
-const HORIZONTAL_MARGIN = 2;
+const HORIZONTAL_GAP_BETWEEN_NOTES = 2;
 const MS_PER_SECOND = 10;
 
 function now() {
@@ -66,23 +65,12 @@ export class Visualizer {
   ) => {
     this.ctx.beginPath();
 
-    const dimensions = [
-      x + RADIUS / 2 + HORIZONTAL_MARGIN / 2,
-      y + RADIUS / 2,
-      width - RADIUS - HORIZONTAL_MARGIN,
-      height - RADIUS
-    ].map(num => Math.floor(num));
+    const dimensions = [x, y, width - HORIZONTAL_GAP_BETWEEN_NOTES, height].map(
+      num => Math.floor(num)
+    );
 
-    const color = isAccidental ? "#ffdc66" : "#42C9FF";
+    this.ctx.fillStyle = isAccidental ? "#ffdc66" : "#42C9FF";
 
-    this.ctx.lineJoin = "round";
-    this.ctx.lineWidth = RADIUS;
-    this.ctx.fillStyle = color;
-    this.ctx.strokeStyle = color;
-
-    // Change origin and dimensions to match true size (a stroke makes the shape a bit larger)
-    // @ts-ignore
-    this.ctx.strokeRect(...dimensions);
     // @ts-ignore
     this.ctx.fillRect(...dimensions);
     this.ctx.closePath();

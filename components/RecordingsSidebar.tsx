@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { memo, useState } from "react";
 import { colors, SideBar } from "@anarock/pebble";
 import Icon from "@components/Icon";

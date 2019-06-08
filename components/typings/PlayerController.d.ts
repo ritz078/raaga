@@ -6,7 +6,7 @@ export interface PlayerControllerProps {
   onTogglePlay: () => void;
   onTrackSelect: (midi: MIDI, i: number) => void;
   onStartPlay: () => void;
-  style: {};
-  onReplay: () => void;
+  style?: any;
+  onReplay?: () => void;
   onToggleSidebar: () => void;
 }

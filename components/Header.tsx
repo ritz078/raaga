@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useCallback, useState, memo } from "react";
 import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
@@ -16,10 +15,9 @@ import {
 import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
-import { Transition, animated } from "react-spring";
 import MidiSelect from "@components/MidiSelect";
 
-const Header: React.SFC<HeaderProps> = ({
+const Header: React.FunctionComponent<HeaderProps> = ({
   dispatch,
   mode,
   instrument,
@@ -45,32 +43,17 @@ const Header: React.SFC<HeaderProps> = ({
       <span className={headerLogo}>🎹</span>
 
       <div className={headerRight}>
-        <Transition
-          native
-          items={mode === VISUALIZER_MODE.WRITE}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0, pointerEvents: "none" }}
-        >
-          {show =>
-            show &&
-            (styles => (
-              <animated.button
-                style={styles}
-                className={recordBtn}
-                onClick={toggleRecording}
-              >
-                <Icon
-                  name={isRecording ? "stop" : "record"}
-                  size={12}
-                  color={colors.red.base}
-                />
-                &nbsp;&nbsp;&nbsp;
-                {isRecording ? "Stop" : "Record"}
-              </animated.button>
-            ))
-          }
-        </Transition>
+        {mode === VISUALIZER_MODE.WRITE && (
+          <button className={recordBtn} onClick={toggleRecording}>
+            <Icon
+              name={isRecording ? "stop" : "record"}
+              size={12}
+              color={colors.red.base}
+            />
+            &nbsp;&nbsp;&nbsp;
+            {isRecording ? "Stop" : "Record"}
+          </button>
+        )}
 
         <ModeToggle mode={mode} onToggle={onToggleMode} />
 

@@ -52,7 +52,7 @@ export const labelStyle = css({
   alignSelf: "flex-end",
   width: "100%",
   paddingBottom: 15,
-  color: colors.gray.base,
+  color: colors.gray.dark,
   userSelect: "none",
   fontSize: 12
 });
