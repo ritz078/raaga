@@ -102,6 +102,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         </div>
 
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
+
+        <a target="_blank" href="https://github.com/ritz078/raaga">
+          <Icon name="github" color={colors.white.base} size={23} />
+        </a>
       </div>
     </header>
   );

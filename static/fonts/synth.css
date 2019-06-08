@@ -1,9 +1,9 @@
 @font-face {
   font-family: "synth";
-  src: url("synth.eot?5c6763802bc9db9a07c1f04592dfa623?#iefix")
+  src: url("synth.eot?109d140c7fa7025fe5b1d8901b2d47a2?#iefix")
       format("embedded-opentype"),
-    url("synth.woff2?5c6763802bc9db9a07c1f04592dfa623") format("woff2"),
-    url("synth.woff?5c6763802bc9db9a07c1f04592dfa623") format("woff");
+    url("synth.woff2?109d140c7fa7025fe5b1d8901b2d47a2") format("woff2"),
+    url("synth.woff?109d140c7fa7025fe5b1d8901b2d47a2") format("woff");
 }
 
 .icon {
@@ -20,45 +20,48 @@
 .icon-close:before {
   content: "\f101";
 }
-.icon-download:before {
+.icon-github:before {
   content: "\f102";
 }
-.icon-midi-file:before {
+.icon-midi:before {
   content: "\f103";
 }
-.icon-pause:before {
+.icon-midi-file:before {
   content: "\f104";
 }
-.icon-midi:before {
+.icon-download:before {
   content: "\f105";
 }
-.icon-play:before {
+.icon-pause:before {
   content: "\f106";
 }
-.icon-play1:before {
+.icon-play:before {
   content: "\f107";
 }
-.icon-record:before {
+.icon-play1:before {
   content: "\f108";
 }
-.icon-replay:before {
+.icon-record:before {
   content: "\f109";
 }
-.icon-settings:before {
+.icon-replay:before {
   content: "\f10a";
 }
-.icon-stop:before {
+.icon-settings:before {
   content: "\f10b";
 }
-.icon-tracks:before {
+.icon-stop:before {
   content: "\f10c";
 }
-.icon-upload:before {
+.icon-tracks:before {
   content: "\f10d";
 }
-.icon-volume-mute:before {
+.icon-upload:before {
   content: "\f10e";
 }
-.icon-volume:before {
+.icon-volume-mute:before {
   content: "\f10f";
+}
+.icon-volume:before {
+  content: "\f110";
 }

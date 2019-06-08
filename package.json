@@ -35,7 +35,7 @@
     "react-piano": "^3.1.2",
     "react-progress-arc": "^2.0.0",
     "react-redux": "^7.0.3",
-    "react-spring": "^7.2.7",
+    "react-spring": "^8.0.23",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "startaudiocontext": "^1.2.1",
