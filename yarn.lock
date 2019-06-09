@@ -6113,7 +6113,7 @@ prop-types@15.6.2, prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, 
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-prop-types@^15.7.2:
+prop-types@^15.5.8, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6323,6 +6323,7 @@ react-popper@^1.3.3:
 react-progress-arc@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-progress-arc/-/react-progress-arc-2.0.0.tgz#b781caa63adb0a4686a9cdce210247bcf3de5eaa"
+  integrity sha512-54okgBY2TAedjh4oqHkdUVkyqvauDhdWLOflCSSlGk/EShLHT+/7thSvzXJr6zw6aawzguXk9hKDjVFp9x8TNg==
 
 react-redux@^7.0.3:
   version "7.0.3"
@@ -6342,11 +6343,13 @@ react-spring@^7.2.1:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-react-spring@^7.2.7:
-  version "7.2.7"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-7.2.7.tgz#1e64ddfbc9b835a3d8795bb0e5c45c3a400ab9e7"
+react-spring@^9.0.0-beta.8:
+  version "9.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-9.0.0-beta.8.tgz#dd4348d3d6dd88ff596b36fa85b3328200914b15"
+  integrity sha512-pcyQqr5W9HBM5Rm0rmdbVIEQz7wocAfWBNWSUm/EEvpb4M0OQ3Xp9JW6Ayo+6ZgV7fLzJJHO/QgNdUMpAtVaTw==
   dependencies:
-    "@babel/runtime" "^7.0.0"
+    "@babel/runtime" "^7.3.1"
+    prop-types "^15.5.8"
 
 react-ssr-prepass@1.0.2:
   version "1.0.2"

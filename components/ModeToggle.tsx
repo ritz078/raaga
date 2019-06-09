@@ -3,7 +3,7 @@ import { modeBackground, modeToggleWrapper } from "./styles/ModeToggle.styles";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { cx } from "emotion";
 
-const ModeToggle: React.SFC<{
+const ModeToggle: React.FunctionComponent<{
   mode: VISUALIZER_MODE;
   onToggle: (mode: VISUALIZER_MODE) => void;
 }> = ({ mode, onToggle }) => {

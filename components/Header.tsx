@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo } from "react";
+import React, { useState, memo } from "react";
 import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
@@ -31,10 +31,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
 }) => {
   const [mute, toggleMute] = useState(false);
 
-  const _toggleMute = useCallback(() => {
+  const _toggleMute = () => {
     Tone.Master.mute = !mute;
     toggleMute(!mute);
-  }, []);
+  };
 
   const volumeName = mute ? "volume-mute" : "volume";
 
@@ -102,6 +102,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         </div>
 
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
+
+        <a target="_blank" href="https://github.com/ritz078/raaga">
+          <Icon name="github" color={colors.white.base} size={23} />
+        </a>
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
 import React, { memo, useState, useRef } from "react";
-import { animated, Transition } from "react-spring";
+import { animated, useTransition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors, mixins } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
@@ -14,12 +14,12 @@ import {
 } from "@components/styles/PlayerController.styles";
 import { isEmpty } from "lodash";
 import TrackSelectionModal from "@components/TrackSelectionModal";
-import ProgressCircle from "@components/ProgressCircle";
 import Draggable from "react-draggable";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
+import { ReducersType } from "@enums/reducers";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -28,28 +28,28 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   onTrackSelect,
   onStartPlay,
   style = {},
-  onToggleSidebar
+  onToggleSidebar,
+  dispatch,
+  isCounterRunning
 }) => {
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
-  const [showCountdown, toggleCountdown] = useState(false);
+
+  const transitions = useTransition(!showTrackSelectionModal, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0, pointerEvents: "none" }
+  });
 
   return (
     <animated.div style={style} className={playerWrapper}>
-      {!isEmpty(midi) && (
-        <Transition
-          native
-          items={!showCountdown}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0, pointerEvents: "none" }}
-        >
-          {show =>
-            show &&
-            (styles => (
-              <Draggable bounds="parent" axis="x">
-                <animated.div style={styles} className={playerController}>
+      {!isEmpty(midi) &&
+        transitions.map(
+          ({ item, props, key }) =>
+            item && (
+              <Draggable bounds="parent" axis="x" key={key}>
+                <animated.div style={props} className={playerController}>
                   <div style={{ flex: 1 }}>
                     <div className={midiNameStyle}>
                       {midi.header.name || "Unknown"}{" "}
@@ -88,12 +88,10 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                   </div>
                 </animated.div>
               </Draggable>
-            ))
-          }
-        </Transition>
-      )}
+            )
+        )}
 
-      {isEmpty(midi) && !showCountdown && (
+      {isEmpty(midi) && !isCounterRunning && (
         <div className={loadFileWrapper}>
           <h3>
             You need to load a MIDI file and then <br /> select a track you want
@@ -132,26 +130,27 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
         <TrackSelectionModal
           visible={showTrackSelectionModal}
           midi={loadedMidi}
-          onSelectTrack={i => {
-            toggleTrackSelectionModal(false);
-            toggleCountdown(true);
+          onCounterStart={i => {
             onTrackSelect(loadedMidi, i);
+
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: true
+            });
+          }}
+          onSelectComplete={() => {
+            toggleTrackSelectionModal(false);
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: false
+            });
+            onStartPlay();
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);
           }}
         />
       </div>
-
-      {showCountdown && (
-        <ProgressCircle
-          onComplete={() => {
-            toggleCountdown(false);
-            toggleTrackSelectionModal(false);
-            onStartPlay();
-          }}
-        />
-      )}
     </animated.div>
   );
 };

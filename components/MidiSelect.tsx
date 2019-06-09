@@ -1,5 +1,4 @@
-// @ts-ignore
-import React, { useState, useCallback, useEffect, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   colors,
   Popper,
@@ -21,7 +20,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
   const [error, setError] = useState("");
 
-  const handleMidiDeviceChange = useCallback(() => {
+  const handleMidiDeviceChange = () => {
     setInputMidis(webMidi.inputs);
 
     if (!webMidi.inputs.length) {
@@ -30,7 +29,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
         payload: null
       });
     }
-  });
+  };
 
   useEffect(() => {
     let enabled = false;

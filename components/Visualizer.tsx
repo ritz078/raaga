@@ -24,7 +24,7 @@ interface VisualizerProps {
 export default class extends React.PureComponent<VisualizerProps> {
   private canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef();
   private visualizerRef: React.RefObject<HTMLDivElement> = React.createRef();
-  private debouncedSetDimensions: (e: Event, update: boolean) => void;
+  readonly debouncedSetDimensions: (e: Event, update: boolean) => void;
 
   constructor(props) {
     super(props);
@@ -53,7 +53,6 @@ export default class extends React.PureComponent<VisualizerProps> {
       },
       () => {
         if (!update) return;
-        // @ts-ignore
         this.props.canvasWorker.postMessage({
           message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
           dimensions: {
@@ -70,7 +69,6 @@ export default class extends React.PureComponent<VisualizerProps> {
 
     let canvas;
     if (offScreenCanvasIsSupported) {
-      // @ts-ignore
       canvas = this.canvasRef.current.transferControlToOffscreen();
     } else {
       canvas = this.canvasRef.current;
@@ -81,6 +79,7 @@ export default class extends React.PureComponent<VisualizerProps> {
     const dimensions = JSON.parse(
       JSON.stringify(this.visualizerRef.current.getBoundingClientRect())
     );
+
     this.props.canvasWorker.postMessage(
       {
         canvas,

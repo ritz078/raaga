@@ -10,15 +10,17 @@ import {
   recordingRowBottom
 } from "@components/styles/RecordingSidebar.styles";
 
-const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
+const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
   visible,
   onClose,
   midis,
   dispatch,
-  onTrackSelect
+  onTrackSelect,
+  onCounterComplete
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(undefined);
+
   return (
     <SideBar onClose={onClose} isOpen={visible} width={500} closeOnOutsideClick>
       <div style={{ padding: 30 }}>
@@ -76,12 +78,24 @@ const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
         <TrackSelectionModal
           visible={showTrackSelectionModal}
           midi={loadedMidi}
-          onSelectTrack={i => {
+          onSelectComplete={i => {
             toggleTrackSelectionModal(false);
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: false
+            });
             onTrackSelect(loadedMidi, i);
+            onCounterComplete();
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);
+          }}
+          onCounterStart={i => {
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: true
+            });
+            onTrackSelect(loadedMidi, i);
           }}
         />
       </div>
@@ -89,5 +103,4 @@ const RecordingsSidebar: React.SFC<RecordingsSidebarProps> = ({
   );
 };
 
-// @ts-ignore
 export default memo(RecordingsSidebar);

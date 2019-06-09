@@ -11,6 +11,7 @@ export interface SoundPlayerProps {
   recordings: Store["recordings"];
   midiHistory: Store["midiHistory"];
   midiDevice: string;
+  isCounterRunning: boolean;
 }
 
 export interface SoundPlayerState {

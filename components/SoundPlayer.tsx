@@ -8,7 +8,7 @@ import {
   toastStyle
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader, Toast } from "@anarock/pebble";
-import { getPianoRangeAndShortcuts } from "@config/piano";
+import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { NoteWithEvent } from "@utils/typings/Player";
@@ -109,7 +109,9 @@ class SoundPlayer extends React.PureComponent<
     }
   }
 
-  private preparePlayerForNewTrack = async (selectedTrack: Track) => {
+  private preparePlayerForNewTrack = async (
+    selectedTrack: Track = this.props.selectedTrack
+  ) => {
     const { notes } = selectedTrack;
     this.setRange(notes);
 
@@ -215,6 +217,10 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private startPlayingTrack = async (track = this.props.selectedTrack) => {
+    this.setState({
+      activeMidis: []
+    });
+
     // in case the sound-fonts are not yet loaded.
     await this.preparePlayerForNewTrack(track);
 
@@ -261,6 +267,7 @@ class SoundPlayer extends React.PureComponent<
 
     const {
       settings: { mode },
+      isCounterRunning,
       dispatch,
       recordings,
       midiDevice,
@@ -277,9 +284,11 @@ class SoundPlayer extends React.PureComponent<
             onClose={this.toggleSidebar}
             midis={midiHistory.concat(recordings)}
             dispatch={dispatch}
+            onCounterComplete={this.startPlayingTrack}
             onTrackSelect={(midi, i) => {
+              debugger;
               this.selectTrack(midi, i);
-              this.startPlayingTrack(midi.tracks[i]);
+              this.preparePlayerForNewTrack(midi.tracks[i]);
             }}
           />
 
@@ -319,6 +328,8 @@ class SoundPlayer extends React.PureComponent<
               onTrackSelect={this.selectTrack}
               onStartPlay={this.startPlayingTrack}
               onToggleSidebar={this.toggleSidebar}
+              dispatch={dispatch}
+              isCounterRunning={isCounterRunning}
             />
           )}
 
@@ -357,13 +368,15 @@ export default connect(
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory
+    midiHistory,
+    uiState
   }: Store) => ({
     settings,
     loadedMidi,
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory
+    midiHistory,
+    isCounterRunning: uiState.isCounterRunning
   })
 )(SoundPlayer);
