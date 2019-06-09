@@ -9,7 +9,7 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "synth",
   storage,
-  blacklist: ["selectedTrack", "midiDevice", "loadedMidi"]
+  blacklist: ["selectedTrack", "midiDevice", "loadedMidi", "uiState"]
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

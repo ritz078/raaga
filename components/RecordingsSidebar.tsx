@@ -79,11 +79,21 @@ const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
           midi={loadedMidi}
           onSelectTrack={i => {
             toggleTrackSelectionModal(false);
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: false
+            });
             onTrackSelect(loadedMidi, i);
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);
           }}
+          onCounterStart={() =>
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: true
+            })
+          }
         />
       </div>
     </SideBar>

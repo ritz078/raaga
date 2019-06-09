@@ -1,4 +1,5 @@
 import { MIDI } from "midiconvert";
+import { Dispatch } from "redux";
 
 export interface PlayerControllerProps {
   midi: MIDI;
@@ -9,4 +10,6 @@ export interface PlayerControllerProps {
   style?: any;
   onReplay?: () => void;
   onToggleSidebar: () => void;
+  dispatch: Dispatch;
+  isCounterRunning: boolean;
 }

@@ -261,6 +261,7 @@ class SoundPlayer extends React.PureComponent<
 
     const {
       settings: { mode },
+      isCounterRunning,
       dispatch,
       recordings,
       midiDevice,
@@ -279,8 +280,8 @@ class SoundPlayer extends React.PureComponent<
             dispatch={dispatch}
             onTrackSelect={(midi, i) => {
               this.selectTrack(midi, i);
+              this.startPlayingTrack();
             }}
-            onStartPlay={this.startPlayingTrack}
           />
 
           <Header
@@ -319,6 +320,8 @@ class SoundPlayer extends React.PureComponent<
               onTrackSelect={this.selectTrack}
               onStartPlay={this.startPlayingTrack}
               onToggleSidebar={this.toggleSidebar}
+              dispatch={dispatch}
+              isCounterRunning={isCounterRunning}
             />
           )}
 
@@ -357,13 +360,15 @@ export default connect(
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory
+    midiHistory,
+    uiState
   }: Store) => ({
     settings,
     loadedMidi,
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory
+    midiHistory,
+    isCounterRunning: uiState.isCounterRunning
   })
 )(SoundPlayer);

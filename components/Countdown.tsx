@@ -27,7 +27,7 @@ export const Countdown: FunctionComponent<CountdownProps> = ({
 
   useEffect(() => {
     const x = setInterval(() => {
-      setProgress(progress - 0.1);
+      setProgress(progress - 0.4);
       if (progress <= 0) {
         onComplete();
       }
@@ -40,7 +40,7 @@ export const Countdown: FunctionComponent<CountdownProps> = ({
 
   return (
     <div className={wrapperCn}>
-      <div className={countClassName}>{Math.ceil((progress * 5) / 100)}</div>
+      <div className={countClassName}>{Math.ceil((progress * 3) / 100)}</div>
       <Circle
         stroke={colors.white.base}
         completed={progress / 100}
