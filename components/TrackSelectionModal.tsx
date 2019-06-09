@@ -11,18 +11,19 @@ import { MIDI } from "midiconvert";
 import Modal from "@components/Modal";
 import { Countdown } from "@components/Countdown";
 import { useState } from "react";
+import { css } from "emotion";
 
 interface TrackSelectionModalProps {
   visible: boolean;
   midi: MIDI;
-  onSelectTrack: (index: number) => void;
+  onSelectComplete: (index: number) => void;
   onClose: () => void;
-  onCounterStart?: () => void;
+  onCounterStart?: (index: number) => void;
 }
 
 const TrackSelectionModal: React.FunctionComponent<
   TrackSelectionModalProps
-> = ({ visible, midi, onSelectTrack, onClose, onCounterStart }) => {
+> = ({ visible, midi, onSelectComplete, onClose, onCounterStart }) => {
   if (!midi) return null;
 
   const [showSelectionModal, toggleSelectionModal] = useState(true);
@@ -39,9 +40,12 @@ const TrackSelectionModal: React.FunctionComponent<
     >
       {showCountdown && (
         <Countdown
+          className={css({
+            marginTop: 20
+          })}
           onComplete={() => {
             toggleCountDown(false);
-            onSelectTrack(trackIndex);
+            onSelectComplete(trackIndex);
           }}
         />
       )}
@@ -62,7 +66,7 @@ const TrackSelectionModal: React.FunctionComponent<
                       selectTrack(i);
                       toggleSelectionModal(false);
                       toggleCountDown(true);
-                      onCounterStart();
+                      onCounterStart(i);
                     }}
                     className={trackRow}
                     key={i}
@@ -89,5 +93,4 @@ const TrackSelectionModal: React.FunctionComponent<
   );
 };
 
-// @ts-ignore
 export default React.memo(TrackSelectionModal);

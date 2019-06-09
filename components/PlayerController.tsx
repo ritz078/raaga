@@ -130,9 +130,16 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
         <TrackSelectionModal
           visible={showTrackSelectionModal}
           midi={loadedMidi}
-          onSelectTrack={i => {
-            toggleTrackSelectionModal(false);
+          onCounterStart={i => {
             onTrackSelect(loadedMidi, i);
+
+            dispatch({
+              type: ReducersType.TOGGLE_COUNTER_STATUS,
+              payload: true
+            });
+          }}
+          onSelectComplete={() => {
+            toggleTrackSelectionModal(false);
             dispatch({
               type: ReducersType.TOGGLE_COUNTER_STATUS,
               payload: false
@@ -142,12 +149,6 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           onClose={() => {
             toggleTrackSelectionModal(false);
           }}
-          onCounterStart={() =>
-            dispatch({
-              type: ReducersType.TOGGLE_COUNTER_STATUS,
-              payload: true
-            })
-          }
         />
       </div>
     </animated.div>

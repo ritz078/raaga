@@ -109,7 +109,9 @@ class SoundPlayer extends React.PureComponent<
     }
   }
 
-  private preparePlayerForNewTrack = async (selectedTrack: Track) => {
+  private preparePlayerForNewTrack = async (
+    selectedTrack: Track = this.props.selectedTrack
+  ) => {
     const { notes } = selectedTrack;
     this.setRange(notes);
 
@@ -215,6 +217,10 @@ class SoundPlayer extends React.PureComponent<
   };
 
   private startPlayingTrack = async (track = this.props.selectedTrack) => {
+    this.setState({
+      activeMidis: []
+    });
+
     // in case the sound-fonts are not yet loaded.
     await this.preparePlayerForNewTrack(track);
 
@@ -278,9 +284,11 @@ class SoundPlayer extends React.PureComponent<
             onClose={this.toggleSidebar}
             midis={midiHistory.concat(recordings)}
             dispatch={dispatch}
+            onCounterComplete={this.startPlayingTrack}
             onTrackSelect={(midi, i) => {
+              debugger;
               this.selectTrack(midi, i);
-              this.startPlayingTrack();
+              this.preparePlayerForNewTrack(midi.tracks[i]);
             }}
           />
 

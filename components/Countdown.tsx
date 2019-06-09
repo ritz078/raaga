@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import Circle from "react-progress-arc";
 import { colors } from "@anarock/pebble";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 
 const wrapperCn = css({
   position: "relative",
@@ -17,18 +17,20 @@ const countClassName = css({
 });
 
 interface CountdownProps {
-  onComplete: () => void;
+  onComplete?: () => void;
+  className?: string;
 }
 
 export const Countdown: FunctionComponent<CountdownProps> = ({
-  onComplete = () => {}
+  onComplete = () => {},
+  className
 }) => {
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
     const x = setInterval(() => {
-      setProgress(progress - 0.4);
-      if (progress <= 0) {
+      setProgress(progress - 0.3);
+      if (progress <= 5) {
         onComplete();
       }
     }, 1);
@@ -39,7 +41,7 @@ export const Countdown: FunctionComponent<CountdownProps> = ({
   });
 
   return (
-    <div className={wrapperCn}>
+    <div className={cx(wrapperCn, className)}>
       <div className={countClassName}>{Math.ceil((progress * 3) / 100)}</div>
       <Circle
         stroke={colors.white.base}
