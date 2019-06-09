@@ -227,6 +227,13 @@ class SoundPlayer extends React.PureComponent<
     this.player.playTrack(this.props.loadedMidi, track, this.onRecordPlay);
   };
 
+  private setTrackAndPlay = (midi: MIDI, i: number) => {
+    const track = midi.tracks[i];
+
+    this.selectTrack(midi, i);
+    this.startPlayingTrack(track);
+  };
+
   private toggleRecording = () => {
     this.setState({
       isRecording: !this.state.isRecording,
@@ -267,7 +274,6 @@ class SoundPlayer extends React.PureComponent<
 
     const {
       settings: { mode },
-      isCounterRunning,
       dispatch,
       recordings,
       midiDevice,
@@ -284,12 +290,7 @@ class SoundPlayer extends React.PureComponent<
             onClose={this.toggleSidebar}
             midis={midiHistory.concat(recordings)}
             dispatch={dispatch}
-            onCounterComplete={this.startPlayingTrack}
-            onTrackSelect={(midi, i) => {
-              debugger;
-              this.selectTrack(midi, i);
-              this.preparePlayerForNewTrack(midi.tracks[i]);
-            }}
+            onTrackSelect={this.setTrackAndPlay}
           />
 
           <Header
@@ -325,11 +326,9 @@ class SoundPlayer extends React.PureComponent<
               onTogglePlay={this.onTogglePlay}
               isPlaying={isPlaying}
               midi={this.props.loadedMidi}
-              onTrackSelect={this.selectTrack}
-              onStartPlay={this.startPlayingTrack}
+              onTrackSelect={this.setTrackAndPlay}
               onToggleSidebar={this.toggleSidebar}
-              dispatch={dispatch}
-              isCounterRunning={isCounterRunning}
+              onStartPlay={this.startPlayingTrack}
             />
           )}
 
@@ -368,15 +367,13 @@ export default connect(
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory,
-    uiState
+    midiHistory
   }: Store) => ({
     settings,
     loadedMidi,
     selectedTrack,
     recordings,
     midiDevice,
-    midiHistory,
-    isCounterRunning: uiState.isCounterRunning
+    midiHistory
   })
 )(SoundPlayer);

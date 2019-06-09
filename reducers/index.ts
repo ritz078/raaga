@@ -5,7 +5,6 @@ import { selectedTrack } from "./selectedTrack";
 import { recordings } from "./recordings";
 import { midiDevice } from "./midiDevice";
 import { midiHistory } from "./midiHistory";
-import { uiState } from "./uiState";
 
 export default combineReducers({
   settings,
@@ -13,6 +12,5 @@ export default combineReducers({
   selectedTrack,
   recordings,
   midiDevice,
-  midiHistory,
-  uiState
+  midiHistory
 });

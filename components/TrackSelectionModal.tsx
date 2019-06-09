@@ -9,9 +9,7 @@ import { OutsideClick } from "@anarock/pebble";
 import prettyMs from "pretty-ms";
 import { MIDI } from "midiconvert";
 import Modal from "@components/Modal";
-import { Countdown } from "@components/Countdown";
 import { useState } from "react";
-import { css } from "emotion";
 
 interface TrackSelectionModalProps {
   visible: boolean;
@@ -23,12 +21,10 @@ interface TrackSelectionModalProps {
 
 const TrackSelectionModal: React.FunctionComponent<
   TrackSelectionModalProps
-> = ({ visible, midi, onSelectComplete, onClose, onCounterStart }) => {
+> = ({ visible, midi, onSelectComplete, onClose }) => {
   if (!midi) return null;
 
   const [showSelectionModal, toggleSelectionModal] = useState(true);
-  const [trackIndex, selectTrack] = useState(null);
-  const [showCountdown, toggleCountDown] = useState(false);
   return (
     <Modal
       visible={visible}
@@ -38,18 +34,6 @@ const TrackSelectionModal: React.FunctionComponent<
         backgroundColor: "transparent"
       }}
     >
-      {showCountdown && (
-        <Countdown
-          className={css({
-            marginTop: 20
-          })}
-          onComplete={() => {
-            toggleCountDown(false);
-            onSelectComplete(trackIndex);
-          }}
-        />
-      )}
-
       {showSelectionModal && (
         <OutsideClick onOutsideClick={onClose} className={trackSelectionModal}>
           <div className={modalTop}>
@@ -63,10 +47,8 @@ const TrackSelectionModal: React.FunctionComponent<
                 .map((track, i) => (
                   <div
                     onClick={() => {
-                      selectTrack(i);
                       toggleSelectionModal(false);
-                      toggleCountDown(true);
-                      onCounterStart(i);
+                      onSelectComplete(i);
                     }}
                     className={trackRow}
                     key={i}

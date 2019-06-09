@@ -19,7 +19,6 @@ import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
-import { ReducersType } from "@enums/reducers";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -28,9 +27,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   onTrackSelect,
   onStartPlay,
   style = {},
-  onToggleSidebar,
-  dispatch,
-  isCounterRunning
+  onToggleSidebar
 }) => {
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
@@ -91,7 +88,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
             )
         )}
 
-      {isEmpty(midi) && !isCounterRunning && (
+      {isEmpty(midi) && (
         <div className={loadFileWrapper}>
           <h3>
             You need to load a MIDI file and then <br /> select a track you want
@@ -130,21 +127,9 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
         <TrackSelectionModal
           visible={showTrackSelectionModal}
           midi={loadedMidi}
-          onCounterStart={i => {
-            onTrackSelect(loadedMidi, i);
-
-            dispatch({
-              type: ReducersType.TOGGLE_COUNTER_STATUS,
-              payload: true
-            });
-          }}
-          onSelectComplete={() => {
+          onSelectComplete={i => {
             toggleTrackSelectionModal(false);
-            dispatch({
-              type: ReducersType.TOGGLE_COUNTER_STATUS,
-              payload: false
-            });
-            onStartPlay();
+            onTrackSelect(loadedMidi, i);
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);
