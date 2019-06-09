@@ -32,7 +32,6 @@
     "react-draggable": "^3.3.0",
     "react-modal": "^3.8.1",
     "react-piano": "^3.1.2",
-    "react-progress-arc": "^2.0.0",
     "react-redux": "^7.0.3",
     "react-spring": "^9.0.0-beta.8",
     "redux": "^4.0.1",
