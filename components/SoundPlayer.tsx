@@ -279,8 +279,8 @@ class SoundPlayer extends React.PureComponent<
             dispatch={dispatch}
             onTrackSelect={(midi, i) => {
               this.selectTrack(midi, i);
-              this.startPlayingTrack(midi.tracks[i]);
             }}
+            onStartPlay={this.startPlayingTrack}
           />
 
           <Header

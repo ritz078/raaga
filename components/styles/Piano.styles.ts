@@ -29,7 +29,7 @@ export const accidentalKeys = css({
 });
 
 export const naturalKeys = css({
-  height: PIANO_HEIGHT - 5,
+  height: PIANO_HEIGHT,
   zIndex: 0,
   border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #4a4a4a`,
   borderTopWidth: 0,
@@ -40,7 +40,7 @@ export const naturalKeys = css({
   cursor: "pointer",
   borderBottom: "4px solid #90caf9",
   "&.__active__": {
-    height: PIANO_HEIGHT,
+    height: PIANO_HEIGHT - 5,
     backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
     borderBottomColor: "#42C9FF"
   }

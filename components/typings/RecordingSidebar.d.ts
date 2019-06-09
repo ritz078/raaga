@@ -9,4 +9,5 @@ export interface RecordingsSidebarProps {
   })[];
   dispatch: Dispatch<AnyAction>;
   onTrackSelect: (midi: MIDI, i) => void;
+  onStartPlay: () => void;
 }

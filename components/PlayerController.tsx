@@ -19,6 +19,7 @@ import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
+import { Countdown } from "@components/Countdown";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -32,6 +33,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(midi);
+  const [showCountdown, toggleCountdown] = useState(false);
 
   const transitions = useTransition(!showTrackSelectionModal, null, {
     from: { opacity: 0 },
@@ -43,9 +45,9 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
     <animated.div style={style} className={playerWrapper}>
       {!isEmpty(midi) &&
         transitions.map(
-          ({ item, props }) =>
+          ({ item, props, key }) =>
             item && (
-              <Draggable bounds="parent" axis="x">
+              <Draggable bounds="parent" axis="x" key={key}>
                 <animated.div style={props} className={playerController}>
                   <div style={{ flex: 1 }}>
                     <div className={midiNameStyle}>
@@ -88,7 +90,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
             )
         )}
 
-      {isEmpty(midi) && (
+      {isEmpty(midi) && !showCountdown && (
         <div className={loadFileWrapper}>
           <h3>
             You need to load a MIDI file and then <br /> select a track you want
@@ -129,14 +131,24 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           midi={loadedMidi}
           onSelectTrack={i => {
             toggleTrackSelectionModal(false);
+            toggleCountdown(true);
             onTrackSelect(loadedMidi, i);
-            onStartPlay();
           }}
           onClose={() => {
             toggleTrackSelectionModal(false);
           }}
         />
       </div>
+
+      {!!showCountdown && (
+        <Countdown
+          onComplete={() => {
+            toggleCountdown(false);
+            toggleTrackSelectionModal(false);
+            onStartPlay();
+          }}
+        />
+      )}
     </animated.div>
   );
 };

@@ -878,13 +878,6 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@types/big-integer@^0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@types/big-integer/-/big-integer-0.0.31.tgz#021c505b5d8ad592cb7ffcda7af88b4fc12d4995"
-  integrity sha512-nYrYenHwC07vTBXoQ8jUUi6sednNYHGQxh0ecvfWm46n3djgxxbe7AZIJVaGjzQaEQVEcH6KmB6VMt//vAP0AA==
-  dependencies:
-    big-integer "*"
-
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -959,13 +952,6 @@
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
-
-"@types/rc-progress@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@types/rc-progress/-/rc-progress-2.2.1.tgz#a39693cb395ee191dd51e2a15691cd0f4ea8cb58"
-  integrity sha512-kwFAP9R2eAItLNom79UD0yxtbr3vBQdMSsEC3Vci45GFuGuyE0Hrv+AYqCHWHJVz2cyt+0kmwSVwMzKLPS/jlA==
-  dependencies:
-    "@types/react" "*"
 
 "@types/react-loadable@*":
   version "5.4.1"
@@ -1745,7 +1731,7 @@ babel-plugin-transform-react-remove-prop-types@0.4.15:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.15.tgz#7ba830e77276a0e788cd58ea527b5f70396e12a7"
 
-babel-runtime@6.x, babel-runtime@^6.26.0:
+babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -1786,11 +1772,6 @@ bcrypt-pbkdf@^1.0.0:
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz#a4301d389b6a43f9b67ff3ca11a3f6637e360e9e"
   dependencies:
     tweetnacl "^0.14.3"
-
-big-integer@*:
-  version "1.6.43"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.43.tgz#8ac15bf13e93e509500859061233e19d8d0d99d1"
-  integrity sha512-9dULc9jsKmXl0Aeunug8wbF+58n+hQoFjqClN7WeZwGLh0XJUWyJJ9Ee+Ep+Ql/J9fRsTVaeThp8MhiCCrY0Jg==
 
 big.js@^3.1.3:
   version "3.2.0"
@@ -6249,14 +6230,6 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-rc-progress@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/rc-progress/-/rc-progress-2.3.0.tgz#cfbd07ff9026c450100980de209a92650e24f313"
-  integrity sha512-hYBKFSsNgD7jsF8j+ZC1J8y5UIC2X/ktCYI/OQhQNSX6mGV1IXnUCjAd9gbLmzmpChPvKyymRNfckScUNiTpFQ==
-  dependencies:
-    babel-runtime "6.x"
-    prop-types "^15.5.8"
-
 rc@^1.2.7:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
@@ -6347,6 +6320,11 @@ react-popper@^1.3.3:
     typed-styles "^0.0.7"
     warning "^4.0.2"
 
+react-progress-arc@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-progress-arc/-/react-progress-arc-2.0.0.tgz#b781caa63adb0a4686a9cdce210247bcf3de5eaa"
+  integrity sha512-54okgBY2TAedjh4oqHkdUVkyqvauDhdWLOflCSSlGk/EShLHT+/7thSvzXJr6zw6aawzguXk9hKDjVFp9x8TNg==
+
 react-redux@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.0.3.tgz#983c5a6de81cb1e696bd1c090ba826545f9170f1"
@@ -6365,10 +6343,10 @@ react-spring@^7.2.1:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-react-spring@^8.0.23:
-  version "8.0.23"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-8.0.23.tgz#2a0ddaeb0816ea9e21898d04d3b8da7d1a3daa14"
-  integrity sha512-2mp7+0DnoBQ67h2zY0rFztdMqSm8gdvSWHgfwKz4TbLQ+N4n2IauB6DCMc046K8uvUNwDCUdlKgshUrCj14QUA==
+react-spring@^9.0.0-beta.8:
+  version "9.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-9.0.0-beta.8.tgz#dd4348d3d6dd88ff596b36fa85b3328200914b15"
+  integrity sha512-pcyQqr5W9HBM5Rm0rmdbVIEQz7wocAfWBNWSUm/EEvpb4M0OQ3Xp9JW6Ayo+6ZgV7fLzJJHO/QgNdUMpAtVaTw==
   dependencies:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
