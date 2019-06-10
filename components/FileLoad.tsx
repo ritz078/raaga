@@ -28,7 +28,7 @@ const FileLoad = ({ onMidiLoad, label }) => {
   }
 
   return (
-    <>
+    <div style={{ display: "flex" }}>
       <label htmlFor="upload-midi" style={{ display: "flex" }}>
         {label}
       </label>
@@ -41,7 +41,7 @@ const FileLoad = ({ onMidiLoad, label }) => {
         accept=".mid"
         ref={fileRef}
       />
-    </>
+    </div>
   );
 };
 

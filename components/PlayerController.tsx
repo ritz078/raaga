@@ -19,6 +19,7 @@ import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
+import { css, cx } from "emotion";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -102,9 +103,16 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                 toggleTrackSelectionModal(true);
               }}
               label={
-                <button className={loadButton}>
+                <button
+                  className={cx(
+                    loadButton,
+                    css({
+                      pointerEvents: "none"
+                    })
+                  )}
+                >
                   <Icon name="upload" color={colors.gray.darker} size={12} />
-                  &nbsp;&nbsp; Load a MIDI file
+                  &nbsp;&nbsp; Upload a MIDI file
                 </button>
               }
             />
