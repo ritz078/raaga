@@ -10,8 +10,10 @@ import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { Clock } from "@utils/Clock";
 import {
+  ACCIDENTAL_KEY_COLOR,
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
+  NATURAL_KEY_COLOR,
   TRACK_PLAYING_SPEED
 } from "@config/piano";
 
@@ -70,7 +72,9 @@ export class Visualizer {
       num => Math.floor(num)
     );
 
-    this.ctx.fillStyle = isAccidental ? "#ffdc66" : "#42C9FF";
+    this.ctx.fillStyle = isAccidental
+      ? ACCIDENTAL_KEY_COLOR
+      : NATURAL_KEY_COLOR;
 
     // @ts-ignore
     this.ctx.fillRect(...dimensions);
