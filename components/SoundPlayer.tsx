@@ -33,6 +33,7 @@ import webMidi from "webmidi";
 import Tone from "tone";
 import dynamic from "next/dynamic";
 import { RecordingsSidebarProps } from "@components/typings/RecordingSidebar";
+import { PIANO_HEIGHT } from "@config/piano";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -338,7 +339,7 @@ class SoundPlayer extends React.PureComponent<
             canvasWorker={canvasWorker}
           />
         </div>
-        <div style={{ height: 300 }}>
+        <div style={{ height: PIANO_HEIGHT }}>
           <div className={pianoWrapper}>
             {loading && (
               <Loader className={loaderClass} color={colors.white.base} />

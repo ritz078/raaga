@@ -6,7 +6,6 @@ import Tone from "tone";
 import Icon from "@components/Icon";
 import {
   headerClass,
-  headerLogo,
   headerRight,
   iconNotifier,
   instrumentLabel,
@@ -39,9 +38,8 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   const volumeName = mute ? "volume-mute" : "volume";
 
   return (
-    <header className={headerClass}>
-      <span className={headerLogo}>🎹</span>
-
+    <div className={headerClass}>
+      <span></span>
       <div className={headerRight}>
         {mode === VISUALIZER_MODE.WRITE && (
           <button className={recordBtn} onClick={toggleRecording}>
@@ -102,12 +100,8 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         </div>
 
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
-
-        <a target="_blank" href="https://github.com/ritz078/raaga">
-          <Icon name="github" color={colors.white.base} size={23} />
-        </a>
       </div>
-    </header>
+    </div>
   );
 };
 
