@@ -29,3 +29,13 @@ export const mainHeader = css({
     textDecoration: "none"
   }
 });
+
+export const betaTag = css({
+  backgroundColor: "#e91e63",
+  fontSize: 12,
+  display: "inline-block",
+  borderRadius: 2,
+  padding: "3px 5px",
+  marginLeft: 1,
+  marginTop: -18
+});
