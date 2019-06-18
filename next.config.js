@@ -30,6 +30,8 @@ const config = {
 
   target: "serverless",
 
+  generateInDevMode: true,
+
   workboxOpts: {
     swDest: "static/service-worker.js",
     runtimeCaching: [
