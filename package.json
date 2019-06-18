@@ -8,7 +8,7 @@
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
     "build:fonts": "node ./scripts/generate-fonts",
-    "now-build": "next build && next export -o dist"
+    "now-build": "next build"
   },
   "lint-staged": {
     "./assets/*/*.svg": [
@@ -26,6 +26,7 @@
     "midi-instruments": "^1.1.1",
     "midiconvert": "^0.4.7",
     "next": "8.1.0",
+    "next-offline": "^4.0.2",
     "pretty-ms": "^5.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -42,7 +43,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.2.0",
-    "@now/static-build": "^0.5.9",
+    "@now/next": "^0.4.2",
     "@types/lodash": "^4.14.134",
     "@types/next": "^8.0.5",
     "@types/react": "^16.8.20",
@@ -64,6 +65,7 @@
     "redux-devtools-extension": "^2.13.8",
     "typescript": "3.5.2",
     "webfonts-generator": "^0.4.0",
+    "webpack": "^4.34.0",
     "worker-loader": "^2.0.0"
   },
   "husky": {
