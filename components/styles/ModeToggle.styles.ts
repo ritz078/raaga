@@ -13,15 +13,19 @@ export const modeToggleWrapper = css({
   color: colors.gray.light,
   justifyItems: "center",
   userSelect: "none",
-  div: {
+  cursor: "pointer",
+  "& > div": {
     flex: 1,
     textAlign: "center",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    cursor: "pointer",
     fontSize: 13,
     zIndex: 9
+  },
+  "&.__disabled__": {
+    opacity: 0.6,
+    cursor: "not-allowed"
   }
 });
 
