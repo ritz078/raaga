@@ -28,6 +28,8 @@ const config = {
     return config;
   },
 
+  target: "serverless",
+
   workboxOpts: {
     swDest: "static/service-worker.js",
     runtimeCaching: [
