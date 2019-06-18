@@ -53,7 +53,11 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           </button>
         )}
 
-        <ModeToggle mode={mode} onToggle={onToggleMode} />
+        <ModeToggle
+          mode={mode}
+          onToggle={onToggleMode}
+          disabled={isRecording}
+        />
 
         <Popper
           label={({ toggle, isOpen }) => (
