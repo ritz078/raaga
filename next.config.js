@@ -32,8 +32,6 @@ const config = {
 
   generateInDevMode: process.env.SW,
 
-  generateSw: false,
-
   workboxOpts: {
     swDest: "static/service-worker.js",
     runtimeCaching: [
