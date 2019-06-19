@@ -7,13 +7,13 @@ import {
 } from "@components/styles/Header.styles";
 import { OutsideClick } from "@anarock/pebble";
 import prettyMs from "pretty-ms";
-import { MIDI } from "midiconvert";
 import Modal from "@components/Modal";
 import { useState } from "react";
+import { Midi } from "@typings/midi";
 
 interface TrackSelectionModalProps {
   visible: boolean;
-  midi: MIDI;
+  midi: Midi;
   onSelectComplete: (index: number) => void;
   onClose: () => void;
   onCounterStart?: (index: number) => void;
@@ -56,7 +56,9 @@ const TrackSelectionModal: React.FunctionComponent<
                   >
                     <div style={{ paddingRight: 20 }}>#{i + 1}</div>
                     <div className="__name__">{track.name || "Unnamed"}</div>
-                    <div style={{ flex: 1 }}>{track.instrument || "N/A"}</div>
+                    <div style={{ flex: 1 }}>
+                      {track.instrument.name || "N/A"}
+                    </div>
                     <div style={{ flex: 0.5 }}>
                       {prettyMs(track.duration * 1000)}
                     </div>

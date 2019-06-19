@@ -1,17 +1,24 @@
-import { parse } from "midiconvert";
+import MIDI from "@tonejs/midi";
+import { Midi } from "@typings/midi";
 
-const file = new FileReader();
 const _self = self as any;
 
-let name;
-
-file.onload = () => {
+self.onmessage = async e => {
   try {
-    // heavy computation
-    const parsedMidi = parse(file.result);
-    const json = parsedMidi.toJSON();
+    const parsedMidi = await MIDI.fromUrl(URL.createObjectURL(e.data));
 
-    if (!json.header.name) json.header.name = name;
+    const _json = parsedMidi.toJSON();
+
+    const json: Midi = {
+      ..._json,
+      duration: _json.duration,
+      tracks: _json.tracks.map((track, i) => ({
+        ...track,
+        duration: parsedMidi.tracks[i].duration
+      }))
+    };
+
+    if (!json.header.name) json.header.name = e.data.data.name;
 
     _self.postMessage({
       data: json
@@ -21,9 +28,4 @@ file.onload = () => {
       error: e.message
     });
   }
-};
-
-self.onmessage = e => {
-  file.readAsArrayBuffer(e.data);
-  name = e.data.name;
 };

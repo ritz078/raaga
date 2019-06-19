@@ -3,8 +3,8 @@ import {
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
 import { Visualizer } from "@utils/Visualizer";
-import { Track } from "midiconvert";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
+import { Track } from "@typings/midi";
 
 export interface Data {
   canvas: {

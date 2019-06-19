@@ -1,5 +1,5 @@
-import { Note } from "midiconvert";
 import Tone from "tone";
+import { Note } from "@typings/midi";
 
 export default class Recorder {
   private notes: Partial<Note>[] = [];

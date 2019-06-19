@@ -1,6 +1,5 @@
 import { MidiNumbers } from "react-piano";
 import { groupBy } from "lodash";
-import { Note, Track } from "midiconvert";
 import {
   getAllMidiNumbersInRange,
   getNaturalKeyWidthRatio,
@@ -16,6 +15,7 @@ import {
   NATURAL_KEY_COLOR,
   TRACK_PLAYING_SPEED
 } from "@config/piano";
+import { Note, Track } from "@typings/midi";
 
 function now() {
   return Date.now() / 1000;
