@@ -138,5 +138,6 @@ export const iconNotifier = css({
   height: 20,
   position: "absolute",
   top: "14px",
-  transform: "translateX(27px)"
+  transform: "translateX(27px)",
+  pointerEvents: "none"
 });

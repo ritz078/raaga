@@ -1,7 +1,7 @@
-import { Note } from "midiconvert";
 import { MidiNumbers, KeyboardShortcuts } from "react-piano";
 import { range } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
+import { Note } from "@typings/midi";
 
 const pitchPositions = {
   C: 0,

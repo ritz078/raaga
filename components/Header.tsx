@@ -2,7 +2,6 @@ import React, { useState, memo } from "react";
 import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-
 import Icon from "@components/Icon";
 import {
   headerClass,

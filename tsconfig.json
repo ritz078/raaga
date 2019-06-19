@@ -6,7 +6,7 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "removeComments": false,
     "preserveConstEnums": true,
@@ -27,7 +27,8 @@
       "@assets/*": ["./assets/*"],
       "@controllers/*": ["./controllers/*"]
     },
-    "lib": ["dom", "es2016", "webworker"]
+    "lib": ["dom", "es2016", "webworker"],
+    "typeRoots": ["./node_modules/@types", "./typings/npm"]
   },
-  "exclude": ["scripts", "static", "public", ".next"]
+  "exclude": ["scripts", "static", "public", ".next", "./node_modules"]
 }

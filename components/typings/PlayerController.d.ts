@@ -1,10 +1,10 @@
-import { MIDI } from "midiconvert";
+import { Midi } from "@typings/midi";
 
 export interface PlayerControllerProps {
-  midi: MIDI;
+  midi: Midi;
   isPlaying: boolean;
   onTogglePlay: () => void;
-  onTrackSelect: (midi: MIDI, i: number) => void;
+  onTrackSelect: (midi: Midi, i: number) => void;
   onStartPlay: () => void;
   style?: any;
   onReplay?: () => void;

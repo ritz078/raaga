@@ -30,7 +30,7 @@ const config = {
 
   target: "serverless",
 
-  generateInDevMode: true,
+  generateInDevMode: process.env.SW,
 
   workboxOpts: {
     swDest: "static/service-worker.js",

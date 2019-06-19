@@ -2,13 +2,13 @@ import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
 import { NoteWithEvent, Sampler } from "@utils/typings/Player";
 import Tone from "tone";
 import { instruments } from "midi-instruments";
-import { MIDI, Note, Track } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
 import { get as getFromIDB, set as setInIDB } from "idb-keyval";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import Recorder from "@utils/Recorder";
 import { PIANO_HEIGHT, TRACK_PLAYING_SPEED } from "@config/piano";
+import { Midi, Note, Track } from "@typings/midi";
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -146,11 +146,11 @@ export class Player {
    * @param track
    * @param cb
    */
-  public playTrack = (midi: MIDI, track: Track, cb) => {
+  public playTrack = (midi: Midi, track: Track, cb) => {
     const delay = (window.innerHeight - PIANO_HEIGHT) / TRACK_PLAYING_SPEED;
 
     const notes = getNotesWithNoteEnd(track.notes, delay);
-    Tone.Transport.bpm.value = midi.header.bpm;
+    Tone.Transport.bpm.value = midi.header.tempos[0].bpm;
     Tone.Transport.duration = track.duration;
     Tone.Transport.seconds = 0;
 

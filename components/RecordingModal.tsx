@@ -3,22 +3,55 @@ import Modal from "@components/Modal";
 import Icon from "@components/Icon";
 import { colors, Input, Button, mixins } from "@anarock/pebble";
 import { description, iconClose, title } from "./styles/RecordingModal.styles";
-import { Note, create } from "midiconvert";
-import { getInstrumentById } from "midi-instruments";
+import { getInstrumentIdByName, Instrument } from "midi-instruments";
 import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
+import { Midi, Note } from "@typings/midi";
+import MIDI from "@tonejs/midi";
 
 interface RecordingModalProps {
   notes: Note[];
-  instrumentId: number;
+  instrument: Instrument;
   dispatch: Dispatch<AnyAction>;
   visible: boolean;
   onActionComplete: () => void;
 }
 
-const RecordingModal: React.SFC<RecordingModalProps> = ({
+function createMidi(name: string, notes: Note[], instrument: Instrument) {
+  const midi = new MIDI();
+
+  const tracks = midi.addTrack();
+  const { name: instrumentName, group } = instrument;
+
+  notes.forEach(_note => tracks.addNote(_note));
+
+  const duration = tracks.duration;
+
+  let midiJson: Midi = midi.toJSON();
+
+  return {
+    ...midiJson,
+    header: {
+      ...midiJson.header,
+      name
+    },
+    tracks: [
+      {
+        ...midiJson.tracks[0],
+        duration,
+        instrument: {
+          name: instrumentName,
+          family: group,
+          number: +getInstrumentIdByName(name)
+        }
+      }
+    ]
+  };
+}
+
+const RecordingModal: React.FunctionComponent<RecordingModalProps> = ({
   notes = [],
-  instrumentId,
+  instrument,
   dispatch,
   visible,
   onActionComplete
@@ -26,32 +59,18 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
   const [name, setName] = useState("");
 
   const saveFile = useCallback(() => {
-    const midi = create();
-    // @ts-ignore
-    const tracks = midi.track(name);
-    tracks.patch(instrumentId);
-
-    notes.forEach(({ midi, time, duration, velocity }) =>
-      tracks.note(midi, time, duration, velocity)
-    );
-
-    const midiJson = midi.toJSON();
-    midiJson.header.name = name;
+    const midi = createMidi(name, notes, instrument);
 
     dispatch({
       type: ReducersType.SAVE_RECORDING,
       payload: {
-        ...midiJson,
-        id:
-          "_" +
-          Math.random()
-            .toString(36)
-            .substr(2, 9)
+        ...midi,
+        id: Date.now()
       }
     });
 
     onActionComplete();
-  }, [name]);
+  }, [name, instrument]);
 
   const lastNote = notes[notes.length - 1];
   return (
@@ -84,7 +103,7 @@ const RecordingModal: React.SFC<RecordingModalProps> = ({
             color: colors.gray.dark
           }}
         >
-          {getInstrumentById(instrumentId).name}
+          {instrument.name}
           {"  "}&bull;{"  "}
           {notes.length} Notes {"    "}&bull;{"   "}
           {(lastNote.time + lastNote.duration).toFixed(2)}s

@@ -912,6 +912,13 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
+"@tonejs/midi@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tonejs/midi/-/midi-2.0.0.tgz#9be022ad148f146143109d083841ec3268ad5c04"
+  integrity sha512-I/6ErqMtccju7ZVkJPCsC1L4ARDP0H6tb5wy1KIsWQf2bp7sLBjxUIHp0ZV/1XXB5fZbA/XN2dfSaFg/Jl/Hww==
+  dependencies:
+    midi-file "^1.1.1"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -4697,11 +4704,6 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
-jsmidgen@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/jsmidgen/-/jsmidgen-0.1.5.tgz#ad0afd6375eb12f51064025393ce3baec380585d"
-  integrity sha1-rQr9Y3XrEvUQZAJTk847rsOAWF0=
-
 json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
@@ -5203,24 +5205,17 @@ micromatch@^3.1.10, micromatch@^3.1.4, micromatch@^3.1.8:
     snapdragon "^0.8.1"
     to-regex "^3.0.2"
 
-midi-file-parser@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/midi-file-parser/-/midi-file-parser-1.0.0.tgz#175a013f277e9d26acf94cfe6c03b13abb0a1e9e"
-  integrity sha1-F1oBPyd+nSas+Uz+bAOxOrsKHp4=
-
-midi-instruments@^1.1.1:
+midi-file@^1.1.1:
   version "1.1.1"
-  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.1.1.tgz#43d3a2a327d7e6cd75216f39e688ae4531b6cd17"
+  resolved "https://registry.yarnpkg.com/midi-file/-/midi-file-1.1.1.tgz#eb82876a2a7ac83174170e27bf57d4e2c8816112"
+  integrity sha512-HI6Y/kc9g1Af0OqMkTzI2AeGgPJMONgQcd/13gBf8C9BcUh7wa/AnXR1Fgl8SIuO7GJmFhSIACEWcwiAz2E2Pg==
+
+midi-instruments@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/midi-instruments/-/midi-instruments-1.1.4.tgz#f0fbdb3c893462ca153c2e60845aaf928908d9af"
+  integrity sha512-vsNmr8blGwGoUEoVnn6Arc04T5zihK4faBUPeRPYmvhyMRL7oxBosuKHN5xxGcDgDf8RwNjEVgf/w4XwP7nl1A==
   dependencies:
     just-values "^1.1.0"
-
-midiconvert@^0.4.7:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/midiconvert/-/midiconvert-0.4.7.tgz#4744cd2e57cffdb980f3e56aa1268e56a86f20f8"
-  integrity sha512-GfzIQDY7Msml5HEcQjoVMbeyEsDRlkzkZ5IVJ6rxfAs4df3Ux6pJRIXT010gbQ3hI10aX16h716XoVkC+V+szw==
-  dependencies:
-    jsmidgen "^0.1.5"
-    midi-file-parser "^1.0.0"
 
 miller-rabin@^4.0.0:
   version "4.0.1"

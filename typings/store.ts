@@ -1,16 +1,16 @@
-import { MIDI, Track } from "midiconvert";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import { Midi, Track } from "@typings/midi";
 
 export interface Store {
   selectedTrack: Track;
-  loadedMidi: MIDI;
+  loadedMidi: Midi;
   settings: {
     mode: VISUALIZER_MODE;
   };
-  recordings: (MIDI & {
+  recordings: (Midi & {
     id: string;
   })[];
-  midiHistory: (MIDI & {
+  midiHistory: (Midi & {
     id: string;
   })[];
   midiDevice: string;

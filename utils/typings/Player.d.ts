@@ -1,11 +1,10 @@
-import { Note } from "midiconvert";
 import { EVENT_TYPE } from "@enums/piano";
 import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
-import { Track } from "midiconvert";
 import { Range } from "@utils/typings/Visualizer";
+import { Note, Track } from "@typings/midi";
 
 interface Message {
   message: VISUALIZER_MESSAGES;

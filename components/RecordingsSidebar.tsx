@@ -32,16 +32,18 @@ const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
         </h3>
 
         {midis.map((recording, i) => {
-          const track = recording.tracks[0];
+          const { tracks, duration, header, id } = recording;
+
+          const track = tracks[0];
           return (
-            <div key={recording.id} className={recordingRow}>
+            <div key={id} className={recordingRow}>
               <div>
-                <div>{recording.header.name || "Unnamed"}</div>
+                <div>{header.name || "Unnamed"}</div>
                 <div className={recordingRowBottom}>
-                  {recording.duration.toFixed(2)}s <span>&bull;</span>
-                  {recording.tracks.length} track
+                  {(duration || 0).toFixed(2)}s <span>&bull;</span>
+                  {tracks.length} track
                   <span>&bull;</span>
-                  {track.instrument}
+                  {track.instrument.name}
                 </div>
               </div>
 

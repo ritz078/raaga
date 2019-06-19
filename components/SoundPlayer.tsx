@@ -9,7 +9,6 @@ import {
 } from "@components/styles/SoundPlayer.styles";
 import { colors, Loader, Toast } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
-import { MIDI, Track } from "midiconvert";
 import Visualizer from "@components/Visualizer";
 import { NoteWithEvent } from "@utils/typings/Player";
 import { connect } from "react-redux";
@@ -22,7 +21,7 @@ import CanvasWorker, {
 } from "@controllers/visualizer.controller";
 import {
   getInstrumentById,
-  getInstrumentNames,
+  getInstrumentByValue,
   instruments
 } from "midi-instruments";
 import PlayerController from "@components/PlayerController";
@@ -34,6 +33,7 @@ import Tone from "tone";
 import dynamic from "next/dynamic";
 import { RecordingsSidebarProps } from "@components/typings/RecordingSidebar";
 import { PIANO_HEIGHT } from "@config/piano";
+import { Midi, Track } from "@typings/midi";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -117,8 +117,10 @@ class SoundPlayer extends React.PureComponent<
     this.setRange(notes);
 
     // change instrument if info present in midi.
-    if (selectedTrack.instrumentNumber) {
-      const { value } = getInstrumentById(selectedTrack.instrumentNumber);
+    if (selectedTrack.instrument.number) {
+      const { value } = getInstrumentById(
+        selectedTrack.instrument.number.toString()
+      );
       if (value === this.state.instrument) return;
 
       await this.changeInstrument(value);
@@ -194,7 +196,7 @@ class SoundPlayer extends React.PureComponent<
     });
   };
 
-  private selectTrack = (midi: MIDI, i: number) => {
+  private selectTrack = (midi: Midi, i: number) => {
     const track = midi.tracks[i];
 
     this.props.dispatch({
@@ -228,7 +230,7 @@ class SoundPlayer extends React.PureComponent<
     this.player.playTrack(this.props.loadedMidi, track, this.onRecordPlay);
   };
 
-  private setTrackAndPlay = (midi: MIDI, i: number) => {
+  private setTrackAndPlay = (midi: Midi, i: number) => {
     const track = midi.tracks[i];
 
     this.selectTrack(midi, i);
@@ -281,6 +283,8 @@ class SoundPlayer extends React.PureComponent<
       midiHistory
     } = this.props;
 
+    const _instrument = getInstrumentByValue(instrument);
+
     return (
       <>
         <div className={flexOne}>
@@ -312,9 +316,7 @@ class SoundPlayer extends React.PureComponent<
             visible={!isRecording && !!recordedNotes}
             dispatch={dispatch}
             notes={recordedNotes as any}
-            instrumentId={getInstrumentNames().findIndex(
-              _instrument => _instrument === instrument
-            )}
+            instrument={_instrument}
             onActionComplete={() =>
               this.setState({
                 recordedNotes: undefined
