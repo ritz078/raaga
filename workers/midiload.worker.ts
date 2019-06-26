@@ -18,7 +18,7 @@ self.onmessage = async e => {
       }))
     };
 
-    if (!json.header.name) json.header.name = e.data.data.name;
+    if (!json.header.name) json.header.name = e.data.name;
 
     _self.postMessage({
       data: json
