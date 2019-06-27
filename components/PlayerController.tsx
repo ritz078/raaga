@@ -117,9 +117,9 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
               }
             />
 
-            <button className={loadButton} onClick={onToggleSidebar}>
-              Open Saved MIDI
-            </button>
+            {/*<button className={loadButton} onClick={onToggleSidebar}>*/}
+            {/*  Open Saved MIDI*/}
+            {/*</button>*/}
           </div>
         </div>
       )}
