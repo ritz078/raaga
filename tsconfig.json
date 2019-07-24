@@ -28,7 +28,15 @@
       "@controllers/*": ["./controllers/*"]
     },
     "lib": ["dom", "es2016", "webworker"],
-    "typeRoots": ["./node_modules/@types", "./typings/npm"]
+    "typeRoots": ["./node_modules/@types", "./typings/npm"],
+    "allowJs": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "exclude": ["scripts", "static", "public", ".next", "./node_modules"]
+  "exclude": ["scripts", "static", "public", ".next", "./node_modules"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

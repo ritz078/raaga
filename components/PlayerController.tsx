@@ -27,8 +27,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   onTogglePlay,
   onTrackSelect,
   onStartPlay,
-  style = {},
-  onToggleSidebar
+  style = {}
 }) => {
   const safariContextStartClickRef = useRef(null);
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);

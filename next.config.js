@@ -1,14 +1,8 @@
-const withTypescript = require("@zeit/next-typescript");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const withCSS = require("@zeit/next-css");
 const webpack = require("webpack");
-const withOffline = require("next-offline");
 
 const config = {
   webpack(config, options) {
-    if (options.isServer && options.dev)
-      config.plugins.push(new ForkTsCheckerWebpackPlugin());
-
     config.plugins.push(
       new webpack.DefinePlugin({
         "process.env.DEV": JSON.stringify(options.dev)
@@ -23,35 +17,19 @@ const config = {
       }
     });
 
-    config.output.globalObject = `this`;
+    config.output.globalObject = 'typeof self !== "object" ? self : this';
+
+    // Temporary fix for https://github.com/zeit/next.js/issues/8071
+    config.plugins.forEach(plugin => {
+      if (plugin.definitions && plugin.definitions["typeof window"]) {
+        delete plugin.definitions["typeof window"];
+      }
+    });
 
     return config;
   },
 
-  target: "serverless",
-
-  generateInDevMode: process.env.SW,
-
-  workboxOpts: {
-    swDest: "static/service-worker.js",
-    runtimeCaching: [
-      {
-        urlPattern: /^https?.*/,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "https-calls",
-          networkTimeoutSeconds: 15,
-          expiration: {
-            maxEntries: 150,
-            maxAgeSeconds: 30 * 24 * 60 * 60 // 1 month
-          },
-          cacheableResponse: {
-            statuses: [0, 200]
-          }
-        }
-      }
-    ]
-  }
+  target: "serverless"
 };
 
-module.exports = withOffline(withCSS(withTypescript(config)));
+module.exports = withCSS(config);
