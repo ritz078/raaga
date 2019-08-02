@@ -83,7 +83,7 @@ export const iconClass = css({
 });
 
 export const instrumentLabel = css({
-  display: "block",
+  display: "inline-flex",
   color: colors.white.base,
   backgroundColor: "rgba(47,47,47,0.8)",
   padding: "12px 20px",
@@ -92,15 +92,8 @@ export const instrumentLabel = css({
   cursor: "pointer",
   marginLeft: 20,
   marginRight: 10,
-  span: {
-    fontSize: 8,
-    marginLeft: 8,
-    transition: "transform 200ms",
-    display: "inline-block",
-    "&.__open__": {
-      transform: "rotate(180deg)"
-    }
-  }
+  outline: "none",
+  border: "none"
 });
 
 export const recordBtn = css({

@@ -9,6 +9,7 @@ import {
 import { headerLogo } from "@components/styles/Header.styles";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
+import { Pane } from "evergreen-ui";
 
 const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
   ssr: false
@@ -23,9 +24,11 @@ export default function() {
           <span className={betaTag}>beta</span>
         </span>
 
-        <a target="_blank" href="https://github.com/ritz078/raaga">
-          <Icon name="github" color={colors.white.base} size={23} />
-        </a>
+        <Pane display="flex" alignItems="center">
+          <a target="_blank" href="https://github.com/ritz078/raaga">
+            <Icon name="github" color={colors.white.base} size={23} />
+          </a>
+        </Pane>
       </header>
       <div className={playerWrapper}>
         <SoundPlayer />

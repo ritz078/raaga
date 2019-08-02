@@ -1,11 +1,5 @@
-import React, { useState, useEffect, memo } from "react";
-import {
-  colors,
-  Popper,
-  Option,
-  OptionGroupRadio,
-  Toast
-} from "@anarock/pebble";
+import React, { useState, useEffect, memo, useCallback } from "react";
+import { colors, Toast } from "@anarock/pebble";
 import Icon from "@components/Icon";
 import webMidi from "webmidi";
 import {
@@ -14,13 +8,13 @@ import {
   noMidiIconWrapper
 } from "@components/styles/MidiSelect.styles";
 import { ReducersType } from "@enums/reducers";
-import { css } from "emotion";
+import { SelectMenu, Pane } from "evergreen-ui";
 
 const MidiSelect = ({ dispatch, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
   const [error, setError] = useState("");
 
-  const handleMidiDeviceChange = () => {
+  const handleMidiDeviceChange = useCallback(() => {
     setInputMidis(webMidi.inputs);
 
     if (!webMidi.inputs.length) {
@@ -29,7 +23,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
         payload: null
       });
     }
-  };
+  }, [webMidi]);
 
   useEffect(() => {
     let enabled = false;
@@ -59,66 +53,47 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
   }, []);
 
   return (
-    <Popper
-      label={({ toggle }) => (
-        <div>
-          <Icon className="icon-padding" name="midi" onClick={toggle} />
-          {inputMidis.length && (
-            <Icon
-              name="record"
-              size={10}
-              color={colors.green.base}
-              className={deviceAvailable}
-            />
-          )}
-        </div>
-      )}
-      placement="bottom-end"
-      popperClassName={css({
-        width: 300
-      })}
-    >
-      {({ toggle }) =>
-        inputMidis.length ? (
-          <OptionGroupRadio
-            onChange={id => {
-              dispatch({
-                type: ReducersType.SET_MIDI_DEVICE,
-                payload: id
-              });
-              Toast.show(
-                // @ts-ignore
-                `Connected to ${webMidi.getInputById(id as string).name}`,
-                "success"
-              );
-              toggle();
-            }}
-            selected={midiDeviceId}
-          >
-            {inputMidis.map(input => (
-              <Option
-                key={input.id}
-                label={input.name}
-                value={input.id}
-                rightElement={() =>
-                  input.id === midiDeviceId ? (
-                    <Icon name="record" size={14} color={colors.green.base} />
-                  ) : null
-                }
-              />
-            ))}
-          </OptionGroupRadio>
-        ) : (
-          <div className={midiWrapper}>
-            <div className={noMidiIconWrapper}>
-              <Icon name="midi" color={colors.gray.darker} size={26} />
-            </div>
-            {error ||
-              "No device detected. Make sure your device is MIDI compatible and properly connected."}
+    <SelectMenu
+      hasFilter={false}
+      hasTitle={false}
+      options={inputMidis.map(({ label, id }) => ({
+        label,
+        value: id
+      }))}
+      emptyView={
+        <div className={midiWrapper}>
+          <div className={noMidiIconWrapper}>
+            <Icon name="midi" color={colors.gray.darker} size={26} />
           </div>
-        )
+          {error ||
+            "No device detected. Make sure your device is MIDI compatible and properly connected."}
+        </div>
       }
-    </Popper>
+      selected={midiDeviceId}
+      onSelect={({ value }) => {
+        dispatch({
+          type: ReducersType.SET_MIDI_DEVICE,
+          payload: value
+        });
+        Toast.show(
+          // @ts-ignore
+          `Connected to ${webMidi.getInputById(value as string).name}`,
+          "success"
+        );
+      }}
+    >
+      <Pane>
+        <Icon className="icon-padding" name="midi" />
+        {inputMidis.length && (
+          <Icon
+            name="record"
+            size={10}
+            color={colors.green.base}
+            className={deviceAvailable}
+          />
+        )}
+      </Pane>
+    </SelectMenu>
   );
 };
 

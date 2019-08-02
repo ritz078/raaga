@@ -5,7 +5,6 @@ import { colors, mixins } from "@anarock/pebble";
 import ProgressBar from "@components/ProgressBar";
 import {
   controllerBottom,
-  loadButton,
   loadFileIcon,
   loadFileWrapper,
   midiNameStyle,
@@ -19,7 +18,7 @@ import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
-import { css, cx } from "emotion";
+import { Button } from "evergreen-ui";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -102,23 +101,16 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                 toggleTrackSelectionModal(true);
               }}
               label={
-                <button
-                  className={cx(
-                    loadButton,
-                    css({
-                      pointerEvents: "none"
-                    })
-                  )}
+                <Button
+                  marginTop={20}
+                  pointerEvents="none"
+                  cursor="pointer"
+                  iconBefore="upload"
                 >
-                  <Icon name="upload" color={colors.gray.darker} size={12} />
-                  &nbsp;&nbsp; Upload a MIDI file
-                </button>
+                  Upload a MIDI file
+                </Button>
               }
             />
-
-            {/*<button className={loadButton} onClick={onToggleSidebar}>*/}
-            {/*  Open Saved MIDI*/}
-            {/*</button>*/}
           </div>
         </div>
       )}

@@ -42,23 +42,6 @@ export const progressBar = css({
   }
 });
 
-export const loadButton = css({
-  color: colors.gray.darker,
-  backgroundColor: colors.white.base,
-  padding: "12px 20px 12px 16px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: 4,
-  fontSize: 14,
-  cursor: "pointer",
-  userSelect: "none",
-  maxWidth: 200,
-  outline: "none",
-  border: 0,
-  margin: "50px 10px"
-});
-
 export const loadFileWrapper = css({
   color: colors.white.base,
   display: "flex",

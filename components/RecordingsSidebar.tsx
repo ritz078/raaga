@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { colors, SideBar } from "@anarock/pebble";
 import Icon from "@components/Icon";
 import { ReducersType } from "@enums/reducers";
@@ -9,6 +9,8 @@ import {
   recordingRow,
   recordingRowBottom
 } from "@components/styles/RecordingSidebar.styles";
+import exampleMidis from "../midi.json";
+import { loadMidi } from "@utils/loadMidi";
 
 const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
   visible,
@@ -19,6 +21,13 @@ const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(undefined);
+
+  const loadFileAndGetParsedMidi = useCallback(async ({ label, url }) => {
+    const midi = await loadMidi(url, label);
+    setLoadedMidi(midi);
+    onClose();
+    toggleTrackSelectionModal(true);
+  }, []);
 
   return (
     <SideBar onClose={onClose} isOpen={visible} width={500} closeOnOutsideClick>
@@ -31,6 +40,11 @@ const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
           Saved MIDIs
         </h3>
 
+        {exampleMidis.map(midi => (
+          <div key={midi.label} onClick={() => loadFileAndGetParsedMidi(midi)}>
+            {midi.label}
+          </div>
+        ))}
         {midis.map((recording, i) => {
           const { tracks, duration, header, id } = recording;
 

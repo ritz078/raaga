@@ -1,24 +1,10 @@
-import MIDI from "@tonejs/midi";
-import { Midi } from "@typings/midi";
+import { loadMidi } from "@utils/loadMidi";
 
-const _self = self as any;
+const _self: Worker = self as any;
 
-self.onmessage = async e => {
+self.onmessage = async ({ data }) => {
   try {
-    const parsedMidi = await MIDI.fromUrl(URL.createObjectURL(e.data));
-
-    const _json = parsedMidi.toJSON();
-
-    const json: Midi = {
-      ..._json,
-      duration: _json.duration,
-      tracks: _json.tracks.map((track, i) => ({
-        ...track,
-        duration: parsedMidi.tracks[i].duration
-      }))
-    };
-
-    if (!json.header.name) json.header.name = e.data.name;
+    const json = await loadMidi(data, data.name);
 
     _self.postMessage({
       data: json

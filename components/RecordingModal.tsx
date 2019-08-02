@@ -7,7 +7,7 @@ import { getInstrumentIdByName, Instrument } from "midi-instruments";
 import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
 import { Midi, Note } from "@typings/midi";
-import MIDI from "@tonejs/midi";
+import { Midi as MIDI } from "@tonejs/midi";
 
 interface RecordingModalProps {
   notes: Note[];
@@ -27,6 +27,7 @@ function createMidi(name: string, notes: Note[], instrument: Instrument) {
 
   const duration = tracks.duration;
 
+  // @ts-ignore
   let midiJson: Midi = midi.toJSON();
 
   return {

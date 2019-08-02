@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { colors, Option, OptionGroupRadio, Popper } from "@anarock/pebble";
+import { colors } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import Icon from "@components/Icon";
@@ -14,6 +14,15 @@ import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
+import { SelectMenu, Position, Pane } from "evergreen-ui";
+
+const instrumentOptions = Object.keys(instruments).map(id => {
+  const { name, value } = instruments[id];
+  return {
+    label: name,
+    value
+  };
+});
 
 const Header: React.FunctionComponent<HeaderProps> = ({
   dispatch,
@@ -58,38 +67,28 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           disabled={isRecording}
         />
 
-        <Popper
-          label={({ toggle, isOpen }) => (
-            <div className={instrumentLabel} onClick={toggle}>
-              {getInstrumentByValue(instrument).name}{" "}
-              <span className={isOpen ? "__open__" : undefined}>▼</span>
-            </div>
-          )}
-          placement="bottom"
+        <SelectMenu
+          options={instrumentOptions}
+          selected={instrument}
+          onSelect={item => {
+            onInstrumentChange(item.value);
+          }}
+          title="Instruments"
+          position={Position.BOTTOM}
+          closeOnSelect
         >
-          {({ toggle }) => (
-            <OptionGroupRadio
-              onChange={value => {
-                onInstrumentChange(value);
-                toggle();
-              }}
-              selected={instrument}
-            >
-              {Object.keys(instruments).map(id => {
-                const { value, name } = instruments[id];
-                return <Option key={value} value={value} label={name} />;
-              })}
-            </OptionGroupRadio>
-          )}
-        </Popper>
-        <div>
-          <Icon
-            className="icon-padding"
-            name={volumeName}
-            color={colors.white.base}
-            onClick={_toggleMute}
-          />
-        </div>
+          <Pane className={instrumentLabel}>
+            {getInstrumentByValue(instrument).name}
+          </Pane>
+        </SelectMenu>
+
+        <Icon
+          className="icon-padding"
+          name={volumeName}
+          color={colors.white.base}
+          onClick={_toggleMute}
+        />
+
         <div>
           {!!recordings.length && (
             <span className={iconNotifier}>{recordings.length}</span>

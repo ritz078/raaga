@@ -5,7 +5,6 @@ export const midiWrapper = css({
   padding: 30,
   backgroundColor: "white",
   borderRadius: 4,
-  width: 300,
   textAlign: "center",
   color: colors.gray.dark,
   fontSize: 14,
