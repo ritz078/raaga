@@ -1,13 +1,14 @@
 import React, { memo, useState, useCallback } from "react";
 import Modal from "@components/Modal";
 import Icon from "@components/Icon";
-import { colors, Input, Button, mixins } from "@anarock/pebble";
+import { colors, Input, mixins } from "@anarock/pebble";
 import { description, iconClose, title } from "./styles/RecordingModal.styles";
 import { getInstrumentIdByName, Instrument } from "midi-instruments";
 import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
 import { Midi, Note } from "@typings/midi";
 import { Midi as MIDI } from "@tonejs/midi";
+import { Button } from "evergreen-ui";
 
 interface RecordingModalProps {
   notes: Note[];
@@ -119,10 +120,10 @@ const RecordingModal: React.FunctionComponent<RecordingModalProps> = ({
       />
 
       <div style={mixins.flexSpaceBetween}>
-        <Button disabled={!name} onClick={saveFile}>
+        <Button appearance="primary" disabled={!name} onClick={saveFile}>
           Save
         </Button>
-        <Button type="secondary" onClick={onActionComplete}>
+        <Button intent="danger" onClick={onActionComplete}>
           Discard
         </Button>
       </div>

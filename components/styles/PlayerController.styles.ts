@@ -48,6 +48,9 @@ export const loadFileWrapper = css({
   alignItems: "center",
   flexDirection: "column",
   textAlign: "center",
+  width: "100%",
+  padding: "20px 10px",
+  backgroundColor: "rgba(255, 255, 255, 0.06)",
   h3: {
     lineHeight: "35px",
     fontWeight: "normal"

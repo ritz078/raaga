@@ -90,8 +90,8 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
       {isEmpty(midi) && (
         <div className={loadFileWrapper}>
           <h3>
-            You need to load a MIDI file and then <br /> select a track you want
-            to play.
+            You need to load a MIDI file and then select a track you want to
+            play.
           </h3>
 
           <div style={mixins.flexSpaceBetween}>
