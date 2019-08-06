@@ -1,14 +1,13 @@
-import { loadMidi } from "@utils/loadMidi";
-
+// @ts-ignore
 const _self: Worker = self as any;
 
 self.onmessage = async ({ data }) => {
   try {
-    const json = await loadMidi(data, data.name);
+    const url = URL.createObjectURL(data);
+    const res = await fetch(url);
+    const arrayBuffer = await res.arrayBuffer();
 
-    _self.postMessage({
-      data: json
-    });
+    _self.postMessage(arrayBuffer, [arrayBuffer]);
   } catch (e) {
     _self.postMessage({
       error: e.message

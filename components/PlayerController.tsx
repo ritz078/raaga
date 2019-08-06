@@ -70,7 +70,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                   <div className={loadFileIcon}>
                     <FileLoad
                       onMidiLoad={data => {
-                        setLoadedMidi(data.data);
+                        setLoadedMidi(data);
                         toggleTrackSelectionModal(true);
                       }}
                       label={
@@ -97,7 +97,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           <div style={mixins.flexSpaceBetween}>
             <FileLoad
               onMidiLoad={data => {
-                setLoadedMidi(data.data);
+                setLoadedMidi(data);
                 toggleTrackSelectionModal(true);
               }}
               label={

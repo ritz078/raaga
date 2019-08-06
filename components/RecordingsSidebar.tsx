@@ -10,7 +10,7 @@ import {
   recordingRowBottom
 } from "@components/styles/RecordingSidebar.styles";
 import exampleMidis from "../midi.json";
-import { loadMidi } from "@utils/loadMidi";
+import { loadMidiAsync } from "@utils/loadMidi";
 
 const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
   visible,
@@ -22,8 +22,8 @@ const RecordingsSidebar: React.FunctionComponent<RecordingsSidebarProps> = ({
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState(undefined);
 
-  const loadFileAndGetParsedMidi = useCallback(async ({ label, url }) => {
-    const midi = await loadMidi(url, label);
+  const loadFileAndGetParsedMidi = useCallback(async ({ url }) => {
+    const midi = await loadMidiAsync(url);
     setLoadedMidi(midi);
     onClose();
     toggleTrackSelectionModal(true);

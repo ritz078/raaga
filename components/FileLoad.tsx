@@ -1,5 +1,6 @@
 import React, { useEffect, memo } from "react";
 import MidiLoadWorker from "@workers/midiload.worker";
+import { loadMidi } from "@utils/loadMidi";
 
 let worker: Worker;
 
@@ -14,7 +15,7 @@ const FileLoad = ({ onMidiLoad, label }) => {
           return;
         }
 
-        onMidiLoad(e.data);
+        onMidiLoad(loadMidi(e.data));
       };
     }
   }, []);
