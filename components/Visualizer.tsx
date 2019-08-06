@@ -1,4 +1,11 @@
-import * as React from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  FunctionComponent,
+  useMemo
+} from "react";
 import { debounce } from "lodash";
 import {
   VISUALIZER_MESSAGES,
@@ -21,118 +28,99 @@ interface VisualizerProps {
   canvasWorker: CanvasWorkerFallback;
 }
 
-export default class extends React.PureComponent<VisualizerProps> {
-  private canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef();
-  private visualizerRef: React.RefObject<HTMLDivElement> = React.createRef();
-  readonly debouncedSetDimensions: (e: Event, update: boolean) => void;
+const Visualizer: FunctionComponent<VisualizerProps> = ({
+  mode,
+  range,
+  canvasWorker
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const visualizerRef = useRef<HTMLDivElement>(null);
 
-  constructor(props) {
-    super(props);
+  const [dimensions, setDimensions] = useState({
+    width: 1100,
+    height: 400
+  });
 
-    this.debouncedSetDimensions = debounce(this.setDimensions, 1000);
-  }
+  const updateDimensions = useCallback(() => {
+    const { width, height } = visualizerRef.current.getBoundingClientRect();
+    setDimensions({ width, height });
+  }, [visualizerRef]);
 
-  state = {
-    dimensions: {
-      width: 1100,
-      height: 400
-    }
-  };
+  const debouncedSetDimensions = useMemo(
+    () => debounce(updateDimensions, 1000),
+    [updateDimensions]
+  );
 
-  private setDimensions = (_e, update = true) => {
-    const {
-      width,
-      height
-    } = this.visualizerRef.current.getBoundingClientRect();
-    this.setState(
-      {
-        dimensions: {
-          width,
-          height
-        }
-      },
-      () => {
-        if (!update) return;
-        this.props.canvasWorker.postMessage({
-          message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
-          dimensions: {
-            width,
-            height
-          }
-        });
-      }
-    );
-  };
-
-  componentDidMount() {
-    this.setDimensions(null, false);
+  useEffect(() => {
+    updateDimensions();
 
     let canvas;
     if (offScreenCanvasIsSupported) {
-      canvas = this.canvasRef.current.transferControlToOffscreen();
+      canvas = canvasRef.current.transferControlToOffscreen();
     } else {
-      canvas = this.canvasRef.current;
+      canvas = canvasRef.current;
     }
 
     // This has been done because it wasn't getting correctly transferred
     // in firefox.
     const dimensions = JSON.parse(
-      JSON.stringify(this.visualizerRef.current.getBoundingClientRect())
+      JSON.stringify(visualizerRef.current.getBoundingClientRect())
     );
 
-    this.props.canvasWorker.postMessage(
+    canvasWorker.postMessage(
       {
         canvas,
         message: VISUALIZER_MESSAGES.INIT,
         dimensions,
-        range: this.props.range,
-        mode: this.props.mode
+        range,
+        mode
       },
       [canvas]
     );
 
-    // @ts-ignore
-    window.addEventListener("resize", this.debouncedSetDimensions);
-  }
+    window.addEventListener("resize", debouncedSetDimensions);
 
-  componentWillUnmount() {
-    // @ts-ignore
-    window.removeEventListener("resize", this.debouncedSetDimensions);
-  }
+    return () => window.removeEventListener("resize", debouncedSetDimensions);
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.mode !== this.props.mode) {
-      this.props.canvasWorker.postMessage({
-        message: VISUALIZER_MESSAGES.SET_MODE,
-        mode: this.props.mode
-      });
-    }
-  }
-
-  render() {
-    const { width, height } = this.state.dimensions;
-
-    const className = cx(visualizerWrapper, {
-      [css({
-        transform: "rotate(180deg) scaleX(-1)"
-      })]: this.props.mode === VISUALIZER_MODE.READ
+  useEffect(() => {
+    canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
+      dimensions
     });
+  }, [dimensions]);
 
-    return (
-      <div className={className} ref={this.visualizerRef}>
-        <canvas
-          width={width}
-          height={height}
-          style={{ height }}
-          ref={this.canvasRef}
-        />
+  useEffect(() => {
+    canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.SET_MODE,
+      mode
+    });
+  }, [mode]);
 
-        <div className={noteSectionWrapper}>
-          {getNaturalKeysInRange(this.props.range).map(x => (
-            <div className={noteSection} key={x} />
-          ))}
-        </div>
+  const { width, height } = dimensions;
+
+  const className = cx(visualizerWrapper, {
+    [css({
+      transform: "rotate(180deg) scaleX(-1)"
+    })]: mode === VISUALIZER_MODE.READ
+  });
+
+  return (
+    <div className={className} ref={visualizerRef}>
+      <canvas
+        width={width}
+        height={height}
+        style={dimensions}
+        ref={canvasRef}
+      />
+
+      <div className={noteSectionWrapper}>
+        {getNaturalKeysInRange(range).map(x => (
+          <div className={noteSection} key={x} />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default Visualizer;
