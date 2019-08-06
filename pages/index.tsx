@@ -5,7 +5,7 @@ import {
   bodyClass,
   mainHeader,
   playerWrapper
-} from "./styles/main.styles";
+} from "@styles/main.styles";
 import { headerLogo } from "@components/styles/Header.styles";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
