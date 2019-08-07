@@ -167,7 +167,7 @@ function SoundPlayer({
 
   const onTogglePlay = useCallback(() => {
     if (Tone.Transport.state === "stopped") {
-      startPlayingTrack();
+      startPlayingTrack(loadedMidi);
     } else {
       player.current.togglePlay();
     }
@@ -199,20 +199,23 @@ function SoundPlayer({
     preparePlayerForNewTrack(track);
   }, []);
 
-  const startPlayingTrack = async (track = selectedTrack) => {
+  const startPlayingTrack = async (
+    midi: Midi = loadedMidi,
+    track = selectedTrack
+  ) => {
     setActiveMidis([]);
 
     // in case the sound-fonts are not yet loaded.
     await preparePlayerForNewTrack(track);
 
-    player.current.playTrack(loadedMidi, track, onRecordPlay);
+    player.current.playTrack(midi, track, onRecordPlay);
   };
 
   const setTrackAndPlay = (midi: Midi, i: number) => {
     const track = midi.tracks[i];
 
     selectTrack(midi, i);
-    startPlayingTrack(track);
+    startPlayingTrack(midi, track);
   };
 
   const toggleRecording = () => {
@@ -287,7 +290,7 @@ function SoundPlayer({
             midi={loadedMidi}
             onTrackSelect={setTrackAndPlay}
             onToggleSidebar={() => toggleSidebar(!showSidebar)}
-            onStartPlay={startPlayingTrack}
+            onStartPlay={() => startPlayingTrack(loadedMidi)}
           />
         )}
 

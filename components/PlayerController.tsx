@@ -128,6 +128,7 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
           midi={loadedMidi}
           onSelectComplete={i => {
             toggleTrackSelectionModal(false);
+            debugger;
             onTrackSelect(loadedMidi, i);
           }}
           onClose={() => {

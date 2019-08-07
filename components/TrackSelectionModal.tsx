@@ -23,7 +23,6 @@ const TrackSelectionModal: React.FunctionComponent<
   TrackSelectionModalProps
 > = ({ visible, midi, onSelectComplete, onClose }) => {
   if (!midi) return null;
-
   const [showSelectionModal, toggleSelectionModal] = useState(true);
   return (
     <Modal

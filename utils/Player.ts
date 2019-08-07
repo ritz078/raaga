@@ -182,6 +182,7 @@ export class Player {
       ...track,
       notes: track.notes.map(_note => ({
         ..._note,
+        duration: _note.duration,
         time: _note.time + delay
       })),
       duration: track.duration + delay
