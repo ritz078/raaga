@@ -9,13 +9,19 @@ const config = {
       })
     );
 
-    config.module.rules.unshift({
-      test: /\.worker\.ts/,
-      use: {
-        loader: "worker-loader",
-        options: { fallback: true, inline: true }
+    config.module.rules.unshift(
+      {
+        test: /\.worker\.ts/,
+        use: {
+          loader: "worker-loader",
+          options: { fallback: true, inline: true }
+        }
+      },
+      {
+        test: /\.svg$/,
+        use: ["@svgr/webpack"]
       }
-    });
+    );
 
     config.output.globalObject = 'typeof self !== "object" ? self : this';
 

@@ -8,7 +8,7 @@ injectGlobal`
 margin: 0;
 padding: 0;
 box-sizing: border-box;
-font-family: "Lato";
+font-family: "Viga";
 -webkit-font-smoothing: antialiased;
 }
 
@@ -52,7 +52,7 @@ export default class MyDocument extends Document<{
         <Head>
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Lato"
+            href="https://fonts.googleapis.com/css?family=Viga"
           />
           <link rel="stylesheet" href={"/static/fonts/synth.css"} />
           <link
