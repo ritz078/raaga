@@ -7,7 +7,7 @@ import {
 import { getInstrumentById } from "midi-instruments";
 import Tone from "tone";
 import { last, groupBy, flatten, values } from "lodash";
-import { Header, MidiJSON, Note, Track } from "./midiParser";
+import { Header, MidiJSON, Note, Tempo } from "./midiParser";
 import { drumNames, keySignatureKeys } from "./midiConstants";
 
 enum NOTE_EVENT_TYPE {
@@ -16,10 +16,10 @@ enum NOTE_EVENT_TYPE {
 }
 
 type Event = TMidiEvent & {
-  absoluteTime: number;
+  ticks: number;
 };
 
-export function search(array: any[], value: any, prop = "ticks"): number {
+export function search(array: Tempo[], value: number, prop = "ticks"): number {
   let beginning = 0;
   const len = array.length;
   let end = len;
@@ -137,19 +137,19 @@ export default class MidiParser {
         this.header.tempos.push({
           // @ts-ignore
           bpm: 60000000 / event.setTempo.microsecondsPerBeat,
-          ticks: event.absoluteTime
+          ticks: event.ticks
         });
       } else if (event.endOfTrack) {
         this.header.meta.push({
           text: event.text as string,
-          ticks: event.absoluteTime,
+          ticks: event.ticks,
           type: "endOfTrack"
         });
       } else if (event.timeSignature) {
         const { numerator, denominator } = event.timeSignature as any;
 
         this.header.timeSignatures.push({
-          ticks: event.absoluteTime,
+          ticks: event.ticks,
           timeSignature: [numerator, denominator]
         });
       }
@@ -175,7 +175,7 @@ export default class MidiParser {
           // noteStart event.
           const index = lastNoteOnMapping[noteNumber];
           const note = notes[index];
-          note.durationTick = event.absoluteTime - note.absoluteTime;
+          note.durationTick = event.ticks - note.ticks;
           note.noteOffVelocity = note.velocity;
           note.duration = this.ticksToSeconds(note.durationTick);
         }
@@ -186,9 +186,9 @@ export default class MidiParser {
             : NOTE_EVENT_TYPE.NOTE_OFF,
           name: Tone.Frequency(noteNumber, "midi").toNote(),
           midi: noteNumber,
-          absoluteTime: event.absoluteTime,
+          ticks: event.ticks,
           velocity: velocity / 100,
-          time: this.ticksToSeconds(event.absoluteTime)
+          time: this.ticksToSeconds(event.ticks)
         });
       });
 
@@ -225,38 +225,49 @@ export default class MidiParser {
       event => (<any>event.noteOn).noteNumber
     );
 
-    this.beats = Object.keys(groupedByNoteNumber).map(number => ({
-      instrument: {
-        name: drumNames[number],
-        family: "Drums",
-        number: +number,
-        value: drumNames[number]
-          ? drumNames[number].toLowerCase().replace(/ /g, "_")
-          : ""
-      },
-      notes: groupedByNoteNumber[number].map(note => ({
-        time: this.ticksToSeconds(<any>note.absoluteTime)
-      }))
-    }));
+    this.beats = Object.keys(groupedByNoteNumber).map(number => {
+      return {
+        instrument: {
+          name: drumNames[number],
+          family: "Drums",
+          number: +number,
+          value: drumNames[number]
+            ? drumNames[number].toLowerCase().replace(/ /g, "_")
+            : ""
+        },
+        notes: groupedByNoteNumber[number].map(note => {
+          return {
+            time: this.ticksToSeconds(<any>note.ticks),
+            // @ts-ignore
+            velocity: note.noteOn.velocity / 100
+          };
+        })
+      };
+    });
   };
+
+  parse1 = () => {};
 
   async parse(): Promise<MidiJSON> {
     const parsedArrayBuffer: IMidiFile = await parseArrayBuffer(
       this.arrayBuffer
     );
 
+    parsedArrayBuffer.tracks.forEach(events => {
+      let currentTick = 0;
+      events.forEach(event => {
+        currentTick += event.delta;
+        event.ticks = currentTick;
+      });
+    });
+
     const normalizedTracks = this.normalizeTracks(parsedArrayBuffer.tracks);
 
     this.header.ppq = parsedArrayBuffer.division;
 
+    // @ts-ignore
     const tracks = normalizedTracks
       .map(events => {
-        let currentTick = 0;
-        events.forEach(event => {
-          currentTick += event.delta;
-          event.absoluteTime = currentTick;
-        });
-
         const _track = {
           name: undefined,
           notes: [],
@@ -325,7 +336,7 @@ export default class MidiParser {
 
     return {
       tracks,
-      beats: this.beats,
+      beats: [],
       header: this.header,
       duration: Math.max(...tracks.map(track => track.duration))
     };

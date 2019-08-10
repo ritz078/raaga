@@ -1,12 +1,14 @@
-import { Pane, Text, Icon } from "evergreen-ui";
+import { Pane, Text, Icon, Heading } from "evergreen-ui";
 import * as React from "react";
-import AcousticGuitar from "@assets/images/instruments/1-acoustic-guitar.svg";
+import AcousticGuitar from "@assets/images/instruments/acoustic-guitar.svg";
+import DrumSet from "@assets/images/instruments/drum-set.svg";
 import { useEffect, useState } from "react";
 import { loadMidiAsync } from "@utils/loadMidi";
 import { Track } from "@typings/midi";
 import { Beat } from "@utils/midiParser/midiParser";
+import { BackgroundPlayer } from "@utils/midiPlayer";
 
-function Card({ instrumentName }) {
+function Card({ instrumentName, drums = false }) {
   return (
     <Pane
       paddingX={5}
@@ -23,11 +25,11 @@ function Card({ instrumentName }) {
     >
       <Pane
         borderRadius={2}
-        backgroundColor="#03a9f4"
+        backgroundColor={drums ? "#009688" : "#03a9f4"}
         paddingX={8}
         paddingY={8}
       >
-        <AcousticGuitar height={35} />
+        {drums ? <DrumSet height={35} /> : <AcousticGuitar height={35} />}
       </Pane>
 
       <Pane
@@ -53,8 +55,12 @@ export default function() {
 
   useEffect(() => {
     (async () => {
-      const midi = await loadMidiAsync("/static/midi/potc.mid");
+      const midi = await loadMidiAsync("/static/midi/wherever.mid");
       loadMidi(midi);
+
+      // const player = new BackgroundPlayer(midi);
+      //
+      // player.load();
     })();
   }, []);
 
@@ -62,6 +68,10 @@ export default function() {
 
   return (
     <Pane zIndex={8} position="absolute" paddingTop={100} paddingX={30}>
+      <Heading color="#fff" marginBottom={20} marginLeft={15}>
+        Instruments
+      </Heading>
+
       <Pane display="flex" flexDirection="row" flexWrap={"wrap"}>
         {midi &&
           midi.tracks &&
@@ -73,11 +83,16 @@ export default function() {
       </Pane>
 
       {midi && midi.beats && (
-        <Pane display="flex" flexDirection="row" flexWrap={"wrap"}>
-          {midi.beats.map((beat: Beat, i) => (
-            <Card key={i} instrumentName={beat.instrument.name} />
-          ))}
-        </Pane>
+        <>
+          <Heading color="#fff" marginBottom={20} marginLeft={15}>
+            Drums (Percussions)
+          </Heading>
+          <Pane display="flex" flexDirection="row" flexWrap={"wrap"}>
+            {midi.beats.map((beat: Beat, i) => (
+              <Card drums key={i} instrumentName={beat.instrument.name} />
+            ))}
+          </Pane>
+        </>
       )}
     </Pane>
   );

@@ -10,7 +10,7 @@ import Recorder from "@utils/Recorder";
 import { PIANO_HEIGHT, TRACK_PLAYING_SPEED } from "@config/piano";
 import { Midi, Note, Track } from "@typings/midi";
 
-function midiJsToJson(data) {
+export function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
   if (begin < 0) throw Error("Invalid MIDI.js Soundfont format");
   begin = data.indexOf("=", begin) + 2;

@@ -1,3 +1,9 @@
+export interface Tempo {
+  bpm: number;
+  ticks: number;
+  time?: number;
+}
+
 export interface Header {
   name?: string;
   keySignatures: {
@@ -5,11 +11,7 @@ export interface Header {
     key: string;
     ticks: number;
   }[];
-  tempos: {
-    bpm: number;
-    ticks: number;
-    time?: number;
-  }[];
+  tempos: Tempo[];
   meta: {
     ticks: number;
     type: "endOfTrack";
@@ -24,7 +26,7 @@ export interface Header {
 }
 
 export interface Note {
-  absoluteTime: number;
+  ticks: number;
   midi: number;
   name: string;
   type: NOTE_EVENT_TYPE;
