@@ -223,17 +223,10 @@ function SoundPlayer({
     setRecordedNotes(player.current.toggleRecording());
   };
 
-  const toggleMode = (mode: VISUALIZER_MODE) => {
+  useEffect(() => {
     resetPlayer();
-    dispatch({
-      type: ReducersType.CHANGE_SETTINGS,
-      payload: {
-        mode
-      }
-    });
-
     setPlaying(false);
-  };
+  }, [settings.mode]);
 
   useEffect(() => {
     changeInstrument();
@@ -270,7 +263,6 @@ function SoundPlayer({
           isRecording={isRecording}
           toggleRecording={toggleRecording}
           recordings={recordings}
-          onToggleMode={toggleMode}
           midiDeviceId={midiDevice}
           onToggleSidebar={() => toggleSidebar(!showSidebar)}
         />

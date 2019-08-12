@@ -14,6 +14,7 @@ export const modeToggleWrapper = css({
   justifyItems: "center",
   userSelect: "none",
   cursor: "pointer",
+  marginRight: 15,
   "& > div": {
     flex: 1,
     textAlign: "center",

@@ -16,6 +16,5 @@ export interface HeaderProps {
   recordings: Store["recordings"];
   onTrackSelect?: (midi: Midi, i) => void;
   midiDeviceId: string;
-  onToggleMode: (mode: VISUALIZER_MODE) => void;
   onToggleSidebar: () => void;
 }

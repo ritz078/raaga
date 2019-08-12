@@ -10,7 +10,6 @@ import {
   instrumentLabel,
   recordBtn
 } from "./styles/Header.styles";
-import ModeToggle from "./ModeToggle";
 import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
@@ -33,7 +32,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   toggleRecording,
   recordings,
   midiDeviceId,
-  onToggleMode,
   onToggleSidebar
 }) => {
   const [mute, toggleMute] = useState(false);
@@ -60,12 +58,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
             {isRecording ? "Stop" : "Record"}
           </button>
         )}
-
-        <ModeToggle
-          mode={mode}
-          onToggle={onToggleMode}
-          disabled={isRecording}
-        />
 
         <SelectMenu
           options={instrumentOptions}
