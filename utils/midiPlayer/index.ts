@@ -1,13 +1,8 @@
 import Tone from "tone";
 import { MidiJSON, Note } from "@utils/midiParser/midiParser";
-import { midiJsToJson } from "@utils/Player";
-import { get as getFromIDB, set as setInIDB } from "idb-keyval";
-import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promiseWorker } from "@utils/promiseWorker";
 import { flatten } from "lodash";
-
-const DRUMS_NAME = "drumsBeats";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
@@ -31,80 +26,6 @@ export class BackgroundPlayer {
   public setSong(song: MidiJSON) {
     this.song = song;
   }
-
-  private fetchInstrumentFromRemote = async (
-    instrument = DRUMS_NAME,
-    isDrums?: boolean
-  ) => {
-    let url = !process.env.DEV
-      ? `https://midifonts.s3.ap-south-1.amazonaws.com/${instrument}-mp3.js`
-      : `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
-
-    if (isDrums) {
-      url =
-        "https://raw.githubusercontent.com/dave4mpls/midi-js-soundfonts-with-drums/gh-pages/drums-mp3.js";
-    }
-    const response = await fetch(url);
-    const data = await response.text();
-    const audio = midiJsToJson(data);
-    await setInIDB(isDrums ? DRUMS_NAME : instrument, audio);
-    return audio;
-  };
-
-  /**
-   * Load a soundFont and add it to Tone sampler.
-   * @param instrument
-   * @param isDrums
-   */
-  public loadSoundFont = async (
-    instrument = instruments[0].value,
-    isDrums = false
-  ) => {
-    let audio;
-    try {
-      // audio = await getFromIDB(isDrums ? DRUMS_NAME : instrument);
-      if (!audio)
-        audio = await this.fetchInstrumentFromRemote(instrument, isDrums);
-    } catch (e) {
-      audio = await this.fetchInstrumentFromRemote(instrument, isDrums);
-    }
-
-    if (isDrums) {
-      const promises = Object.keys(audio).map(
-        key =>
-          new Promise(resolve => this.drumSampler.add(key, audio[key], resolve))
-      );
-
-      return Promise.all(promises);
-    }
-    const instrumentIndex = getInstrumentIdByValue(instrument);
-
-    const promises = Object.keys(audio).map(
-      key =>
-        new Promise(resolve => {
-          return this.trackSamplers[instrumentIndex].add(
-            key,
-            audio[key],
-            resolve
-          );
-        })
-    );
-    return Promise.all(promises);
-  };
-
-  load = async () => {
-    const promises = this.song.tracks
-      .filter(track => track.instrument && track.instrument.value)
-      .map(track => this.loadSoundFont(track.instrument.value));
-
-    let drumPromise;
-    if (this.song.beats && this.song.beats.length) {
-      drumPromise = this.loadSoundFont(null, true);
-    }
-
-    await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
-    this.schedule();
-  };
 
   load1 = async () => {
     // @ts-ignore
@@ -143,14 +64,11 @@ export class BackgroundPlayer {
       )
     );
 
-    debugger;
-
     await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
     this.schedule();
   };
 
   schedule = () => {
-    debugger;
     this.song.tracks.forEach(track => {
       const index = track.instrument.number;
 
