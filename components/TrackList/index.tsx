@@ -12,7 +12,7 @@ function Card({ instrumentName, drums = false }) {
   return (
     <Pane
       paddingX={5}
-      marginX={15}
+      marginX={7}
       paddingY={5}
       backgroundColor={"#3f51b5"}
       borderRadius={2}
@@ -20,7 +20,7 @@ function Card({ instrumentName, drums = false }) {
       border={"1px solid green"}
       display="flex"
       flexDirection="row"
-      marginBottom={30}
+      marginBottom={14}
       width={230}
     >
       <Pane
@@ -58,9 +58,9 @@ export default function() {
       const midi = await loadMidiAsync("/static/midi/wherever.mid");
       loadMidi(midi);
 
-      // const player = new BackgroundPlayer(midi);
-      //
-      // player.load();
+      const player = new BackgroundPlayer(midi);
+
+      player.load1();
     })();
   }, []);
 

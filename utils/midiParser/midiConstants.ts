@@ -1,21 +1,3 @@
-export const keySignatureKeys = [
-  "Cb",
-  "Gb",
-  "Db",
-  "Ab",
-  "Eb",
-  "Bb",
-  "F",
-  "C",
-  "G",
-  "D",
-  "A",
-  "E",
-  "B",
-  "F#",
-  "C#"
-];
-
 export const drumNames = {
   "35": "Bass Drum 2",
   "36": "Bass Drum 1",

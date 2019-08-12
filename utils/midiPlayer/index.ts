@@ -3,8 +3,13 @@ import { MidiJSON, Note } from "@utils/midiParser/midiParser";
 import { midiJsToJson } from "@utils/Player";
 import { get as getFromIDB, set as setInIDB } from "idb-keyval";
 import { getInstrumentIdByValue, instruments } from "midi-instruments";
+import LoadInstrumentWorker from "@workers/loadInstrument.worker";
+import { promiseWorker } from "@utils/promiseWorker";
+import { flatten } from "lodash";
 
 const DRUMS_NAME = "drumsBeats";
+
+const loadInstrumentWorker = new LoadInstrumentWorker();
 
 export class BackgroundPlayer {
   song: MidiJSON;
@@ -57,7 +62,7 @@ export class BackgroundPlayer {
   ) => {
     let audio;
     try {
-      audio = await getFromIDB(isDrums ? DRUMS_NAME : instrument);
+      // audio = await getFromIDB(isDrums ? DRUMS_NAME : instrument);
       if (!audio)
         audio = await this.fetchInstrumentFromRemote(instrument, isDrums);
     } catch (e) {
@@ -89,7 +94,7 @@ export class BackgroundPlayer {
 
   load = async () => {
     const promises = this.song.tracks
-      .filter(track => track.instrument.value)
+      .filter(track => track.instrument && track.instrument.value)
       .map(track => this.loadSoundFont(track.instrument.value));
 
     let drumPromise;
@@ -101,20 +106,64 @@ export class BackgroundPlayer {
     this.schedule();
   };
 
+  load1 = async () => {
+    // @ts-ignore
+    const data: {
+      tracks: {
+        [k: string]: string;
+      }[];
+      drums: {
+        [k: string]: string;
+      };
+    } = await promiseWorker(loadInstrumentWorker, {
+      song: this.song
+    });
+
+    let drumPromise;
+    if (data.drums) {
+      drumPromise = Object.keys(data.drums).map(
+        key =>
+          new Promise(resolve =>
+            this.drumSampler.add(key, data.drums[key], resolve)
+          )
+      );
+    }
+    const promises = flatten(
+      Object.keys(data.tracks).map(key =>
+        Object.keys(data.tracks[key]).map(
+          tone =>
+            new Promise(resolve => {
+              return this.trackSamplers[key].add(
+                tone,
+                data.tracks[key][tone],
+                resolve
+              );
+            })
+        )
+      )
+    );
+
+    debugger;
+
+    await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
+    this.schedule();
+  };
+
   schedule = () => {
+    debugger;
     this.song.tracks.forEach(track => {
-      this.trackPart[track.instrument.number] = new Tone.Part(
-        (time, note: Note) => {
-          // TODO: end events
-          this.trackSamplers[track.instrument.number].triggerAttackRelease(
-            note.name,
-            note.duration,
-            time,
-            note.velocity
-          );
-        },
-        track.notes
-      ).start();
+      const index = track.instrument.number;
+
+      this.trackSamplers[index].volume.value = track.volume;
+      this.trackPart[index] = new Tone.Part((time, note: Note) => {
+        // TODO: end events
+
+        this.trackSamplers[index].triggerAttackRelease(
+          note.name,
+          note.duration,
+          time
+        );
+      }, track.notes).start();
     });
 
     // TODO: explore volume

@@ -23,3 +23,11 @@ declare module "@workers/canvas.worker" {
 
   export default WebpackWorker;
 }
+
+declare module "@workers/loadInstrument.worker" {
+  class WebpackWorker extends Worker {
+    constructor();
+  }
+
+  export default WebpackWorker;
+}

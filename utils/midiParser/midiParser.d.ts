@@ -6,35 +6,31 @@ export interface Tempo {
 
 export interface Header {
   name?: string;
-  keySignatures: {
-    scale: "minor" | "major";
-    key: string;
-    ticks: number;
-  }[];
-  tempos: Tempo[];
-  meta: {
-    ticks: number;
-    type: "endOfTrack";
-    text: string;
-  }[];
-  timeSignatures: {
-    ticks: number;
-    timeSignature: [number, number];
-    measures?: number;
-  }[];
+  // keySignatures: {
+  //   scale: "minor" | "major";
+  //   key: string;
+  //   ticks: number;
+  // }[];
+  // tempos: Tempo[];
+  // meta: {
+  //   ticks: number;
+  //   type: "endOfTrack";
+  //   text: string;
+  // }[];
+  // timeSignatures: {
+  //   ticks: number;
+  //   timeSignature: [number, number];
+  //   measures?: number;
+  // }[];
   ppq: number;
 }
 
 export interface Note {
-  ticks: number;
   midi: number;
   name: string;
-  type: NOTE_EVENT_TYPE;
-  noteOffVelocity?: number;
-  velocity: number;
-  durationTick?: number;
   duration: number;
   time: number;
+  slides: any[];
 }
 
 export interface Instrument {
@@ -45,14 +41,19 @@ export interface Instrument {
 }
 
 export interface Track {
+  n: number;
+  volume: number;
   name: string;
   notes: Note[];
   instrument: Instrument;
   channel: number;
   duration: number;
+  program: number;
 }
 
 export interface Beat {
+  n: number;
+  volume: number;
   instrument: Partial<Instrument>;
   notes: {
     time: number;
@@ -62,6 +63,6 @@ export interface Beat {
 export interface MidiJSON {
   beats: Beat[];
   duration: number;
-  tracks: Track[];
+  tracks: Partial<Track>[];
   header: Header;
 }
