@@ -1,15 +1,28 @@
-import { set as setInIDB } from "idb-keyval";
+import { get as getInIDB, set as setInIDB } from "idb-keyval";
 import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { MidiJSON } from "@utils/midiParser/midiParser";
 
 const _self = self as any;
 
 const DRUMS_NAME = "drumsBeats";
+const MIDI_FONT_DATA_CONSTANT = "MIDI_FONT_DATA";
 
-const midiFontData = {
+let midiFontData = {
   tracks: {},
   drums: null
 };
+
+(async function populateMidiFontDataFromIDB() {
+  try {
+    const data = await getInIDB(MIDI_FONT_DATA_CONSTANT);
+
+    if (data) {
+      midiFontData = data as any;
+    }
+  } catch (e) {
+    console.log(`Error in fetching ${MIDI_FONT_DATA_CONSTANT} from IDB.`);
+  }
+})();
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -23,6 +36,15 @@ const fetchInstrumentFromRemote = async (
   instrument = DRUMS_NAME,
   isDrums?: boolean
 ) => {
+  const instrumentId = getInstrumentIdByValue(instrument);
+  const { drums, tracks } = midiFontData;
+
+  if (isDrums && drums) {
+    return drums;
+  } else if (tracks[instrumentId]) {
+    return tracks[instrumentId];
+  }
+
   let url = !process.env.DEV
     ? `https://midifonts.s3.ap-south-1.amazonaws.com/${instrument}-mp3.js`
     : `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
@@ -33,10 +55,7 @@ const fetchInstrumentFromRemote = async (
   }
   const response = await fetch(url);
   const data = await response.text();
-  const audio = midiJsToJson(data);
-  await setInIDB(isDrums ? DRUMS_NAME : instrument, audio);
-
-  return audio;
+  return midiJsToJson(data);
 };
 
 const loadSoundFont = async (
@@ -57,7 +76,6 @@ const loadSoundFont = async (
 const load = async (song: MidiJSON) => {
   const promises = song.tracks
     .filter(track => track.instrument && track.instrument.value)
-    // @ts-ignore
     .map(track => loadSoundFont(track.instrument.value));
 
   let drumPromise;
@@ -70,6 +88,12 @@ const load = async (song: MidiJSON) => {
 
 _self.onmessage = async ({ data: { id, song } }) => {
   await load(song);
+
+  try {
+    await setInIDB(MIDI_FONT_DATA_CONSTANT, midiFontData);
+  } catch (e) {
+    console.log(`Error in setting ${MIDI_FONT_DATA_CONSTANT}`);
+  }
 
   _self.postMessage({
     id,

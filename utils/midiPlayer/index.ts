@@ -74,8 +74,6 @@ export class BackgroundPlayer {
 
       this.trackSamplers[index].volume.value = track.volume;
       this.trackPart[index] = new Tone.Part((time, note: Note) => {
-        // TODO: end events
-
         this.trackSamplers[index].triggerAttackRelease(
           note.name,
           note.duration,
@@ -84,7 +82,6 @@ export class BackgroundPlayer {
       }, track.notes).start();
     });
 
-    // TODO: explore volume
     this.song.beats.forEach(beat => {
       this.drumPart[beat.instrument.number] = new Tone.Part(
         time => {
@@ -102,5 +99,17 @@ export class BackgroundPlayer {
     });
 
     Tone.Transport.start();
+  };
+
+  public clear = () => {
+    [...this.trackPart, ...this.drumPart].forEach(trackPart => {
+      if (!trackPart) return;
+      if (trackPart._state) {
+        trackPart.dispose();
+      }
+      trackPart = null;
+    });
+
+    Tone.Transport.stop();
   };
 }

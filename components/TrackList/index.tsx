@@ -3,10 +3,13 @@ import * as React from "react";
 import AcousticGuitar from "@assets/images/instruments/acoustic-guitar.svg";
 import DrumSet from "@assets/images/instruments/drum-set.svg";
 import { useEffect, useState } from "react";
-import { loadMidiAsync } from "@utils/loadMidi";
 import { Track } from "@typings/midi";
-import { Beat } from "@utils/midiParser/midiParser";
+import { Beat, MidiJSON } from "@utils/midiParser/midiParser";
 import { BackgroundPlayer } from "@utils/midiPlayer";
+import MidiParse from "@workers/midiParse.worker";
+import { promiseWorker } from "@utils/promiseWorker";
+
+const midiParseWorker = new MidiParse();
 
 function Card({ instrumentName, drums = false }) {
   return (
@@ -55,9 +58,11 @@ export default function() {
 
   useEffect(() => {
     (async () => {
-      const midi = await loadMidiAsync("/static/midi/wherever.mid");
-      loadMidi(midi);
+      const midi: MidiJSON = await promiseWorker(midiParseWorker, {
+        filePath: "/static/midi/wherever.mid"
+      });
 
+      loadMidi(midi);
       const player = new BackgroundPlayer(midi);
 
       player.load1();

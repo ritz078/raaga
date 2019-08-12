@@ -1,10 +1,10 @@
 import { getInstrumentById } from "midi-instruments";
-import Tone from "tone";
 import { last } from "lodash";
 import { Beat, Note, Track } from "./midiParser";
 import { drumNames } from "./midiConstants";
 import MidiFile from "midifile";
 import MidiEvents from "midievents";
+import { MidiNumbers } from "piano-utils";
 
 export default class MidiParser {
   arrayBuffer: ArrayBuffer;
@@ -61,7 +61,7 @@ export default class MidiParser {
       midi: param1,
       duration: 0.0000001,
       slides: [],
-      name: Tone.Frequency(param1, "midi").toNote()
+      name: MidiNumbers.getAttributes(param1).note
     });
   };
 

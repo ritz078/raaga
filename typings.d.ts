@@ -31,3 +31,11 @@ declare module "@workers/loadInstrument.worker" {
 
   export default WebpackWorker;
 }
+
+declare module "@workers/midiParse.worker" {
+  class WebpackWorker extends Worker {
+    constructor();
+  }
+
+  export default WebpackWorker;
+}

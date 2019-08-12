@@ -1,6 +1,10 @@
 let id = 1;
 
-export function promiseWorker(worker: Worker, payload, transferables?) {
+export function promiseWorker(
+  worker: Worker,
+  payload,
+  transferables?
+): Promise<any> {
   const _id = id;
   worker.postMessage({ ...payload, id: _id }, transferables);
   id++;
