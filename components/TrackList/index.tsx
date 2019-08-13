@@ -66,9 +66,9 @@ const TrackList: React.FunctionComponent<TrackListProps> = ({ onPlay }) => {
   // called when the status of all the beats is toggled
   const toggleAllBeats = e => {
     if (e.target.checked) {
-      setPlayingTracksIndex(range(midi.beats.length));
+      setPlayingBeatsIndex(range(midi.beats.length));
     } else {
-      setPlayingTracksIndex([]);
+      setPlayingBeatsIndex([]);
     }
   };
 
@@ -117,6 +117,8 @@ const TrackList: React.FunctionComponent<TrackListProps> = ({ onPlay }) => {
     });
   };
 
+  if (!midi) return null;
+
   return (
     <Dialog
       preventBodyScrolling
@@ -124,112 +126,114 @@ const TrackList: React.FunctionComponent<TrackListProps> = ({ onPlay }) => {
       onCloseComplete={() => {}}
       hasFooter={false}
       hasHeader={false}
+      contentContainerProps={{
+        paddingX: 0,
+        paddingY: 0
+      }}
+      shouldCloseOnOverlayClickbool={false}
     >
-      {midi ? (
-        <>
-          <div className={styles.dialogWrapper}>
-            <div className={styles.header}>
-              <Heading color="#fff" size={600}>
-                {midi.header.name[0] || "Unknown"}
-              </Heading>
+      <div className={styles.dialogWrapper}>
+        <div className={styles.header}>
+          <Heading color="#fff" size={600}>
+            {midi.header.name[0] || "Unknown"}
+          </Heading>
 
-              <div className={styles.titleSubText}>
-                <Text color="#8a8a8a">
-                  {midi.tracks.length} Tracks &middot; {"  "}
-                  {midi.beats.length} Beats &middot; {"  "}
-                  {midi.duration && midi.duration.toFixed(2)} seconds &middot;{" "}
-                  {"  "}
-                  {midi.header.ppq} ticks/beat
-                </Text>
-              </div>
-            </div>
+          <div className={styles.titleSubText}>
+            <Text color="#8a8a8a">
+              {midi.tracks.length} Tracks &middot; {"  "}
+              {midi.beats.length} Beats &middot; {"  "}
+              {midi.duration && midi.duration.toFixed(2)} seconds &middot;{" "}
+              {"  "}
+              {midi.header.ppq} ticks/beat
+            </Text>
+          </div>
+        </div>
+        <div className={styles.content}>
+          <div className={styles.sectionTitle}>
+            <Heading color="#fff">Tracks</Heading>
+            <Switch
+              checked={playingTracksIndex.length === midi.tracks.length}
+              marginRight={15}
+              onChange={toggleAllTracks}
+            />
+          </div>
 
-            <div className={styles.sectionTitle}>
-              <Heading color="#fff">Tracks</Heading>
-              <Switch
-                checked={playingTracksIndex.length === midi.tracks.length}
-                marginRight={15}
-                onChange={toggleAllTracks}
-              />
-            </div>
-
-            <div className={styles.instrumentWrapper}>
-              {midi &&
-                midi.tracks &&
-                midi.tracks.map((track: Track, i) => {
-                  const isSelectedTrack = selectedTrackIndex === i;
-                  return (
-                    <InstrumentCard
-                      disabled={!playingTracksIndex.includes(i)}
-                      onClick={() => selectTrack(i)}
-                      isSelected={isSelectedTrack}
-                      key={i}
-                      instrumentName={track.instrument.name}
-                      onIconClick={
-                        !isSelectedTrack ? () => toggleTrack(i) : undefined
-                      }
-                    />
-                  );
-                })}
-            </div>
-
-            {midi && midi.beats && !!midi.beats.length && (
-              <>
-                <div className={styles.sectionTitle}>
-                  <Heading color="#fff">Beats</Heading>
-                  <Switch
-                    checked={playingBeatsIndex.length === midi.beats.length}
-                    marginRight={15}
-                    onChange={toggleAllBeats}
+          <div className={styles.instrumentWrapper}>
+            {midi &&
+              midi.tracks &&
+              midi.tracks.map((track: Track, i) => {
+                const isSelectedTrack = selectedTrackIndex === i;
+                return (
+                  <InstrumentCard
+                    disabled={!playingTracksIndex.includes(i)}
+                    onClick={() => selectTrack(i)}
+                    isSelected={isSelectedTrack}
+                    key={i}
+                    instrumentName={track.instrument.name}
+                    onIconClick={
+                      !isSelectedTrack ? () => toggleTrack(i) : undefined
+                    }
                   />
-                </div>
-                <div className={styles.instrumentWrapper}>
-                  {midi.beats.map((beat: Beat, i) => (
-                    <InstrumentCard
-                      disabled={!playingBeatsIndex.includes(i)}
-                      isSelected={false}
-                      drums
-                      key={i}
-                      instrumentName={beat.instrument.name}
-                      onIconClick={() => toggleBeat(i)}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+                );
+              })}
           </div>
 
-          <div className={styles.footer}>
-            {selectedTrackIndex === null ? (
-              <InlineAlert marginBottom={0} intent="none">
-                <Text color={"#2196f3"}>
-                  You need to select a track which can be played with
-                  visualizer. Other sounds can play in background.
+          {midi && midi.beats && !!midi.beats.length && (
+            <>
+              <div className={styles.sectionTitle}>
+                <Heading color="#fff">Beats</Heading>
+                <Switch
+                  checked={playingBeatsIndex.length === midi.beats.length}
+                  marginRight={15}
+                  onChange={toggleAllBeats}
+                />
+              </div>
+              <div className={styles.instrumentWrapper}>
+                {midi.beats.map((beat: Beat, i) => (
+                  <InstrumentCard
+                    disabled={!playingBeatsIndex.includes(i)}
+                    isSelected={false}
+                    drums
+                    key={i}
+                    instrumentName={beat.instrument.name}
+                    onIconClick={() => toggleBeat(i)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className={styles.footer}>
+          {selectedTrackIndex === null ? (
+            <InlineAlert marginBottom={0} intent="none">
+              <Text color={"#2196f3"}>
+                You need to select a track which can be played with visualizer.
+                Other sounds can play in background.
+              </Text>
+            </InlineAlert>
+          ) : (
+            <Checkbox
+              checked={playInstrumentsInBackground}
+              marginY={0}
+              label={
+                <Text color="#fff" fontSize={14}>
+                  Play other instruments in Background
                 </Text>
-              </InlineAlert>
-            ) : (
-              <Checkbox
-                checked={playInstrumentsInBackground}
-                marginY={0}
-                label={
-                  <Text color="#fff" fontSize={14}>
-                    Play other instruments in Background
-                  </Text>
-                }
-                onChange={handleBackgroundPlayChange}
-              />
-            )}
-            <div
-              className={cx(styles.playButton, {
-                __disabled__: !selectedTrackIndex
-              })}
-              onClick={_onPlayClick}
-            >
-              Play Track
-            </div>
+              }
+              onChange={handleBackgroundPlayChange}
+            />
+          )}
+          <div
+            className={cx(styles.playButton, {
+              __disabled__: selectedTrackIndex === null
+            })}
+            onClick={_onPlayClick}
+          >
+            Play Track
           </div>
-        </>
-      ) : null}
+        </div>
+      </div>
     </Dialog>
   );
 };
