@@ -84,7 +84,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
     >
       <Pane>
         <Icon className="icon-padding" name="midi" />
-        {inputMidis.length && (
+        {!!inputMidis.length && (
           <Icon
             name="record"
             size={10}

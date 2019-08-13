@@ -63,6 +63,6 @@ export interface Beat {
 export interface MidiJSON {
   beats: Beat[];
   duration: number;
-  tracks: Partial<Track>[];
+  tracks: Track[];
   header: Header;
 }

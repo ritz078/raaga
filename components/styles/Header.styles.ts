@@ -48,7 +48,7 @@ export const headerClass = css({
   position: "absolute",
   width: "100%",
   background: `linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%)`,
-  zIndex: 9,
+  zIndex: 10,
   ...mixins.flexSpaceBetween,
   alignItems: "center",
   ".icon-padding": {

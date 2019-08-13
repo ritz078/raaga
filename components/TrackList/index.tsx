@@ -1,104 +1,237 @@
-import { Pane, Text, Icon, Heading } from "evergreen-ui";
+import {
+  Text,
+  Heading,
+  Dialog,
+  Switch,
+  InlineAlert,
+  Checkbox
+} from "evergreen-ui";
 import * as React from "react";
-import AcousticGuitar from "@assets/images/instruments/acoustic-guitar.svg";
-import DrumSet from "@assets/images/instruments/drum-set.svg";
 import { useEffect, useState } from "react";
-import { Track } from "@typings/midi";
-import { Beat, MidiJSON } from "@utils/midiParser/midiParser";
-import { BackgroundPlayer } from "@utils/midiPlayer";
+import { Beat, MidiJSON, Track } from "@utils/midiParser/midiParser";
 import MidiParse from "@workers/midiParse.worker";
 import { promiseWorker } from "@utils/promiseWorker";
+import { range } from "lodash";
+import InstrumentCard from "@components/TrackList/InstrumentCard";
+import * as styles from "./tracklist.styles";
+import { cx } from "emotion";
 
 const midiParseWorker = new MidiParse();
 
-function Card({ instrumentName, drums = false }) {
-  return (
-    <Pane
-      paddingX={5}
-      marginX={7}
-      paddingY={5}
-      backgroundColor={"#3f51b5"}
-      borderRadius={2}
-      height={60}
-      border={"1px solid green"}
-      display="flex"
-      flexDirection="row"
-      marginBottom={14}
-      width={230}
-    >
-      <Pane
-        borderRadius={2}
-        backgroundColor={drums ? "#009688" : "#03a9f4"}
-        paddingX={8}
-        paddingY={8}
-      >
-        {drums ? <DrumSet height={35} /> : <AcousticGuitar height={35} />}
-      </Pane>
-
-      <Pane
-        marginLeft={15}
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
-      >
-        <Text size={400} color="#eee" fontSize={13} textTransform="capitalize">
-          {instrumentName}
-        </Text>
-
-        <Pane>
-          <Icon icon="volume-up" color="#03a9f4" size={18} />
-        </Pane>
-      </Pane>
-    </Pane>
-  );
+function toggleInArray(arr: number[], num: number) {
+  return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];
 }
 
-export default function() {
-  const [midi, loadMidi] = useState();
+interface TrackListProps {
+  onPlay?: (args: {
+    selectedTrackIndex: number;
+    playingTracksIndex: number[];
+    playingBeatsIndex: number[];
+  }) => void;
+  midi?: MidiJSON;
+}
+
+const TrackList: React.FunctionComponent<TrackListProps> = ({ onPlay }) => {
+  const [midi, loadMidi] = useState<MidiJSON>();
+  const [selectedTrackIndex, setSelectedTrackIndex] = useState(null);
+  const [playingTracksIndex, setPlayingTracksIndex] = useState([]);
+  const [playingBeatsIndex, setPlayingBeatsIndex] = useState([]);
+
+  const playInstrumentsInBackground =
+    !!playingBeatsIndex.length || playingTracksIndex.length >= 2;
+
+  // called when a single track's status is toggled
+  const toggleTrack = (trackIndex: number) => {
+    if (!midi) return;
+    setPlayingTracksIndex(toggleInArray(playingTracksIndex, trackIndex));
+  };
+
+  // called when a single beat's status is toggled
+  const toggleBeat = (beatIndex: number) => {
+    if (!midi) return;
+    setPlayingBeatsIndex(toggleInArray(playingBeatsIndex, beatIndex));
+  };
+
+  // called when the status of all the tracks is toggled
+  const toggleAllTracks = e => {
+    if (e.target.checked) {
+      setPlayingTracksIndex(range(midi.tracks.length));
+    } else {
+      setPlayingTracksIndex(
+        selectedTrackIndex !== null ? [selectedTrackIndex] : []
+      );
+    }
+  };
+
+  // called when the status of all the beats is toggled
+  const toggleAllBeats = e => {
+    if (e.target.checked) {
+      setPlayingTracksIndex(range(midi.beats.length));
+    } else {
+      setPlayingTracksIndex([]);
+    }
+  };
+
+  // called when a particular track is selected as the primary track
+  const selectTrack = i => {
+    if (!playingTracksIndex.includes(i)) {
+      setPlayingTracksIndex(playingTracksIndex.concat(i));
+    }
+
+    setSelectedTrackIndex(i);
+  };
+
+  useEffect(() => {
+    if (midi) {
+      setPlayingBeatsIndex(range(midi.beats.length));
+      setPlayingTracksIndex(range(midi.tracks.length));
+    }
+  }, [midi]);
+
+  // called when user toggles the behaviour of sounds playing in the background.
+  const handleBackgroundPlayChange = e => {
+    if (!e.target.checked) {
+      setPlayingBeatsIndex([]);
+      setPlayingTracksIndex([].concat(selectedTrackIndex));
+    } else {
+      setPlayingBeatsIndex(range(midi.beats.length));
+      setPlayingTracksIndex(range(midi.tracks.length));
+    }
+  };
 
   useEffect(() => {
     (async () => {
       const midi: MidiJSON = await promiseWorker(midiParseWorker, {
-        filePath: "/static/midi/wherever.mid"
+        filePath: "/static/midi/potc.mid"
       });
 
       loadMidi(midi);
-      const player = new BackgroundPlayer(midi);
-
-      player.load1();
     })();
   }, []);
 
-  console.log(midi);
+  const _onPlayClick = () => {
+    onPlay({
+      selectedTrackIndex,
+      playingTracksIndex,
+      playingBeatsIndex
+    });
+  };
 
   return (
-    <Pane zIndex={8} position="absolute" paddingTop={100} paddingX={30}>
-      <Heading color="#fff" marginBottom={20} marginLeft={15}>
-        Instruments
-      </Heading>
-
-      <Pane display="flex" flexDirection="row" flexWrap={"wrap"}>
-        {midi &&
-          midi.tracks &&
-          midi.tracks
-            .filter(track => track.notes.length)
-            .map((track: Track, i) => (
-              <Card key={i} instrumentName={track.instrument.name} />
-            ))}
-      </Pane>
-
-      {midi && midi.beats && (
+    <Dialog
+      preventBodyScrolling
+      isShown
+      onCloseComplete={() => {}}
+      hasFooter={false}
+      hasHeader={false}
+    >
+      {midi ? (
         <>
-          <Heading color="#fff" marginBottom={20} marginLeft={15}>
-            Drums (Percussions)
-          </Heading>
-          <Pane display="flex" flexDirection="row" flexWrap={"wrap"}>
-            {midi.beats.map((beat: Beat, i) => (
-              <Card drums key={i} instrumentName={beat.instrument.name} />
-            ))}
-          </Pane>
+          <div className={styles.dialogWrapper}>
+            <div className={styles.header}>
+              <Heading color="#fff" size={600}>
+                {midi.header.name[0] || "Unknown"}
+              </Heading>
+
+              <div className={styles.titleSubText}>
+                <Text color="#8a8a8a">
+                  {midi.tracks.length} Tracks &middot; {"  "}
+                  {midi.beats.length} Beats &middot; {"  "}
+                  {midi.duration && midi.duration.toFixed(2)} seconds &middot;{" "}
+                  {"  "}
+                  {midi.header.ppq} ticks/beat
+                </Text>
+              </div>
+            </div>
+
+            <div className={styles.sectionTitle}>
+              <Heading color="#fff">Tracks</Heading>
+              <Switch
+                checked={playingTracksIndex.length === midi.tracks.length}
+                marginRight={15}
+                onChange={toggleAllTracks}
+              />
+            </div>
+
+            <div className={styles.instrumentWrapper}>
+              {midi &&
+                midi.tracks &&
+                midi.tracks.map((track: Track, i) => {
+                  const isSelectedTrack = selectedTrackIndex === i;
+                  return (
+                    <InstrumentCard
+                      disabled={!playingTracksIndex.includes(i)}
+                      onClick={() => selectTrack(i)}
+                      isSelected={isSelectedTrack}
+                      key={i}
+                      instrumentName={track.instrument.name}
+                      onIconClick={
+                        !isSelectedTrack ? () => toggleTrack(i) : undefined
+                      }
+                    />
+                  );
+                })}
+            </div>
+
+            {midi && midi.beats && !!midi.beats.length && (
+              <>
+                <div className={styles.sectionTitle}>
+                  <Heading color="#fff">Beats</Heading>
+                  <Switch
+                    checked={playingBeatsIndex.length === midi.beats.length}
+                    marginRight={15}
+                    onChange={toggleAllBeats}
+                  />
+                </div>
+                <div className={styles.instrumentWrapper}>
+                  {midi.beats.map((beat: Beat, i) => (
+                    <InstrumentCard
+                      disabled={!playingBeatsIndex.includes(i)}
+                      isSelected={false}
+                      drums
+                      key={i}
+                      instrumentName={beat.instrument.name}
+                      onIconClick={() => toggleBeat(i)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className={styles.footer}>
+            {selectedTrackIndex === null ? (
+              <InlineAlert marginBottom={0} intent="none">
+                <Text color={"#2196f3"}>
+                  You need to select a track which can be played with
+                  visualizer. Other sounds can play in background.
+                </Text>
+              </InlineAlert>
+            ) : (
+              <Checkbox
+                checked={playInstrumentsInBackground}
+                marginY={0}
+                label={
+                  <Text color="#fff" fontSize={14}>
+                    Play other instruments in Background
+                  </Text>
+                }
+                onChange={handleBackgroundPlayChange}
+              />
+            )}
+            <div
+              className={cx(styles.playButton, {
+                __disabled__: !selectedTrackIndex
+              })}
+              onClick={_onPlayClick}
+            >
+              Play Track
+            </div>
+          </div>
         </>
-      )}
-    </Pane>
+      ) : null}
+    </Dialog>
   );
-}
+};
+
+export default React.memo(TrackList);

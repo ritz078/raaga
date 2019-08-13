@@ -5,6 +5,7 @@ import { drumNames } from "./midiConstants";
 import MidiFile from "midifile";
 import MidiEvents from "midievents";
 import { MidiNumbers } from "piano-utils";
+import UTF8 from "utf-8";
 
 export default class MidiParser {
   arrayBuffer: ArrayBuffer;
@@ -13,7 +14,9 @@ export default class MidiParser {
     tracks: [],
     beats: [],
     header: {
-      ppq: 480
+      ppq: 480,
+      name: [],
+      format: null
     }
   };
 
@@ -117,28 +120,31 @@ export default class MidiParser {
     const midi = new MidiFile(this.arrayBuffer);
 
     this.song.header.ppq = midi.header.getTicksPerBeat();
+    this.song.header.format = midi.header.getFormat();
 
     const events = midi.getEvents();
 
     events.forEach(event => {
       const { subtype, channel, param1, param2 } = event;
 
-      if (this.song.duration < event.playTime / 1000) {
-        this.song.duration = event.playTime / 1000;
+      if (subtype === MidiEvents.EVENT_META_TRACK_NAME && !event.track) {
+        const text = UTF8.getStringFromBytes(event.data, 0, event.length, true);
+        this.song.header.name.push(text);
       }
+
       if (subtype === MidiEvents.EVENT_MIDI_NOTE_ON) {
         if (channel === 9) {
           if (param1 >= 35 && param1 <= 81) {
             this.startDrum(event);
           } else {
-            console.log("wrong drum", event);
+            // console.log("wrong drum", event);
           }
         } else {
           if (param1 >= 0 && param1 <= 127) {
             //console.log('start', param1);
             this.startNote(event);
           } else {
-            console.log("wrong tone", event);
+            // console.log("wrong tone", event);
           }
         }
       } else {
@@ -160,7 +166,7 @@ export default class MidiParser {
                 number: param1
               };
             } else {
-              console.log("skip program for drums");
+              // console.log("skip program for drums");
             }
           } else {
             if (subtype == MidiEvents.EVENT_MIDI_CONTROLLER) {
@@ -175,7 +181,7 @@ export default class MidiParser {
                 //console.log('	bend', channel, param1, param2);
                 this.addSlide(event);
               } else {
-                console.log("unknown", channel, event);
+                // console.log("unknown", channel, event);
               }
             }
           }
@@ -190,6 +196,11 @@ export default class MidiParser {
 
     // remove tracks with zero notes.
     this.song.tracks = this.song.tracks.filter(track => track.duration);
+    this.song.beats = this.song.beats.filter(beat => beat.notes.length);
+
+    this.song.duration = Math.max(
+      ...this.song.tracks.map(track => track.duration)
+    );
 
     return this.song;
   };

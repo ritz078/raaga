@@ -2,69 +2,60 @@ import Tone from "tone";
 import { MidiJSON, Note } from "@utils/midiParser/midiParser";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promiseWorker } from "@utils/promiseWorker";
-import { flatten } from "lodash";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
 export class BackgroundPlayer {
   song: MidiJSON;
-  trackSamplers = new Array(128).fill(null).map(() => {
-    const sampler = new Tone.Sampler({});
-    sampler.connect(Tone.Master);
-    return sampler;
-  });
-  drumSampler = new Tone.Sampler({});
+  trackSamplers = [];
+  drumSampler;
   trackPart = [];
   drumPart = [];
 
+  static getTrackSampler = audio => {
+    return new Promise(resolve => {
+      const sampler = new Tone.Sampler(audio, () => {
+        sampler.connect(Tone.Master);
+        resolve(sampler);
+      });
+    });
+  };
+
   constructor(song: MidiJSON) {
     this.song = song;
-
-    this.drumSampler.connect(Tone.Master);
   }
 
   public setSong(song: MidiJSON) {
     this.song = song;
   }
 
-  load1 = async () => {
-    // @ts-ignore
-    const data: {
-      tracks: {
-        [k: string]: string;
-      }[];
-      drums: {
-        [k: string]: string;
-      };
-    } = await promiseWorker(loadInstrumentWorker, {
+  loadInstruments = async () => {
+    const data = await promiseWorker(loadInstrumentWorker, {
       song: this.song
     });
 
-    let drumPromise;
     if (data.drums) {
-      drumPromise = Object.keys(data.drums).map(
-        key =>
-          new Promise(resolve =>
-            this.drumSampler.add(key, data.drums[key], resolve)
-          )
-      );
+      this.drumSampler = await new Promise(resolve => {
+        const sampler = new Tone.Sampler(data.drums, () => {
+          sampler.connect(Tone.Master);
+          resolve(sampler);
+        });
+      });
     }
-    const promises = flatten(
-      Object.keys(data.tracks).map(key =>
-        Object.keys(data.tracks[key]).map(
-          tone =>
-            new Promise(resolve => {
-              return this.trackSamplers[key].add(
-                tone,
-                data.tracks[key][tone],
-                resolve
-              );
-            })
-        )
+
+    const trackInstrumentIds = Object.keys(data.tracks);
+    const samplers = await Promise.all(
+      trackInstrumentIds.map(key =>
+        BackgroundPlayer.getTrackSampler(data.tracks[key])
       )
     );
 
-    await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
+    samplers.forEach((sampler, i) => {
+      const instrumentId = trackInstrumentIds[i];
+
+      this.trackSamplers[instrumentId] = sampler;
+    });
+
     this.schedule();
   };
 
@@ -83,33 +74,41 @@ export class BackgroundPlayer {
     });
 
     this.song.beats.forEach(beat => {
-      this.drumPart[beat.instrument.number] = new Tone.Part(
+      const beatInstrumentNumber = beat.instrument.number;
+      this.drumPart[beatInstrumentNumber] = new Tone.Part(
         time => {
-          const midi = beat.instrument.number;
           this.drumSampler.triggerAttack(
-            Tone.Frequency(midi, "midi").toNote(),
+            Tone.Frequency(beatInstrumentNumber, "midi").toNote(),
             time
           );
         },
         beat.notes.map(_beat => ({
           ..._beat,
-          note: Tone.Frequency(beat.instrument.number, "midi").toNote()
+          note: Tone.Frequency(beatInstrumentNumber, "midi").toNote()
         }))
       ).start();
     });
 
+    this.play();
+  };
+
+  play = () => {
     Tone.Transport.start();
   };
 
+  public togglePlay = Tone.Transport.toggle;
+
   public clear = () => {
+    Tone.Transport.stop();
+
     [...this.trackPart, ...this.drumPart].forEach(trackPart => {
       if (!trackPart) return;
       if (trackPart._state) {
         trackPart.dispose();
       }
-      trackPart = null;
     });
 
-    Tone.Transport.stop();
+    this.trackPart = [];
+    this.drumPart = [];
   };
 }

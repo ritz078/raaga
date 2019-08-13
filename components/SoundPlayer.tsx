@@ -285,14 +285,13 @@ function SoundPlayer({
             onStartPlay={() => startPlayingTrack(loadedMidi)}
           />
         )}
-
         <Visualizer
           range={keyboardRange}
           mode={settings.mode}
           canvasWorker={canvasWorker}
         />
       </div>
-      <div style={{ height: PIANO_HEIGHT }}>
+      <div style={{ height: PIANO_HEIGHT, display: "flex" }}>
         <div className={pianoWrapper}>
           {loading && (
             <Loader className={loaderClass} color={colors.white.base} />

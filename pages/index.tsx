@@ -1,11 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
-import {
-  betaTag,
-  bodyClass,
-  mainHeader,
-  playerWrapper
-} from "@styles/main.styles";
+import { bodyClass, mainHeader, playerWrapper } from "@styles/main.styles";
 import { headerLogo } from "@components/styles/Header.styles";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
@@ -33,10 +28,7 @@ function Main({ dispatch, settings }) {
   return (
     <div className={bodyClass}>
       <header className={mainHeader}>
-        <span className={headerLogo}>
-          🎹
-          <span className={betaTag}>beta</span>
-        </span>
+        <span className={headerLogo}>🎹</span>
 
         <Pane display="flex" alignItems="center">
           <ModeToggle

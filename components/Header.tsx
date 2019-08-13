@@ -14,6 +14,7 @@ import { HeaderProps } from "./typings/Header";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Pane } from "evergreen-ui";
+import TrackList from "./TrackList";
 
 const instrumentOptions = Object.keys(instruments).map(id => {
   const { name, value } = instruments[id];
@@ -47,6 +48,8 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     <div className={headerClass}>
       <span></span>
       <div className={headerRight}>
+        <TrackList />
+
         {mode === VISUALIZER_MODE.WRITE && (
           <button className={recordBtn} onClick={toggleRecording}>
             <Icon
@@ -59,20 +62,22 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           </button>
         )}
 
-        <SelectMenu
-          options={instrumentOptions}
-          selected={instrument}
-          onSelect={item => {
-            onInstrumentChange(item.value);
-          }}
-          title="Instruments"
-          position={Position.BOTTOM}
-          closeOnSelect
-        >
-          <Pane className={instrumentLabel}>
-            {getInstrumentByValue(instrument).name}
-          </Pane>
-        </SelectMenu>
+        {mode === VISUALIZER_MODE.WRITE && (
+          <SelectMenu
+            options={instrumentOptions}
+            selected={instrument}
+            onSelect={item => {
+              onInstrumentChange(item.value);
+            }}
+            title="Instruments"
+            position={Position.BOTTOM}
+            closeOnSelect
+          >
+            <Pane className={instrumentLabel}>
+              {getInstrumentByValue(instrument).name}
+            </Pane>
+          </SelectMenu>
+        )}
 
         <Icon
           className="icon-padding"

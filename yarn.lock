@@ -5845,10 +5845,10 @@ midi-json-parser-worker@^6.5.0:
     tslib "^1.10.0"
     worker-factory "^5.0.5"
 
-midi-json-parser@^6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/midi-json-parser/-/midi-json-parser-6.4.0.tgz#061727fc292aaa8513a5d33fc0f28541d4c66463"
-  integrity sha512-ffZxfOk9BdwwTjq7xeYs3TiTIJ4ks7DG7ucWzT9Ny0fs0kQbWhnElwjpAgFydTROIkpfuzz86jXuAt5rHzJTfg==
+midi-json-parser@^6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/midi-json-parser/-/midi-json-parser-6.4.1.tgz#e14f9f29f9fe4f41636318484ea5961d024a91b0"
+  integrity sha512-ptSLI1h7LeOdF/fDTs4f/cuhL7e2NHeI6UWYgUGH/mI8Egn6nAN9msVCnKAEEZTnDbV2mqOrOgDOM8+GeIIIIQ==
   dependencies:
     "@babel/runtime" "^7.5.5"
     midi-json-parser-broker "^3.0.31"
@@ -7245,10 +7245,10 @@ react-dom@^16.9.0:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
-react-draggable@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-3.3.0.tgz#2ed7ea3f92e7d742d747f9e6324860606cd4d997"
-  integrity sha512-U7/jD0tAW4T0S7DCPK0kkKLyL0z61sC/eqU+NUfDjnq+JtBKaYKDHpsK2wazctiA4alEzCXUnzkREoxppOySVw==
+react-draggable@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-3.3.1.tgz#661b191d2b5be554e774ea68a5b7484568447b8b"
+  integrity sha512-JeKyuO5f1jnVwMHdNkFpmaQoYn/6CyIiCDGSKbTgRisEtekjeUCeKmlNaNTLlpKOEu0SaKcBA1HlypSqWN/8Tw==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"

@@ -19,7 +19,6 @@ import Tone from "tone";
 import { PlayerControllerProps } from "@components/typings/PlayerController";
 import FileLoad from "@components/FileLoad";
 import { Button } from "evergreen-ui";
-import TrackList from "./TrackList";
 
 const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
   midi,
@@ -41,8 +40,6 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
 
   return (
     <>
-      <TrackList />
-
       <animated.div style={style} className={playerWrapper}>
         {!isEmpty(midi) &&
           transitions.map(
