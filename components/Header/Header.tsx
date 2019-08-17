@@ -6,15 +6,27 @@ import Icon from "@components/Icon";
 import {
   headerClass,
   headerRight,
-  iconNotifier,
   instrumentLabel,
   recordBtn
-} from "./styles/Header.styles";
-import { HeaderProps } from "./typings/Header";
+} from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Pane } from "evergreen-ui";
-import TrackList from "./TrackList";
+import { AnyAction, Dispatch } from "redux";
+import { MidiJSON, Note } from "@utils/midiParser/midiParser";
+
+export interface HeaderProps {
+  dispatch: Dispatch<AnyAction>;
+  mode: VISUALIZER_MODE;
+  instrument: string;
+  onTogglePlay: () => void;
+  onInstrumentChange: (instrument: React.ReactText) => void;
+  isRecording: boolean;
+  toggleRecording: () => void;
+  notes?: Note[];
+  onTrackSelect?: (midi: MidiJSON, i) => void;
+  midiDeviceId: string;
+}
 
 const instrumentOptions = Object.keys(instruments).map(id => {
   const { name, value } = instruments[id];
@@ -24,16 +36,14 @@ const instrumentOptions = Object.keys(instruments).map(id => {
   };
 });
 
-const Header: React.FunctionComponent<HeaderProps> = ({
+const _Header: React.FunctionComponent<HeaderProps> = ({
   dispatch,
   mode,
   instrument,
   onInstrumentChange,
   isRecording,
   toggleRecording,
-  recordings,
-  midiDeviceId,
-  onToggleSidebar
+  midiDeviceId
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -48,8 +58,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     <div className={headerClass}>
       <span></span>
       <div className={headerRight}>
-        <TrackList />
-
         {mode === VISUALIZER_MODE.WRITE && (
           <button className={recordBtn} onClick={toggleRecording}>
             <Icon
@@ -86,22 +94,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           onClick={_toggleMute}
         />
 
-        <div>
-          {!!recordings.length && (
-            <span className={iconNotifier}>{recordings.length}</span>
-          )}
-          <Icon
-            onClick={onToggleSidebar}
-            className="icon-padding"
-            name="tracks"
-            color={colors.white.base}
-          />
-        </div>
-
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
       </div>
     </div>
   );
 };
 
-export default memo(Header);
+export const Header = memo(_Header);

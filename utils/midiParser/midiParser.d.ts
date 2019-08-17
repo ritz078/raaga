@@ -49,6 +49,7 @@ export interface Track {
   channel: number;
   duration: number;
   program: number;
+  id: number;
 }
 
 export interface Beat {

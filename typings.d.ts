@@ -39,3 +39,6 @@ declare module "@workers/midiParse.worker" {
 
   export default WebpackWorker;
 }
+
+declare const IN_BROWSER: boolean;
+declare const IS_DEV: boolean;

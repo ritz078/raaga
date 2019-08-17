@@ -4,7 +4,7 @@ import { colors, mixins } from "@anarock/pebble";
 export const playerWrapper = css({
   position: "absolute",
   bottom: 0,
-  top: 0,
+  top: 50,
   left: 0,
   right: 0,
   display: "flex",

@@ -1,12 +1,9 @@
-import { Midi } from "@typings/midi";
+import { MidiJSON } from "@utils/midiParser/midiParser";
 
 export interface PlayerControllerProps {
-  midi: Midi;
+  midi: MidiJSON;
   isPlaying: boolean;
   onTogglePlay: () => void;
-  onTrackSelect: (midi: Midi, i: number) => void;
   onStartPlay: () => void;
   style?: any;
-  onReplay?: () => void;
-  onToggleSidebar: () => void;
 }

@@ -14,7 +14,9 @@ export const header = css({
   borderBottom: `1px solid ${BORDER_COLOR}`,
   padding: "20px 15px 10px 20px",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center"
 });
 
 export const footer = css({
@@ -65,4 +67,28 @@ export const content = css({
   flexDirection: "column",
   backgroundColor: "#1b1b1b",
   padding: "0 15px 20px 20px"
+});
+
+export const sidebar = css({
+  width: 250,
+  backgroundColor: "#272727",
+  borderTopLeftRadius: 10,
+  borderBottomLeftRadius: 10,
+  padding: 20
+});
+
+export const zeroStateWrapper = css({
+  minHeight: 500,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center"
+});
+
+export const zeroStateIllustration = css({
+  width: 550,
+  color: "#7b7b7b",
+  textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center"
 });

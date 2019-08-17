@@ -189,9 +189,10 @@ export default class MidiParser {
       }
     });
 
-    this.song.tracks.forEach(track => {
+    this.song.tracks.forEach((track, index) => {
       const lastNote: Note = last(track.notes);
       track.duration = lastNote ? lastNote.time + lastNote.duration : 0;
+      track.id = index + 1;
     });
 
     // remove tracks with zero notes.

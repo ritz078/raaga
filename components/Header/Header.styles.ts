@@ -46,6 +46,7 @@ export const modalBottom = css({
 export const headerClass = css({
   height: 65,
   position: "absolute",
+  top: 50,
   width: "100%",
   background: `linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%)`,
   zIndex: 10,
@@ -66,14 +67,14 @@ export const headerClass = css({
 
 export const headerRight = css({
   ...mixins.flexSpaceBetween,
-  alignItems: "center",
-  svg: {
-    padding: 15,
-    width: 50,
-    height: 50,
-    cursor: "pointer",
-    fill: colors.white.base
-  }
+  alignItems: "center"
+  // svg: {
+  //   padding: 15,
+  //   width: 50,
+  //   height: 50,
+  //   cursor: "pointer",
+  //   fill: colors.white.base
+  // }
 });
 
 export const iconClass = css({

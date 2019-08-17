@@ -5,7 +5,9 @@ const config = {
   webpack(config, options) {
     config.plugins.push(
       new webpack.DefinePlugin({
-        "process.env.DEV": JSON.stringify(options.dev)
+        "process.env.DEV": JSON.stringify(options.dev),
+        IN_BROWSER: !options.isServer,
+        IS_DEV: options.dev
       })
     );
 
@@ -19,7 +21,18 @@ const config = {
       },
       {
         test: /\.svg$/,
-        use: ["@svgr/webpack"]
+        use: [
+          {
+            loader: "@svgr/webpack",
+            options: {
+              svgoConfig: {
+                plugins: {
+                  removeViewBox: false
+                }
+              }
+            }
+          }
+        ]
       }
     );
 

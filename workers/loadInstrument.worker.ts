@@ -1,28 +1,22 @@
 import { get as getInIDB, set as setInIDB } from "idb-keyval";
-import { getInstrumentIdByValue, instruments } from "midi-instruments";
-import { MidiJSON } from "@utils/midiParser/midiParser";
+import {
+  getInstrumentById,
+  getInstrumentIdByValue,
+  instruments
+} from "midi-instruments";
 
 const _self = self as any;
 
 const DRUMS_NAME = "drumsBeats";
-const MIDI_FONT_DATA_CONSTANT = "MIDI_FONT_DATA";
 
 let midiFontData = {
   tracks: {},
   drums: null
 };
 
-(async function populateMidiFontDataFromIDB() {
-  try {
-    const data = await getInIDB(MIDI_FONT_DATA_CONSTANT);
-
-    if (data) {
-      midiFontData = data as any;
-    }
-  } catch (e) {
-    console.log(`Error in fetching ${MIDI_FONT_DATA_CONSTANT} from IDB.`);
-  }
-})();
+function getIdbKey(instrumentId) {
+  return `instrument:${instrumentId}`;
+}
 
 function midiJsToJson(data) {
   let begin = data.indexOf("MIDI.Soundfont.");
@@ -45,6 +39,16 @@ const fetchInstrumentFromRemote = async (
     return tracks[instrumentId];
   }
 
+  if (isDrums) {
+    const _drums = await getInIDB(DRUMS_NAME);
+    if (drums) {
+      return _drums;
+    }
+  } else {
+    const track = await getInIDB(getIdbKey(instrumentId));
+    if (track) return track;
+  }
+
   let url = !process.env.DEV
     ? `https://midifonts.s3.ap-south-1.amazonaws.com/${instrument}-mp3.js`
     : `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
@@ -55,7 +59,15 @@ const fetchInstrumentFromRemote = async (
   }
   const response = await fetch(url);
   const data = await response.text();
-  return midiJsToJson(data);
+  const result = midiJsToJson(data);
+
+  if (isDrums) {
+    await setInIDB(DRUMS_NAME, result);
+  } else {
+    await setInIDB(getIdbKey(instrumentId), result);
+  }
+
+  return result;
 };
 
 const loadSoundFont = async (
@@ -73,27 +85,20 @@ const loadSoundFont = async (
   }
 };
 
-const load = async (song: MidiJSON) => {
-  const promises = song.tracks
-    .filter(track => track.instrument && track.instrument.value)
-    .map(track => loadSoundFont(track.instrument.value));
+function loadInstruments(instrumentIds: number[], drums?: boolean) {
+  const promises = instrumentIds.map(instrumentId => {
+    const { value } = getInstrumentById(instrumentId.toString(10));
 
-  let drumPromise;
-  if (song.beats && song.beats.length) {
-    drumPromise = loadSoundFont(null, true);
-  }
+    return loadSoundFont(value);
+  });
 
-  await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
-};
+  const drumPromise = drums ? loadSoundFont(null, true) : undefined;
 
-_self.onmessage = async ({ data: { id, song } }) => {
-  await load(song);
+  return Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
+}
 
-  try {
-    await setInIDB(MIDI_FONT_DATA_CONSTANT, midiFontData);
-  } catch (e) {
-    console.log(`Error in setting ${MIDI_FONT_DATA_CONSTANT}`);
-  }
+_self.onmessage = async ({ data: { id, instrumentIds, drums } }) => {
+  await loadInstruments(instrumentIds, drums);
 
   _self.postMessage({
     id,

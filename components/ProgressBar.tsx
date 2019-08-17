@@ -13,7 +13,7 @@ const ProgressBar: FunctionComponent<{}> = () => {
     return function cleanup() {
       clearInterval(id);
     };
-  });
+  }, []);
 
   return (
     <div className={progressBar}>

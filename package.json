@@ -72,7 +72,7 @@
     "redux-devtools-extension": "^2.13.8",
     "typescript": "3.5.3",
     "webfonts-generator": "^0.4.0",
-    "webpack": "^4.39.1",
+    "webpack": "^4.39.2",
     "worker-loader": "^2.0.0"
   },
   "husky": {

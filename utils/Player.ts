@@ -1,22 +1,12 @@
 import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
 import { NoteWithEvent, Sampler } from "@utils/typings/Player";
 import Tone from "tone";
-import { instruments } from "midi-instruments";
 import { EVENT_TYPE } from "@enums/piano";
 import { Range } from "@utils/typings/Visualizer";
-import { get as getFromIDB, set as setInIDB } from "idb-keyval";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import Recorder from "@utils/Recorder";
 import { PIANO_HEIGHT, TRACK_PLAYING_SPEED } from "@config/piano";
 import { Midi, Note, Track } from "@typings/midi";
-
-export function midiJsToJson(data) {
-  let begin = data.indexOf("MIDI.Soundfont.");
-  if (begin < 0) throw Error("Invalid MIDI.js Soundfont format");
-  begin = data.indexOf("=", begin) + 2;
-  const end = data.lastIndexOf(",");
-  return JSON.parse(data.slice(begin, end) + "}");
-}
 
 function getNotesWithNoteEnd(notes: Note[], delay: number = 0) {
   const _notes = [];
@@ -72,73 +62,6 @@ export class Player {
     this.sampler.connect(Tone.Master);
     this.canvasWorker = canvasWorker;
   }
-
-  private fetchInstrumentFromRemote = async instrument => {
-    const url = !process.env.DEV
-      ? `https://midifonts.s3.ap-south-1.amazonaws.com/${instrument}-mp3.js`
-      : `https://gleitz.github.io/midi-js-soundfonts/MusyngKite/${instrument}-mp3.js`;
-    const response = await fetch(url);
-    const data = await response.text();
-    const audio = midiJsToJson(data);
-    await setInIDB(instrument, audio);
-    return audio;
-  };
-
-  /**
-   * Load a soundFont and add it to Tone sampler.
-   * @param instrument
-   */
-  public loadSoundFont = async (instrument = instruments[0].value) => {
-    let audio;
-    try {
-      audio = await getFromIDB(instrument);
-      if (!audio) audio = await this.fetchInstrumentFromRemote(instrument);
-    } catch (e) {
-      audio = await this.fetchInstrumentFromRemote(instrument);
-    }
-
-    const promises = Object.keys(audio).map(
-      key => new Promise(resolve => this.sampler.add(key, audio[key], resolve))
-    );
-    return Promise.all(promises);
-  };
-
-  /**
-   * Takes a midi number and returns the corresponding note name.
-   * @param midi
-   */
-  private getNoteName = (midi: number) => Tone.Frequency(midi, "midi").toNote();
-
-  /**
-   * Plays a single note
-   * @param midi
-   * @param velocity
-   */
-  public playNote = (midi: number, velocity = 1) => {
-    this.recorder.startNote(midi);
-
-    this.sampler.triggerAttack(this.getNoteName(midi), undefined, velocity);
-
-    this.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.PLAY_NOTE,
-      midi
-    });
-  };
-
-  /**
-   * Stops a note that's already playing.
-   * @param midi
-   */
-  public stopNote = (midi: number) => {
-    this.recorder.endNote(midi);
-
-    this.sampler.triggerRelease(this.getNoteName(midi));
-
-    this.canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.STOP_NOTE,
-      midi
-    });
-  };
 
   /**
    * Play a track in read mode

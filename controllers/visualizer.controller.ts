@@ -3,11 +3,9 @@ import { controlVisualizer, Data } from "@utils/visualizerControl";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 
 export class CanvasWorkerFallback {
-  postMessage(data: Partial<Data>, _transferable?) {
+  postMessage(data, _transferable?) {
     controlVisualizer(data);
   }
 }
 
-export default (offScreenCanvasIsSupported
-  ? CanvasWorker
-  : CanvasWorkerFallback);
+export default offScreenCanvasIsSupported ? CanvasWorker : CanvasWorkerFallback;
