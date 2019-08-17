@@ -41,7 +41,6 @@
     "react-redux": "^7.1.0",
     "react-spring": "^8.0.27",
     "redux": "^4.0.4",
-    "redux-persist": "^5.10.0",
     "startaudiocontext": "^1.2.1",
     "tone": "^13.4.9",
     "ui-box": "^2.1.0",

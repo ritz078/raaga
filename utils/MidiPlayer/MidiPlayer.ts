@@ -1,14 +1,15 @@
 import Tone from "tone";
-import { MidiJSON, Track } from "@utils/midiParser/midiParser";
+import { MidiJSON } from "@utils/midiParser/midiParser";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promiseWorker } from "@utils/promiseWorker";
-import { range } from "lodash";
+import { range as _range } from "lodash";
 import { EVENT_TYPE } from "@enums/piano";
 import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import {
   getDelay,
   getNotesWithNoteEndEvent,
+  getTrackWithDelay,
   NoteWithIdAndEvent
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
@@ -198,38 +199,25 @@ export class MidiPlayer {
   };
 
   private startVisualizer = selectedTrackIndex => {
-    const visualizerDelay = getDelay(0.4);
+    const visualizerDelay = getDelay(0.2);
 
     const mainTrack = this.midi.tracks[selectedTrackIndex];
 
-    const _track: Track = {
-      ...mainTrack,
-      notes: mainTrack.notes.map(_note => ({
-        ..._note,
-        duration: _note.duration,
-        time: _note.time + visualizerDelay
-      })),
-      duration: mainTrack.duration + visualizerDelay
-    };
-
     this.canvasWorker.postMessage({
-      track: _track,
+      track: getTrackWithDelay(mainTrack, visualizerDelay),
       range: this.range,
       message: VISUALIZER_MESSAGES.PLAY_TRACK
     });
   };
 
-  public scheduleAndPlay = (
-    {
-      selectedTrackIndex = 0,
-      // @ts-ignore
-      playingBeatsIndex = range(this.midi.beats.length),
-      // @ts-ignore
-      playingTracksIndex = range(this.midi.tracks.length)
-    }: IScheduleOptions,
-    cb: IEventCallback
-  ) => {
+  public scheduleAndPlay = (options: IScheduleOptions, cb: IEventCallback) => {
     const delay = getDelay();
+
+    const {
+      selectedTrackIndex = 0,
+      playingBeatsIndex = _range(this.midi.beats.length),
+      playingTracksIndex = _range(this.midi.tracks.length)
+    } = options;
 
     this.midi.tracks.forEach((_track, trackIndex) => {
       this.playTrack(trackIndex, playingTracksIndex, cb);
