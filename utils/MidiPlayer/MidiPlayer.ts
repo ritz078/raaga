@@ -281,8 +281,8 @@ export class MidiPlayer {
     Tone.Transport.stop();
 
     [...this.trackPart, ...this.drumPart].forEach(trackPart => {
-      trackPart.stop();
       if (!trackPart) return;
+      trackPart.stop();
       if (trackPart._state) {
         trackPart.dispose();
       }
