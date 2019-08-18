@@ -199,12 +199,13 @@ export class MidiPlayer {
   };
 
   private startVisualizer = selectedTrackIndex => {
-    const visualizerDelay = getDelay(0.2);
+    const visualizerDelay = getDelay(0);
 
     const mainTrack = this.midi.tracks[selectedTrackIndex];
 
+    console.log(Date.now());
     this.canvasWorker.postMessage({
-      track: getTrackWithDelay(mainTrack, visualizerDelay),
+      track: mainTrack,
       range: this.range,
       message: VISUALIZER_MESSAGES.PLAY_TRACK
     });
@@ -219,6 +220,7 @@ export class MidiPlayer {
       playingTracksIndex = _range(this.midi.tracks.length)
     } = options;
 
+    console.log("a", Date.now());
     this.midi.tracks.forEach((_track, trackIndex) => {
       this.playTrack(trackIndex, playingTracksIndex, cb);
     });
@@ -226,8 +228,9 @@ export class MidiPlayer {
     this.midi.beats.forEach((_beat, beatIndex) => {
       this.playBeat(beatIndex, playingBeatsIndex);
     });
+    console.log("b", Date.now());
 
-    Tone.Transport.start(`+${delay}`);
+    Tone.Transport.start(`+${0}`);
     this.startVisualizer(selectedTrackIndex);
   };
 

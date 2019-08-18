@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SoundPlayerProps } from "./typings/SoundPlayer";
-import { getMidiRange, isWithinRange, Player, MidiPlayer } from "@utils";
+import { getMidiRange, isWithinRange, MidiPlayer } from "@utils";
 import {
   flexOne,
   loaderClass,
@@ -11,7 +11,6 @@ import {
 import { colors, Loader, Toast } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import Visualizer from "@components/Visualizer";
-import { NoteWithEvent } from "@utils/typings/Player";
 import { connect } from "react-redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
@@ -26,13 +25,12 @@ import {
   getInstrumentIdByValue,
   instruments
 } from "midi-instruments";
-import PlayerController from "@components/PlayerController";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webMidi from "webmidi";
 import Tone from "tone";
 import { PIANO_HEIGHT } from "@config/piano";
-import { Midi, Track } from "@typings/midi";
+import { Track } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { MidiJSON } from "@utils/midiParser/midiParser";
@@ -42,14 +40,8 @@ const { range } = getPianoRangeAndShortcuts([38, 88]);
 
 const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 
-function SoundPlayer({
-  midiDevice,
-  dispatch,
-  loadedMidi,
-  selectedTrack
-}: SoundPlayerProps) {
-  const player = useRef(new Player({ canvasWorker, range }));
-  const player2 = useRef(new MidiPlayer(canvasWorker, range));
+function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
+  const player = useRef(new MidiPlayer(canvasWorker, range));
 
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
@@ -61,23 +53,20 @@ function SoundPlayer({
   const [mode, setMode] = useState(VISUALIZER_MODE.READ);
 
   const resetPlayer = useCallback(() => {
-    player2.current.clear();
+    player.current.clear();
     setActiveMidis([]);
   }, []);
 
-  const changeInstrument = useCallback(
-    (_instrument = instrument) => {
-      (async () => {
-        setLoading(true);
-        await player2.current.loadInstruments({
-          instrumentIds: [getInstrumentIdByValue(_instrument)]
-        });
-        setInstrument(_instrument);
-        setLoading(false);
-      })();
-    },
-    [player]
-  );
+  const changeInstrument = useCallback((_instrument = instrument) => {
+    (async () => {
+      setLoading(true);
+      await player.current.loadInstruments({
+        instrumentIds: [getInstrumentIdByValue(_instrument)]
+      });
+      setInstrument(_instrument);
+      setLoading(false);
+    })();
+  }, []);
 
   const setRange = useCallback(
     notes => {
@@ -134,22 +123,9 @@ function SoundPlayer({
     [setRange, instrument]
   );
 
-  const onRecordPlay = useCallback(
-    (notesPlaying: NoteWithEvent[], isComplete: boolean) => {
-      if (isComplete) {
-        player.current.stopTrack();
-        setActiveMidis([]);
-        setPlaying(false);
-      } else {
-        setActiveMidis(notesPlaying.map(note => note.midi));
-      }
-    },
-    [player]
-  );
-
   const onNoteStart = useCallback(
     (midi, velocity = 1) => {
-      player2.current.playNote(midi, instrument, velocity);
+      player.current.playNote(midi, instrument, velocity);
 
       setActiveMidis(_activeMidis => _activeMidis.concat(midi));
     },
@@ -158,7 +134,7 @@ function SoundPlayer({
 
   const onNoteStop = useCallback(
     midi => {
-      player2.current.stopNote(midi, instrument);
+      player.current.stopNote(midi, instrument);
       setActiveMidis(_activeMidis =>
         _activeMidis.filter(activeMidi => activeMidi !== midi)
       );
@@ -168,30 +144,13 @@ function SoundPlayer({
 
   const onTogglePlay = useCallback(() => {
     if (Tone.Transport.state === "stopped") {
-      startPlayingTrack(loadedMidi);
+      // startPlayingTrack(loadedMidi);
     } else {
-      player2.current.togglePlay();
+      player.current.togglePlay();
     }
 
     setPlaying(!isPlaying);
   }, [isPlaying]);
-
-  const startPlayingTrack = async (
-    midi: Midi = loadedMidi,
-    track = selectedTrack
-  ) => {
-    setActiveMidis([]);
-
-    // in case the sound-fonts are not yet loaded.
-    await preparePlayerForNewTrack(track);
-
-    player.current.playTrack(midi, track, onRecordPlay);
-  };
-
-  const toggleRecording = () => {
-    setRecording(!isRecording);
-    setRecordedNotes(player.current.toggleRecording());
-  };
 
   useEffect(() => {
     resetPlayer();
@@ -203,7 +162,7 @@ function SoundPlayer({
     setMidiDevice();
   }, []);
 
-  useEffect(() => player2.current.setRange(keyboardRange), [keyboardRange]);
+  useEffect(() => player.current.setRange(keyboardRange), [keyboardRange]);
 
   useEffect(resetPlayer, [mode]);
 
@@ -211,32 +170,37 @@ function SoundPlayer({
 
   const _instrument = getInstrumentByValue(instrument);
 
-  const onMidiAndTrackSelect = async (
-    midi: MidiJSON,
-    playingInfo: TrackSelectionInfo
-  ) => {
-    player2.current.clear();
-    setActiveMidis([]);
+  const onMidiAndTrackSelect = useCallback(
+    (midi: MidiJSON, playingInfo: TrackSelectionInfo) => {
+      (async () => {
+        setMode(VISUALIZER_MODE.READ);
+        player.current.clear();
+        setActiveMidis([]);
 
-    player2.current.setMidi(midi);
+        player.current.setMidi(midi);
 
-    setLoading(true);
+        setLoading(true);
 
-    const _range = setRange(midi.tracks[playingInfo.selectedTrackIndex].notes);
-    player2.current.setRange(_range);
+        const _range = setRange(
+          midi.tracks[playingInfo.selectedTrackIndex].notes
+        );
+        player.current.setRange(_range);
 
-    await player2.current.loadInstruments();
-    setLoading(false);
+        await player.current.loadInstruments();
+        setLoading(false);
 
-    player2.current.scheduleAndPlay(
-      playingInfo,
-      (notes: NoteWithIdAndEvent[], trackIndex: number) => {
-        if (trackIndex === playingInfo.selectedTrackIndex) {
-          setActiveMidis(notes.map(note => note.midi));
-        }
-      }
-    );
-  };
+        player.current.scheduleAndPlay(
+          playingInfo,
+          (notes: NoteWithIdAndEvent[], trackIndex: number) => {
+            if (trackIndex === playingInfo.selectedTrackIndex) {
+              setActiveMidis(notes.map(note => note.midi));
+            }
+          }
+        );
+      })();
+    },
+    []
+  );
 
   return (
     <>
@@ -255,8 +219,6 @@ function SoundPlayer({
           instrument={instrument}
           mode={mode}
           onInstrumentChange={changeInstrument}
-          isRecording={isRecording}
-          toggleRecording={toggleRecording}
           midiDeviceId={midiDevice}
         />
 
@@ -268,17 +230,6 @@ function SoundPlayer({
           onActionComplete={() => setRecordedNotes(undefined)}
         />
 
-        {mode === VISUALIZER_MODE.READ && (
-          <PlayerController
-            onTogglePlay={onTogglePlay}
-            isPlaying={isPlaying}
-            midi={loadedMidi as any}
-            onStartPlay={
-              () => {}
-              // startPlayingTrack(loadedMidi)
-            }
-          />
-        )}
         <Visualizer
           range={keyboardRange}
           mode={mode}

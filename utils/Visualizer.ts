@@ -1,4 +1,4 @@
-import { MidiNumbers } from "react-piano";
+import { MidiNumbers } from "piano-utils";
 import { groupBy } from "lodash";
 import {
   getAllMidiNumbersInRange,
@@ -13,7 +13,8 @@ import {
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
   NATURAL_KEY_COLOR,
-  TRACK_PLAYING_SPEED
+  TRACK_PLAYING_SPEED,
+  RADIUS
 } from "@config/piano";
 import { Note, Track } from "@typings/midi";
 
@@ -68,13 +69,23 @@ export class Visualizer {
   ) => {
     this.ctx.beginPath();
 
-    const dimensions = [x, y, width - HORIZONTAL_GAP_BETWEEN_NOTES, height].map(
-      num => Math.floor(num)
-    );
+    const dimensions = [
+      x + RADIUS / 2 + HORIZONTAL_GAP_BETWEEN_NOTES / 2,
+      y + RADIUS / 2,
+      width - RADIUS - HORIZONTAL_GAP_BETWEEN_NOTES,
+      height - RADIUS
+    ].map(num => Math.floor(num));
 
-    this.ctx.fillStyle = isAccidental
-      ? ACCIDENTAL_KEY_COLOR
-      : NATURAL_KEY_COLOR;
+    const color = isAccidental ? ACCIDENTAL_KEY_COLOR : NATURAL_KEY_COLOR;
+
+    this.ctx.lineJoin = "round";
+    this.ctx.lineWidth = RADIUS;
+    this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = color;
+
+    // Change origin and dimensions to match true size (a stroke makes the shape a bit larger)
+    // @ts-ignore
+    this.ctx.strokeRect(...dimensions);
 
     // @ts-ignore
     this.ctx.fillRect(...dimensions);

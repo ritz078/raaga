@@ -30,6 +30,7 @@ export function controlVisualizer(data: Partial<Data>) {
   } else if (message === VISUALIZER_MESSAGES.UPDATE_RANGE) {
     visualizer.setRange(range);
   } else if (message === VISUALIZER_MESSAGES.PLAY_TRACK) {
+    console.log(Date.now());
     visualizer.setRange(range);
     visualizer.play(track);
   } else if (message === VISUALIZER_MESSAGES.STOP_TRACK) {

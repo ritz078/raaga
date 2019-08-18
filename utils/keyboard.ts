@@ -1,4 +1,4 @@
-import { MidiNumbers, KeyboardShortcuts } from "react-piano";
+import { MidiNumbers, KeyboardShortcuts } from "piano-utils";
 import { range } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
 import { Note } from "@typings/midi";

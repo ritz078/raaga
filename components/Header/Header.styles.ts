@@ -108,6 +108,7 @@ export const recordBtn = css({
   justifyContent: "center",
   alignItems: "center",
   margin: "0 20px",
+  marginRight: 10,
   cursor: "pointer",
   outline: 0,
   border: 0

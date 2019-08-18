@@ -2,7 +2,6 @@ import React, { useState, memo } from "react";
 import { colors } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import Icon from "@components/Icon";
 import {
   headerClass,
   headerRight,
@@ -11,7 +10,7 @@ import {
 } from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
-import { SelectMenu, Position, Pane } from "evergreen-ui";
+import { SelectMenu, Position, Pane, Icon } from "evergreen-ui";
 import { AnyAction, Dispatch } from "redux";
 import { MidiJSON, Note } from "@utils/midiParser/midiParser";
 
@@ -21,8 +20,8 @@ export interface HeaderProps {
   instrument: string;
   onTogglePlay: () => void;
   onInstrumentChange: (instrument: React.ReactText) => void;
-  isRecording: boolean;
-  toggleRecording: () => void;
+  // isRecording: boolean;
+  // toggleRecording: () => void;
   notes?: Note[];
   onTrackSelect?: (midi: MidiJSON, i) => void;
   midiDeviceId: string;
@@ -41,8 +40,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   mode,
   instrument,
   onInstrumentChange,
-  isRecording,
-  toggleRecording,
+  // isRecording,
+  // toggleRecording,
   midiDeviceId
 }) => {
   const [mute, toggleMute] = useState(false);
@@ -52,23 +51,23 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
     toggleMute(!mute);
   };
 
-  const volumeName = mute ? "volume-mute" : "volume";
+  const volumeName = mute ? "volume-off" : "volume-up";
 
   return (
     <div className={headerClass}>
       <span></span>
       <div className={headerRight}>
-        {mode === VISUALIZER_MODE.WRITE && (
-          <button className={recordBtn} onClick={toggleRecording}>
-            <Icon
-              name={isRecording ? "stop" : "record"}
-              size={12}
-              color={colors.red.base}
-            />
-            &nbsp;&nbsp;&nbsp;
-            {isRecording ? "Stop" : "Record"}
-          </button>
-        )}
+        {/*{mode === VISUALIZER_MODE.WRITE && (*/}
+        {/*  <button className={recordBtn} onClick={toggleRecording}>*/}
+        {/*    <Icon*/}
+        {/*      icon={isRecording ? "stop" : "record"}*/}
+        {/*      size={18}*/}
+        {/*      color={colors.red.base}*/}
+        {/*    />*/}
+        {/*    &nbsp;*/}
+        {/*    {isRecording ? "Stop" : "Record"}*/}
+        {/*  </button>*/}
+        {/*)}*/}
 
         {mode === VISUALIZER_MODE.WRITE && (
           <SelectMenu
@@ -88,10 +87,12 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
 
         <Icon
-          className="icon-padding"
-          name={volumeName}
+          icon={volumeName}
           color={colors.white.base}
           onClick={_toggleMute}
+          size={25}
+          cursor="pointer"
+          marginRight={5}
         />
 
         <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />

@@ -11,7 +11,7 @@ import {
   labelStyle,
   naturalKeys
 } from "@components/styles/Piano.styles";
-import { MidiNumbers } from "react-piano";
+import { MidiNumbers } from "piano-utils";
 import { piano } from "@components/styles/SoundPlayer.styles";
 import Tone from "tone";
 import { FunctionComponent, useState } from "react";
@@ -25,7 +25,7 @@ interface PianoProps {
   className?: string;
 }
 
-export const Piano: FunctionComponent<PianoProps> = ({
+const _Piano: FunctionComponent<PianoProps> = ({
   activeMidis,
   onPlay,
   onStop,
@@ -100,3 +100,5 @@ export const Piano: FunctionComponent<PianoProps> = ({
     </div>
   );
 };
+
+export const Piano = React.memo(_Piano);

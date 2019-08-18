@@ -28,7 +28,7 @@ interface VisualizerProps {
   canvasWorker: CanvasWorkerFallback;
 }
 
-const Visualizer: FunctionComponent<VisualizerProps> = ({
+const _Visualizer: FunctionComponent<VisualizerProps> = ({
   mode,
   range,
   canvasWorker
@@ -41,25 +41,22 @@ const Visualizer: FunctionComponent<VisualizerProps> = ({
     height: 400
   });
 
-  const updateDimensions = useCallback(() => {
-    const { width, height } = visualizerRef.current.getBoundingClientRect();
-    setDimensions({ width, height });
-  }, [visualizerRef]);
-
-  const debouncedSetDimensions = useMemo(
-    () => debounce(updateDimensions, 1000),
-    [updateDimensions]
-  );
-
   useEffect(() => {
-    updateDimensions();
-
     let canvas;
     if (offScreenCanvasIsSupported) {
       canvas = canvasRef.current.transferControlToOffscreen();
     } else {
       canvas = canvasRef.current;
     }
+
+    const updateDimensions = () => {
+      const { width, height } = visualizerRef.current.getBoundingClientRect();
+      setDimensions({ width, height });
+    };
+
+    const debounced = debounce(updateDimensions, 1000);
+
+    updateDimensions();
 
     // This has been done because it wasn't getting correctly transferred
     // in firefox.
@@ -78,9 +75,9 @@ const Visualizer: FunctionComponent<VisualizerProps> = ({
       [canvas]
     );
 
-    window.addEventListener("resize", debouncedSetDimensions);
+    window.addEventListener("resize", debounced);
 
-    return () => window.removeEventListener("resize", debouncedSetDimensions);
+    return () => window.removeEventListener("resize", debounced);
   }, []);
 
   useEffect(() => {
@@ -123,4 +120,4 @@ const Visualizer: FunctionComponent<VisualizerProps> = ({
   );
 };
 
-export default Visualizer;
+export default React.memo(_Visualizer);
