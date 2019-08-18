@@ -2803,6 +2803,7 @@ create-ecdh@^4.0.0:
 create-emotion-server@^9.2.12:
   version "9.2.12"
   resolved "https://registry.yarnpkg.com/create-emotion-server/-/create-emotion-server-9.2.12.tgz#30d82507bfe440bfb3dd6c9b5c8faf24597ee954"
+  integrity sha512-ET+E6A5MkQTEBNDYAnjh6+0cB33qStFXhtflkZNPEaOmvzYlB/xcPnpUk4J7ul3MVa8PCQx2Ei5g2MGY/y1n+g==
   dependencies:
     html-tokenize "^2.0.0"
     multipipe "^1.0.2"
@@ -3370,6 +3371,7 @@ emojis-list@^2.0.0:
 emotion-server@^9.2.12:
   version "9.2.12"
   resolved "https://registry.yarnpkg.com/emotion-server/-/emotion-server-9.2.12.tgz#aaaaa04843108943d1ce5a796e0bc40b06a3223e"
+  integrity sha512-Bhjdl7eNoIeiAVa2QPP5d+1nP/31SiO/K1P/qI9cdXCydg91NwGYmteqhhge8u7PF8fLGTEVQfcPwj21815eBw==
   dependencies:
     create-emotion-server "^9.2.12"
 
@@ -9022,9 +9024,9 @@ webfonts-generator@^0.4.0:
     url-join "^1.1.0"
 
 webmidi@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/webmidi/-/webmidi-2.3.3.tgz#26ed86a1a8063da2d95fe299419519346cba603a"
-  integrity sha512-NYePCdUdQ5W0ZvBkQ1aYyzV6gZ96TVcO9T02sGcsRfiSHE8nda1752DGjA+vvOlo0bEbMYqgOrjusBBCALdwFQ==
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/webmidi/-/webmidi-2.5.0.tgz#edca1bf7b3d0f4a2622a5be8eb12b6c65692768a"
+  integrity sha512-2ha4G7i1EWUI81+638Spyn94/LVAcfnh7r/FAYwqDEC3Ikq5qsu9iksa2uRWKPqIFu++To6TPct0Dxn2/iLfHg==
 
 webpack-dev-middleware@3.7.0:
   version "3.7.0"

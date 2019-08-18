@@ -1,9 +1,9 @@
 import * as styles from "./TrackList.styles";
-import * as React from "react";
-import { useRef } from "react";
+import React, { useRef, memo } from "react";
 import { promiseWorker } from "@utils/promiseWorker";
 import { MidiJSON } from "@utils/midiParser/midiParser";
 import { Button } from "@components/Button";
+import sampleMidis from "../../midi.json";
 
 let midiParseWorker;
 if (IN_BROWSER) {
@@ -17,13 +17,22 @@ function Sidebar({ onMidiLoad }) {
   const loadFile = async e => {
     const file = e.target.files[0];
     const midi: MidiJSON = await promiseWorker(midiParseWorker, {
-      filePath: file
+      filePath: file,
+      name: file.name
     });
     onMidiLoad(midi);
     if (inputRef.current) {
       // @ts-ignore
       inputRef.current.value = "";
     }
+  };
+
+  const selectSample = async ({ label, url }) => {
+    const midi = await promiseWorker(midiParseWorker, {
+      filePath: url,
+      name: label
+    });
+    onMidiLoad(midi);
   };
 
   return (
@@ -40,8 +49,20 @@ function Sidebar({ onMidiLoad }) {
         id="upload-midi"
         accept=".mid"
       />
+      <div className={styles.sampleTitle}>Samples</div>
+      {sampleMidis.map(sampleMidi => {
+        return (
+          <div
+            key={sampleMidi.label}
+            onClick={() => selectSample(sampleMidi)}
+            className={styles.sample}
+          >
+            {sampleMidi.label.toLowerCase()}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export default React.memo(Sidebar);
+export default memo(Sidebar);

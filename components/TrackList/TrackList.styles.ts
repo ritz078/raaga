@@ -97,3 +97,23 @@ export const trackList = css({
   flexDirection: "row",
   flex: 1
 });
+
+export const sample = css({
+  fontSize: 14,
+  textTransform: "capitalize",
+  padding: "2px 0",
+  color: "#909090",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  cursor: "pointer",
+  "&:hover": {
+    color: "#fff"
+  }
+});
+
+export const sampleTitle = css({
+  fontSize: 15,
+  color: "#fff",
+  padding: "15px 0 5px"
+});
