@@ -3,7 +3,6 @@ import { css } from "emotion";
 const BORDER_COLOR = "#2a2a2a";
 
 export const dialogWrapper = css({
-  width: 1015,
   display: "flex",
   flex: 1,
   flexDirection: "column",
@@ -91,4 +90,10 @@ export const zeroStateIllustration = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center"
+});
+
+export const trackList = css({
+  display: "flex",
+  flexDirection: "row",
+  flex: 1
 });

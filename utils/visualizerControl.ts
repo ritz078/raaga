@@ -6,7 +6,7 @@ import { Visualizer } from "@utils/Visualizer";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { Track } from "@typings/midi";
 
-export interface Data {
+export interface IData {
   canvas: {
     getContext: (x: string) => CanvasRenderingContext2D;
   };
@@ -16,12 +16,13 @@ export interface Data {
   dimensions: Dimensions;
   midi: number;
   mode: VISUALIZER_MODE;
+  delay: number;
 }
 
 let visualizer, intervalId;
 
-export function controlVisualizer(data: Partial<Data>) {
-  const { canvas, track, message, range, dimensions, midi, mode } = data;
+export function controlVisualizer(data: Partial<IData>) {
+  const { canvas, track, message, range, dimensions, midi, mode, delay } = data;
   if (message === VISUALIZER_MESSAGES.INIT) {
     clearInterval(intervalId);
     visualizer = new Visualizer(canvas, dimensions, range, mode);
@@ -30,9 +31,8 @@ export function controlVisualizer(data: Partial<Data>) {
   } else if (message === VISUALIZER_MESSAGES.UPDATE_RANGE) {
     visualizer.setRange(range);
   } else if (message === VISUALIZER_MESSAGES.PLAY_TRACK) {
-    console.log(Date.now());
     visualizer.setRange(range);
-    visualizer.play(track);
+    visualizer.play(track, delay);
   } else if (message === VISUALIZER_MESSAGES.STOP_TRACK) {
     visualizer.cleanup();
   } else if (message === VISUALIZER_MESSAGES.PLAY_NOTE) {

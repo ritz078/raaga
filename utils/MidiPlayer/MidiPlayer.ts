@@ -9,7 +9,6 @@ import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import {
   getDelay,
   getNotesWithNoteEndEvent,
-  getTrackWithDelay,
   NoteWithIdAndEvent
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
@@ -72,6 +71,11 @@ export class MidiPlayer {
     this.range = range;
   }
 
+  /**
+   * Loads the instruments and populates the ToneJS samplers
+   * with the received data.
+   * @param options
+   */
   public loadInstruments = async (options?: {
     instrumentIds?: string[];
     drums?: boolean;
@@ -129,6 +133,11 @@ export class MidiPlayer {
     });
   };
 
+  /**
+   * Stop playing a note and trigger the end of that note on Visualizer
+   * @param midi
+   * @param instrument
+   */
   public stopNote = (midi: number, instrument) => {
     const instrumentId = getInstrumentIdByValue(instrument);
     this.trackSamplers[instrumentId].triggerRelease(
@@ -141,6 +150,12 @@ export class MidiPlayer {
     });
   };
 
+  /**
+   * Play a single track of a MIDI.
+   * @param trackIndex
+   * @param playingTracksIndex
+   * @param cb
+   */
   private playTrack = (
     trackIndex: number,
     playingTracksIndex: number[],
@@ -179,6 +194,11 @@ export class MidiPlayer {
     }
   };
 
+  /**
+   * Play a single beat from a MIDI
+   * @param beatIndex
+   * @param playingBeatsIndex
+   */
   private playBeat = (beatIndex: number, playingBeatsIndex: number[]) => {
     const beat = this.midi.beats[beatIndex];
     if (playingBeatsIndex.includes(beatIndex)) {
@@ -198,29 +218,34 @@ export class MidiPlayer {
     }
   };
 
+  /**
+   * Starts the visualizer with the main selected track.
+   * @param selectedTrackIndex
+   */
   private startVisualizer = selectedTrackIndex => {
-    const visualizerDelay = getDelay(0);
-
     const mainTrack = this.midi.tracks[selectedTrackIndex];
 
-    console.log(Date.now());
     this.canvasWorker.postMessage({
       track: mainTrack,
       range: this.range,
-      message: VISUALIZER_MESSAGES.PLAY_TRACK
+      message: VISUALIZER_MESSAGES.PLAY_TRACK,
+      delay: getDelay()
     });
   };
 
+  /**
+   * Schedules all the track events and beat events. Also starts the visualizer
+   * with the data of the main selected track.
+   * @param options
+   * @param cb
+   */
   public scheduleAndPlay = (options: IScheduleOptions, cb: IEventCallback) => {
-    const delay = getDelay();
-
     const {
       selectedTrackIndex = 0,
       playingBeatsIndex = _range(this.midi.beats.length),
       playingTracksIndex = _range(this.midi.tracks.length)
     } = options;
 
-    console.log("a", Date.now());
     this.midi.tracks.forEach((_track, trackIndex) => {
       this.playTrack(trackIndex, playingTracksIndex, cb);
     });
@@ -230,7 +255,7 @@ export class MidiPlayer {
     });
     console.log("b", Date.now());
 
-    Tone.Transport.start(`+${0}`);
+    Tone.Transport.start(`+${getDelay()}`);
     this.startVisualizer(selectedTrackIndex);
   };
 

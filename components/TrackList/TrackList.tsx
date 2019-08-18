@@ -20,6 +20,11 @@ interface TrackListProps {
   setMidi: (midi: MidiJSON) => void;
 }
 
+const contentContainerProps = {
+  paddingX: 0,
+  paddingY: 0
+};
+
 const TrackList_: React.FunctionComponent<TrackListProps> = ({
   onPlay,
   visible,
@@ -34,19 +39,11 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
       onCloseComplete={onClose}
       hasFooter={false}
       hasHeader={false}
-      contentContainerProps={{
-        paddingX: 0,
-        paddingY: 0
-      }}
+      contentContainerProps={contentContainerProps}
       shouldCloseOnOverlayClickbool={false}
       width={1265}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row"
-        }}
-      >
+      <div className={styles.trackList}>
         <Sidebar onMidiLoad={setMidi} />
         <div className={styles.dialogWrapper}>
           {!midi ? (

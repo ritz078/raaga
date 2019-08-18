@@ -11,7 +11,7 @@ _self.onmessage = async ({ data: { id, filePath } }) => {
   const res = await fetch(url);
 
   const arrayBuffer = await res.arrayBuffer();
-  const midi = new MidiParser(arrayBuffer);
+  const midi = new MidiParser(arrayBuffer, filePath.name);
   const payload = midi.parse();
 
   _self.postMessage({

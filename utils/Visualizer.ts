@@ -19,7 +19,7 @@ import {
 import { Note, Track } from "@typings/midi";
 
 function now() {
-  return Date.now() / 1000;
+  return performance.now() / 1000;
 }
 
 export class Visualizer {
@@ -197,10 +197,10 @@ export class Visualizer {
     }
   };
 
-  public play = (track: Track) => {
+  public play = (track: Track, delay = 0) => {
     this.cleanup();
-    this.clock.start(track.duration, progress => {
-      this.renderNotesInReadMode(track, progress);
+    this.clock.start(track.duration + delay, progress => {
+      this.renderNotesInReadMode(track, progress, delay);
     });
   };
 
@@ -227,10 +227,14 @@ export class Visualizer {
   private clearCanvas = () =>
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-  private renderNotesInReadMode = (track: Track, progress: number) => {
+  private renderNotesInReadMode = (
+    track: Track,
+    progress: number,
+    delay = 0
+  ) => {
     this.clearCanvas();
 
-    const timeElapsed = track.duration * progress;
+    const timeElapsed = (track.duration + delay) * progress;
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
 
@@ -242,7 +246,7 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time - timeElapsed) * TRACK_PLAYING_SPEED;
+        const top = (note.time + delay - timeElapsed) * TRACK_PLAYING_SPEED;
         const height = note.duration * TRACK_PLAYING_SPEED;
 
         // These are past notes which have been shown.

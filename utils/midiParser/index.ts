@@ -8,8 +8,8 @@ import { MidiNumbers } from "piano-utils";
 import UTF8 from "utf-8";
 
 export default class MidiParser {
-  arrayBuffer: ArrayBuffer;
-  song = {
+  readonly arrayBuffer: ArrayBuffer;
+  private song = {
     duration: 0,
     tracks: [],
     beats: [],
@@ -20,10 +20,14 @@ export default class MidiParser {
     }
   };
 
-  beats = [];
+  private beats = [];
+  private name;
 
-  constructor(arrayBuffer: ArrayBuffer) {
+  constructor(arrayBuffer: ArrayBuffer, name?: string) {
     this.arrayBuffer = arrayBuffer;
+    if (name) {
+      this.song.header.name.push(name.replace(".mid", ""));
+    }
   }
 
   startDrum = event => {
