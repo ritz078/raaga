@@ -12,7 +12,7 @@ if (IN_BROWSER) {
 }
 
 function Sidebar({ onMidiLoad }) {
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const loadFile = async e => {
     const file = e.target.files[0];

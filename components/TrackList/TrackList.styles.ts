@@ -101,7 +101,7 @@ export const trackList = css({
 export const sample = css({
   fontSize: 14,
   textTransform: "capitalize",
-  padding: "2px 0",
+  padding: "2px 0 2px 4px",
   color: "#909090",
   textOverflow: "ellipsis",
   overflow: "hidden",

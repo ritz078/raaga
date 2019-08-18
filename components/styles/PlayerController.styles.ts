@@ -34,6 +34,7 @@ export const progressBar = css({
   borderRadius: 3,
   backgroundColor: "rgba(255, 255, 255, 0.4)",
   margin: "0 20px",
+  minWidth: 200,
   overflow: "hidden",
   "& .__track__": {
     backgroundColor: colors.yellow.base,
@@ -71,17 +72,4 @@ export const controllerBottom = css({
   flex: 1,
   alignItems: "center",
   width: "100%"
-});
-
-export const loadFileIcon = css({
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  borderRadius: 2,
-  width: 58,
-  marginLeft: 20,
-  cursor: "pointer",
-  display: "flex",
-  flexDirection: "column",
-  fontSize: 12,
-  color: colors.white.base,
-  ...mixins.flexMiddleAlign
 });

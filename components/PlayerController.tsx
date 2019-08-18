@@ -2,7 +2,6 @@ import React, { memo, useState } from "react";
 import { animated, useTransition } from "react-spring";
 import Icon from "@components/Icon";
 import { colors } from "@anarock/pebble";
-import ProgressBar from "@components/ProgressBar";
 import {
   controllerBottom,
   midiNameStyle,
@@ -48,8 +47,6 @@ const PlayerController: React.FunctionComponent<PlayerControllerProps> = ({
                           onClick={onTogglePlay}
                           size={16}
                         />
-
-                        <ProgressBar />
 
                         <Icon
                           name="replay"

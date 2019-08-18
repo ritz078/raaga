@@ -22,7 +22,7 @@ function toggleInArray(arr: number[], num: number) {
 function TrackSelection({ midi, onClose, onPlay }) {
   const { header, tracks, beats, duration } = midi;
 
-  const [selectedTrackIndex, setSelectedTrackIndex] = useState(null);
+  const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
   const [playingTracksIndex, setPlayingTracksIndex] = useState([]);
   const [playingBeatsIndex, setPlayingBeatsIndex] = useState([]);
 
@@ -96,7 +96,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
     <>
       <div className={styles.header}>
         <div>
-          <Heading color="#fff" size={600}>
+          <Heading color="#fff" size={600} textTransform="capitalize">
             {header.name[0] || "Unknown"}
           </Heading>
 
@@ -175,26 +175,17 @@ function TrackSelection({ midi, onClose, onPlay }) {
       </div>
 
       <div className={styles.footer}>
-        {selectedTrackIndex === null ? (
-          <InlineAlert marginBottom={0} intent="none">
-            <Text color={"#2196f3"}>
-              You need to select a track which can be played with visualizer.
-              Other sounds can play in background.
-            </Text>
-          </InlineAlert>
-        ) : (
-          tracks.length + beats.length > 1 && (
-            <Checkbox
-              checked={playInstrumentsInBackground}
-              marginY={0}
-              label={
-                <Text color="#fff" fontSize={14}>
-                  Play other instruments in Background
-                </Text>
-              }
-              onChange={handleBackgroundPlayChange}
-            />
-          )
+        {tracks.length + beats.length > 1 && (
+          <Checkbox
+            checked={playInstrumentsInBackground}
+            marginY={0}
+            label={
+              <Text color="#fff" fontSize={14}>
+                Play other instruments in Background
+              </Text>
+            }
+            onChange={handleBackgroundPlayChange}
+          />
         )}
         <div
           className={cx(styles.playButton, {

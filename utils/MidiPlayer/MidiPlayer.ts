@@ -16,7 +16,7 @@ import { getInstrumentIdByValue } from "midi-instruments";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
-interface IScheduleOptions {
+export interface IScheduleOptions {
   selectedTrackIndex: number;
   playingTracksIndex: number[];
   playingBeatsIndex: number[];
@@ -253,14 +253,17 @@ export class MidiPlayer {
     this.midi.beats.forEach((_beat, beatIndex) => {
       this.playBeat(beatIndex, playingBeatsIndex);
     });
-    console.log("b", Date.now());
 
     Tone.Transport.start(`+${getDelay()}`);
     this.startVisualizer(selectedTrackIndex);
   };
 
   public togglePlay = () => {
-    Tone.Transport.toggle();
+    if (Tone.Transport.state === "started") {
+      Tone.Transport.pause();
+    } else {
+      Tone.Transport.start();
+    }
 
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.TOGGLE
@@ -278,6 +281,7 @@ export class MidiPlayer {
     Tone.Transport.stop();
 
     [...this.trackPart, ...this.drumPart].forEach(trackPart => {
+      trackPart.stop();
       if (!trackPart) return;
       if (trackPart._state) {
         trackPart.dispose();

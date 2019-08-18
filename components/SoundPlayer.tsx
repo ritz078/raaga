@@ -1,7 +1,12 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SoundPlayerProps } from "./typings/SoundPlayer";
-import { getMidiRange, isWithinRange, MidiPlayer } from "@utils";
+import {
+  getMidiRange,
+  IScheduleOptions,
+  isWithinRange,
+  MidiPlayer
+} from "@utils";
 import {
   flexOne,
   loaderClass,
@@ -35,6 +40,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { MidiJSON } from "@utils/midiParser/midiParser";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
+import { Range } from "@utils/typings/Visualizer";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
@@ -45,12 +51,14 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
 
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
-  const [activeMidis, setActiveMidis] = useState([]);
-  const [keyboardRange, setKeyboardRange] = useState(range);
+  const [activeMidis, setActiveMidis] = useState<number[]>([]);
+  const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
   const [isRecording, setRecording] = useState(false);
   const [recordedNotes, setRecordedNotes] = useState();
-  const [mode, setMode] = useState(VISUALIZER_MODE.READ);
+  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
+  const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
+  const [loadedMidi, setMidi] = useState<MidiJSON>();
 
   const resetPlayer = useCallback(() => {
     player.current.clear();
@@ -142,37 +150,11 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
     [instrument]
   );
 
-  const onTogglePlay = useCallback(() => {
-    if (Tone.Transport.state === "stopped") {
-      // startPlayingTrack(loadedMidi);
-    } else {
-      player.current.togglePlay();
-    }
-
-    setPlaying(!isPlaying);
-  }, [isPlaying]);
-
-  useEffect(() => {
-    resetPlayer();
-    setPlaying(false);
-  }, [mode]);
-
-  useEffect(() => {
-    changeInstrument();
-    setMidiDevice();
-  }, []);
-
-  useEffect(() => player.current.setRange(keyboardRange), [keyboardRange]);
-
-  useEffect(resetPlayer, [mode]);
-
-  useEffect(setMidiDevice, [midiDevice]);
-
-  const _instrument = getInstrumentByValue(instrument);
-
   const onMidiAndTrackSelect = useCallback(
     (midi: MidiJSON, playingInfo: TrackSelectionInfo) => {
       (async () => {
+        setMidi(midi);
+        setPlayingMidiInfo(playingInfo);
         setMode(VISUALIZER_MODE.READ);
         player.current.clear();
         setActiveMidis([]);
@@ -202,6 +184,34 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
     []
   );
 
+  const onTogglePlay = useCallback(() => {
+    if (Tone.Transport.state === "stopped") {
+      onMidiAndTrackSelect(loadedMidi, playingMidiInfo);
+    } else {
+      player.current.togglePlay();
+    }
+
+    setPlaying(!isPlaying);
+  }, [isPlaying]);
+
+  useEffect(() => {
+    resetPlayer();
+    setPlaying(false);
+  }, [mode]);
+
+  useEffect(() => {
+    changeInstrument();
+    setMidiDevice();
+  }, []);
+
+  useEffect(() => player.current.setRange(keyboardRange), [keyboardRange]);
+
+  useEffect(resetPlayer, [mode]);
+
+  useEffect(setMidiDevice, [midiDevice]);
+
+  const _instrument = getInstrumentByValue(instrument);
+
   return (
     <>
       <div className={flexOne}>
@@ -220,6 +230,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
           mode={mode}
           onInstrumentChange={changeInstrument}
           midiDeviceId={midiDevice}
+          isPlaying={isPlaying}
         />
 
         <RecordingModal
@@ -257,8 +268,6 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   );
 }
 
-export default connect(({ loadedMidi, selectedTrack, midiDevice }: Store) => ({
-  loadedMidi,
-  selectedTrack,
+export default connect(({ midiDevice }: Store) => ({
   midiDevice
 }))(SoundPlayer);
