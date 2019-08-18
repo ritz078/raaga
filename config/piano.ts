@@ -5,3 +5,4 @@ export const PIANO_HEIGHT = 250;
 export const ACCIDENTAL_KEY_COLOR = "#ffdc66";
 export const NATURAL_KEY_COLOR = "#42C9FF";
 export const RADIUS = 2;
+export const GLOBAL_HEADER_HEIGHT = 50;

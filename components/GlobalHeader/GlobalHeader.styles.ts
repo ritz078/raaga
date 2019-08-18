@@ -1,4 +1,5 @@
 import { css } from "emotion";
+import { GLOBAL_HEADER_HEIGHT } from "@config/piano";
 
 export const globalHeaderRight = css({
   display: "flex",
@@ -20,7 +21,7 @@ export const mainHeader = css({
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
-  height: 50,
+  height: GLOBAL_HEADER_HEIGHT,
   "> a": {
     textDecoration: "none"
   }

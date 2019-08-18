@@ -1,6 +1,10 @@
-import { MidiJSON, Note, Track } from "@utils/midiParser/midiParser";
+import { Note } from "@utils/midiParser/midiParser";
 import { EVENT_TYPE } from "@enums/piano";
-import { PIANO_HEIGHT, TRACK_PLAYING_SPEED } from "@config/piano";
+import {
+  GLOBAL_HEADER_HEIGHT,
+  PIANO_HEIGHT,
+  TRACK_PLAYING_SPEED
+} from "@config/piano";
 
 export type NoteWithIdAndEvent = Note & {
   event: EVENT_TYPE;
@@ -42,17 +46,9 @@ export function getNotesWithNoteEndEvent(notes: Note[]): NoteWithIdAndEvent[] {
 }
 
 export function getDelay(offset = 0) {
-  return (window.innerHeight - PIANO_HEIGHT) / TRACK_PLAYING_SPEED + offset;
-}
-
-export function getTrackWithDelay(track: Track, delay = 0) {
-  return {
-    ...track,
-    notes: track.notes.map(_note => ({
-      ..._note,
-      duration: _note.duration,
-      time: _note.time + delay
-    })),
-    duration: track.duration + delay
-  };
+  return (
+    (window.innerHeight - PIANO_HEIGHT - GLOBAL_HEADER_HEIGHT) /
+      TRACK_PLAYING_SPEED +
+    offset
+  );
 }
