@@ -11,7 +11,7 @@ import {
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { useState } from "react";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
-import { MidiJSON } from "@utils/midiParser/midiParser";
+import { MidiJSON } from "@typings/midi";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;

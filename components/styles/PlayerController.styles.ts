@@ -37,24 +37,9 @@ export const progressBar = css({
   minWidth: 200,
   overflow: "hidden",
   "& .__track__": {
-    backgroundColor: colors.yellow.base,
+    backgroundColor: "#42c9ff",
     height: "inherit",
     borderRadius: 3
-  }
-});
-
-export const loadFileWrapper = css({
-  color: colors.white.base,
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  textAlign: "center",
-  width: "100%",
-  padding: "20px 10px",
-  backgroundColor: "rgba(255, 255, 255, 0.06)",
-  h3: {
-    lineHeight: "35px",
-    fontWeight: "normal"
   }
 });
 
@@ -73,3 +58,5 @@ export const controllerBottom = css({
   alignItems: "center",
   width: "100%"
 });
+
+export const timeCn = css({ color: "#fff", display: "inline-flex", width: 50 });

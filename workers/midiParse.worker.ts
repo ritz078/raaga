@@ -1,4 +1,4 @@
-import MidiParser from "@utils/midiParser";
+import { MidiParser } from "@utils/MidiParser";
 
 const _self = self as any;
 

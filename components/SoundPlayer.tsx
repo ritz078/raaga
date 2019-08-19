@@ -25,7 +25,6 @@ import CanvasWorker, {
   CanvasWorkerFallback
 } from "@controllers/visualizer.controller";
 import {
-  getInstrumentById,
   getInstrumentByValue,
   getInstrumentIdByValue,
   instruments
@@ -35,10 +34,9 @@ import RecordingModal from "@components/RecordingModal";
 import webMidi from "webmidi";
 import Tone from "tone";
 import { PIANO_HEIGHT } from "@config/piano";
-import { Track } from "@typings/midi";
+import { MidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
-import { MidiJSON } from "@utils/midiParser/midiParser";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 
@@ -109,28 +107,6 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
     }
   }, [midiDevice]);
 
-  const preparePlayerForNewTrack = useCallback<(track: Track) => void>(
-    track =>
-      (async () => {
-        const { notes } = track;
-        setRange(notes);
-
-        // change instrument if info present in midi.
-        if (track.instrument.number) {
-          const { value } = getInstrumentById(
-            track.instrument.number.toString()
-          );
-          if (value === instrument) return;
-
-          await changeInstrument(value);
-        } else {
-          if (instrument === instruments[0].value) return;
-          await changeInstrument();
-        }
-      })(),
-    [setRange, instrument]
-  );
-
   const onNoteStart = useCallback(
     (midi, velocity = 1) => {
       player.current.playNote(midi, instrument, velocity);
@@ -173,7 +149,18 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
 
         player.current.scheduleAndPlay(
           playingInfo,
-          (notes: NoteWithIdAndEvent[], trackIndex: number) => {
+          (
+            notes: NoteWithIdAndEvent[],
+            trackIndex: number,
+            isComplete?: boolean
+          ) => {
+            if (isComplete) {
+              player.current.clear();
+              setPlaying(false);
+              setActiveMidis([]);
+              return;
+            }
+
             if (trackIndex === playingInfo.selectedTrackIndex) {
               setActiveMidis(notes.map(note => note.midi));
             }
@@ -231,6 +218,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
           onInstrumentChange={changeInstrument}
           midiDeviceId={midiDevice}
           isPlaying={isPlaying}
+          midiDuration={loadedMidi && loadedMidi.duration}
         />
 
         <RecordingModal

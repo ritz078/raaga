@@ -1,4 +1,4 @@
-import { MidiJSON } from "@utils/midiParser/midiParser";
+import { MidiJSON } from "@typings/midi";
 
 export interface PlayerControllerProps {
   midi: MidiJSON;

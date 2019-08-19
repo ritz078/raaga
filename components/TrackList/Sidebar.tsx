@@ -1,9 +1,9 @@
 import * as styles from "./TrackList.styles";
 import React, { useRef, memo } from "react";
 import { promiseWorker } from "@utils/promiseWorker";
-import { MidiJSON } from "@utils/midiParser/midiParser";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
+import { MidiJSON } from "@typings/midi";
 
 let midiParseWorker;
 if (IN_BROWSER) {

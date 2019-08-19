@@ -1,13 +1,13 @@
 import { getInstrumentById } from "midi-instruments";
 import { last } from "lodash";
-import { Beat, Note, Track } from "./midiParser";
 import { drumNames } from "./midiConstants";
 import MidiFile from "midifile";
 import MidiEvents from "midievents";
 import { MidiNumbers } from "piano-utils";
 import UTF8 from "utf-8";
+import { Beat, Note, Track } from "@typings/midi";
 
-export default class MidiParser {
+export class MidiParser {
   readonly arrayBuffer: ArrayBuffer;
   private song = {
     duration: 0,
@@ -19,9 +19,6 @@ export default class MidiParser {
       format: null
     }
   };
-
-  private beats = [];
-  private name;
 
   constructor(arrayBuffer: ArrayBuffer, name?: string) {
     this.arrayBuffer = arrayBuffer;
@@ -203,6 +200,7 @@ export default class MidiParser {
     this.song.tracks = this.song.tracks.filter(track => track.duration);
     this.song.beats = this.song.beats.filter(beat => beat.notes.length);
 
+    debugger;
     this.song.duration = Math.max(
       ...this.song.tracks.map(track => track.duration)
     );

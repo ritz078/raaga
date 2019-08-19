@@ -1,19 +1,12 @@
 import * as styles from "@components/TrackList/TrackList.styles";
-import { Beat, Track } from "@utils/midiParser/midiParser";
 import InstrumentCard from "@components/TrackList/InstrumentCard";
 import { cx } from "emotion";
 import * as React from "react";
-import {
-  Heading,
-  Text,
-  Icon,
-  Switch,
-  InlineAlert,
-  Checkbox
-} from "evergreen-ui";
+import { Heading, Text, Icon, Switch, Checkbox } from "evergreen-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { range } from "lodash";
+import { Beat, Track } from "@typings/midi";
 
 function toggleInArray(arr: number[], num: number) {
   return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];

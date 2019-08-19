@@ -7,8 +7,8 @@ import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Icon } from "evergreen-ui";
 import { AnyAction, Dispatch } from "redux";
-import { MidiJSON, Note } from "@utils/midiParser/midiParser";
 import ProgressBar from "@components/ProgressBar";
+import { MidiJSON, Note } from "@typings/midi";
 
 export interface HeaderProps {
   dispatch: Dispatch<AnyAction>;
@@ -20,6 +20,7 @@ export interface HeaderProps {
   onTrackSelect?: (midi: MidiJSON, i) => void;
   midiDeviceId: string;
   isPlaying: boolean;
+  midiDuration: number;
 }
 
 const instrumentOptions = Object.keys(instruments).map(id => {
@@ -37,7 +38,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   onInstrumentChange,
   midiDeviceId,
   onTogglePlay,
-  isPlaying
+  isPlaying,
+  midiDuration
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -47,7 +49,6 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   };
 
   const volumeName = mute ? "volume-off" : "volume-up";
-
   const playName = isPlaying ? "pause" : "play";
 
   return (
@@ -56,7 +57,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
       <div className={headerRight}>
         <Icon icon={playName} color="#fff" size={25} onClick={onTogglePlay} />
 
-        <ProgressBar progress={0.3} />
+        <ProgressBar duration={midiDuration} />
 
         {mode === VISUALIZER_MODE.WRITE && (
           <SelectMenu

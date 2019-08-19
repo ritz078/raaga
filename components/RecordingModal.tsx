@@ -6,7 +6,7 @@ import { description, iconClose, title } from "./styles/RecordingModal.styles";
 import { getInstrumentIdByName, Instrument } from "midi-instruments";
 import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
-import { Midi, Note } from "@typings/midi";
+import { Note } from "@typings/midi";
 import { Midi as MIDI } from "@tonejs/midi";
 import { Button } from "evergreen-ui";
 

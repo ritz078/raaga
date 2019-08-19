@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import * as styles from "./TrackList.styles";
 import ZeroState from "@assets/images/zero-state.svg";
-import { MidiJSON } from "@utils/midiParser/midiParser";
+import { MidiJSON } from "@typings/midi";
 
 export interface TrackSelectionInfo {
   selectedTrackIndex: number;

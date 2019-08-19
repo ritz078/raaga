@@ -1,5 +1,4 @@
 import Tone from "tone";
-import { MidiJSON } from "@utils/midiParser/midiParser";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promiseWorker } from "@utils/promiseWorker";
 import { range as _range } from "lodash";
@@ -13,6 +12,7 @@ import {
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
+import { MidiJSON } from "@typings/midi";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
