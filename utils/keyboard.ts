@@ -1,7 +1,7 @@
 import { MidiNumbers, KeyboardShortcuts } from "piano-utils";
 import { range } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
-import { Note } from "@typings/midi";
+import { INote } from "@typings/midi";
 
 const pitchPositions = {
   C: 0,
@@ -18,7 +18,7 @@ const pitchPositions = {
   B: 6
 };
 
-export function getMidiRange(notes: Note[]) {
+export function getMidiRange(notes: INote[]) {
   const midis = notes.map(note => note.midi);
   return [Math.min(...midis), Math.max(...midis)];
 }

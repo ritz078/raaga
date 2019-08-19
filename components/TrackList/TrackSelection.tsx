@@ -6,7 +6,7 @@ import { Heading, Text, Icon, Switch, Checkbox } from "evergreen-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { range } from "lodash";
-import { Beat, Track } from "@typings/midi";
+import { IBeat, Track } from "@typings/midi";
 
 function toggleInArray(arr: number[], num: number) {
   return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];
@@ -152,7 +152,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
               />
             </div>
             <div className={styles.instrumentWrapper}>
-              {beats.map((beat: Beat, i) => (
+              {beats.map((beat: IBeat, i) => (
                 <InstrumentCard
                   disabled={!playingBeatsIndex.includes(i)}
                   isSelected={false}

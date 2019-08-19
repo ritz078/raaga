@@ -34,7 +34,7 @@ import RecordingModal from "@components/RecordingModal";
 import webMidi from "webmidi";
 import Tone from "tone";
 import { PIANO_HEIGHT } from "@config/piano";
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
@@ -56,7 +56,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   const [recordedNotes, setRecordedNotes] = useState();
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
   const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
-  const [loadedMidi, setMidi] = useState<MidiJSON>();
+  const [loadedMidi, setMidi] = useState<IMidiJSON>();
 
   const resetPlayer = useCallback(() => {
     player.clear();
@@ -127,7 +127,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   );
 
   const onMidiAndTrackSelect = useCallback(
-    (midi: MidiJSON, playingInfo: TrackSelectionInfo) => {
+    (midi: IMidiJSON, playingInfo: TrackSelectionInfo) => {
       (async () => {
         setMidi(midi);
         setPlayingMidiInfo(playingInfo);

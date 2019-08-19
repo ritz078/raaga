@@ -11,12 +11,12 @@ import {
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { useState } from "react";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
   onToggleMode: (mode: VISUALIZER_MODE) => void;
-  onMidiAndTrackSelect: (midi: MidiJSON, args: TrackSelectionInfo) => void;
+  onMidiAndTrackSelect: (midi: IMidiJSON, args: TrackSelectionInfo) => void;
 }
 
 const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({

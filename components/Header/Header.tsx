@@ -8,7 +8,7 @@ import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Icon } from "evergreen-ui";
 import { AnyAction, Dispatch } from "redux";
 import ProgressBar from "@components/ProgressBar";
-import { MidiJSON, Note } from "@typings/midi";
+import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 
 export interface HeaderProps {
@@ -17,8 +17,8 @@ export interface HeaderProps {
   instrument: string;
   onTogglePlay: () => void;
   onInstrumentChange: (instrument: React.ReactText) => void;
-  notes?: Note[];
-  onTrackSelect?: (midi: MidiJSON, i) => void;
+  notes?: INote[];
+  onTrackSelect?: (midi: IMidiJSON, i) => void;
   midiDeviceId: string;
   isPlaying: boolean;
   midiDuration: number;

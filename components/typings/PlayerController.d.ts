@@ -1,7 +1,7 @@
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 
 export interface PlayerControllerProps {
-  midi: MidiJSON;
+  midi: IMidiJSON;
   isPlaying: boolean;
   onTogglePlay: () => void;
   onStartPlay: () => void;

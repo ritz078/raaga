@@ -1,4 +1,4 @@
-export interface Header {
+export interface IHeader {
   name?: string;
   ppq: number;
   tempo: {
@@ -7,7 +7,7 @@ export interface Header {
   }[];
 }
 
-export interface Note {
+export interface INote {
   midi: number;
   name: string;
   duration: number;
@@ -15,7 +15,7 @@ export interface Note {
   slides: any[];
 }
 
-export interface Instrument {
+export interface IInstrument {
   name: string;
   number: number;
   value: string;
@@ -26,26 +26,26 @@ export interface Track {
   n: number;
   volume: number;
   name: string;
-  notes: Note[];
-  instrument: Instrument;
+  notes: INote[];
+  instrument: IInstrument;
   channel: number;
   duration: number;
   program: number;
   id: number;
 }
 
-export interface Beat {
+export interface IBeat {
   n: number;
   volume: number;
-  instrument: Partial<Instrument>;
+  instrument: Partial<IInstrument>;
   notes: {
     time: number;
   }[];
 }
 
-export interface MidiJSON {
-  beats: Beat[];
+export interface IMidiJSON {
+  beats: IBeat[];
   duration: number;
   tracks: Track[];
-  header: Header;
+  header: IHeader;
 }

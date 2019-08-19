@@ -16,7 +16,7 @@ import {
   TRACK_PLAYING_SPEED,
   RADIUS
 } from "@config/piano";
-import { Note, Track } from "@typings/midi";
+import { INote, Track } from "@typings/midi";
 
 function now() {
   return performance.now() / 1000;
@@ -26,7 +26,7 @@ export class Visualizer {
   ctx: CanvasRenderingContext2D;
   range: Range;
   mode: VISUALIZER_MODE;
-  notes: Partial<Note>[];
+  notes: Partial<INote>[];
   writeIntervalId: number;
   clock = new Clock(MS_PER_SECOND);
 
@@ -129,7 +129,7 @@ export class Visualizer {
   };
 
   private getVerticalCoordinatesInWriteMode = (
-    note: Partial<Note>
+    note: Partial<INote>
   ): {
     top: number;
     height: number;

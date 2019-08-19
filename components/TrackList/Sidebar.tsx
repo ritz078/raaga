@@ -3,7 +3,7 @@ import React, { useRef, memo } from "react";
 import { promiseWorker } from "@utils/promiseWorker";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 
 let midiParseWorker;
 if (IN_BROWSER) {
@@ -16,7 +16,7 @@ function Sidebar({ onMidiLoad }) {
 
   const loadFile = async e => {
     const file = e.target.files[0];
-    const midi: MidiJSON = await promiseWorker(midiParseWorker, {
+    const midi: IMidiJSON = await promiseWorker(midiParseWorker, {
       filePath: file,
       name: file.name
     });

@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import * as styles from "./TrackList.styles";
 import ZeroState from "@assets/images/zero-state.svg";
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 
 export interface TrackSelectionInfo {
   selectedTrackIndex: number;
@@ -14,10 +14,10 @@ export interface TrackSelectionInfo {
 
 interface TrackListProps {
   onPlay: (args: TrackSelectionInfo) => void;
-  midi: MidiJSON;
+  midi: IMidiJSON;
   visible: boolean;
   onClose: () => void;
-  setMidi: (midi: MidiJSON) => void;
+  setMidi: (midi: IMidiJSON) => void;
 }
 
 const contentContainerProps = {

@@ -5,7 +5,7 @@ import MidiFile from "midifile";
 import MidiEvents from "midievents";
 import { MidiNumbers } from "piano-utils";
 import UTF8 from "utf-8";
-import { Beat, Note, Track } from "@typings/midi";
+import { IBeat, INote, Track } from "@typings/midi";
 
 export class MidiParser {
   readonly arrayBuffer: ArrayBuffer;
@@ -44,7 +44,7 @@ export class MidiParser {
 
     const instrumentName = drumNames[n];
 
-    const beat: Beat = {
+    const beat: IBeat = {
       n: n,
       notes: [],
       volume: 1,
@@ -73,7 +73,7 @@ export class MidiParser {
   closeNote = event => {
     const track = this.takeTrack(event.channel);
     for (let i = 0; i < track.notes.length; i++) {
-      const note: Note = track.notes[i];
+      const note: INote = track.notes[i];
       if (
         note.duration == 0.0000001 &&
         note.midi == event.param1 &&
@@ -199,7 +199,7 @@ export class MidiParser {
     });
 
     this.song.tracks.forEach((track, index) => {
-      const lastNote: Note = last(track.notes);
+      const lastNote: INote = last(track.notes);
       track.duration = lastNote ? lastNote.time + lastNote.duration : 0;
       track.id = index + 1;
     });

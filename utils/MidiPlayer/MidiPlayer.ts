@@ -12,7 +12,7 @@ import {
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
-import { MidiJSON } from "@typings/midi";
+import { IMidiJSON } from "@typings/midi";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
@@ -29,7 +29,7 @@ type IEventCallback = (
 ) => void;
 
 export class MidiPlayer {
-  private midi: MidiJSON;
+  private midi: IMidiJSON;
   private trackSamplers = [];
   private drumSampler;
   private trackPart = [];
@@ -56,14 +56,14 @@ export class MidiPlayer {
   constructor(
     canvasWorker: CanvasWorkerFallback,
     range: Range,
-    midi?: MidiJSON
+    midi?: IMidiJSON
   ) {
     this.range = range;
     this.canvasWorker = canvasWorker;
     this.midi = midi;
   }
 
-  public setMidi(midi: MidiJSON) {
+  public setMidi(midi: IMidiJSON) {
     this.midi = midi;
   }
 

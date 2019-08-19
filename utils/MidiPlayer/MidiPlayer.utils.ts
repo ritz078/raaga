@@ -4,14 +4,14 @@ import {
   PIANO_HEIGHT,
   TRACK_PLAYING_SPEED
 } from "@config/piano";
-import { Note } from "@typings/midi";
+import { INote } from "@typings/midi";
 
-export type NoteWithIdAndEvent = Note & {
+export type NoteWithIdAndEvent = INote & {
   event: EVENT_TYPE;
   id: Symbol;
 };
 
-export function getNotesWithNoteEndEvent(notes: Note[]): NoteWithIdAndEvent[] {
+export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
   const _notes = [];
 
   notes.forEach((note, i) => {
