@@ -12,9 +12,9 @@ export type NoteWithIdAndEvent = INote & {
 };
 
 export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
-  const _notes = [];
+  let _notes: NoteWithIdAndEvent[] = [];
 
-  notes.forEach((note, i) => {
+  notes.forEach(note => {
     const id = Symbol(note.name);
     const time = note.time + note.duration;
     _notes.push(
@@ -31,16 +31,12 @@ export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
         id
       }
     );
-
-    if (i === notes.length - 1) {
-      _notes.push({
-        ...note,
-        time,
-        event: EVENT_TYPE.PLAYING_COMPLETE,
-        id
-      });
-    }
   });
+
+  _notes.sort((a, b) => b.time - a.time);
+
+  _notes.find(note => note.event === EVENT_TYPE.NOTE_STOP).event =
+    EVENT_TYPE.PLAYING_COMPLETE;
 
   return _notes;
 }

@@ -154,14 +154,14 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
             trackIndex: number,
             isComplete?: boolean
           ) => {
-            if (isComplete) {
-              player.clear();
-              setPlaying(false);
-              setActiveMidis([]);
-              return;
-            }
-
             if (trackIndex === playingInfo.selectedTrackIndex) {
+              if (isComplete) {
+                player.clear();
+                setPlaying(false);
+                setActiveMidis([]);
+                return;
+              }
+
               setActiveMidis(notes.map(note => note.midi));
             }
           }
