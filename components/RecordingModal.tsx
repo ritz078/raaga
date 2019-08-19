@@ -29,7 +29,7 @@ function createMidi(name: string, notes: Note[], instrument: Instrument) {
   const duration = tracks.duration;
 
   // @ts-ignore
-  let midiJson: Midi = midi.toJSON();
+  const midiJson: Midi = midi.toJSON();
 
   return {
     ...midiJson,

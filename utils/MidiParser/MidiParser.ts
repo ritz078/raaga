@@ -16,7 +16,8 @@ export class MidiParser {
     header: {
       ppq: 480,
       name: [],
-      format: null
+      format: null,
+      tempo: []
     }
   };
 
@@ -133,6 +134,13 @@ export class MidiParser {
         this.song.header.name.push(text);
       }
 
+      if (subtype === MidiEvents.EVENT_META_SET_TEMPO) {
+        this.song.header.tempo.push({
+          bpm: event.tempoBPM,
+          time: event.playTime
+        });
+      }
+
       if (subtype === MidiEvents.EVENT_MIDI_NOTE_ON) {
         if (channel === 9) {
           if (param1 >= 35 && param1 <= 81) {
@@ -200,7 +208,6 @@ export class MidiParser {
     this.song.tracks = this.song.tracks.filter(track => track.duration);
     this.song.beats = this.song.beats.filter(beat => beat.notes.length);
 
-    debugger;
     this.song.duration = Math.max(
       ...this.song.tracks.map(track => track.duration)
     );

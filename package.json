@@ -39,8 +39,6 @@
     "react-redux": "^7.1.0",
     "react-spring": "^8.0.27",
     "redux": "^4.0.4",
-    "startaudiocontext": "^1.2.1",
-    "tinydate": "^1.2.0",
     "tone": "^13.4.9",
     "utf-8": "^2.0.0",
     "webmidi": "^2.3.3"
@@ -56,8 +54,6 @@
     "@zeit/next-css": "^1.0.1",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^3.2.0",
-    "eslint": "^6.1.0",
-    "eslint-plugin-react-hooks": "^1.7.0",
     "globby": "^10.0.1",
     "husky": "^3.0.4",
     "imagemin-lint-staged": "^0.4.0",

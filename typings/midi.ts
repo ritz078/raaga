@@ -1,6 +1,10 @@
 export interface Header {
   name?: string;
   ppq: number;
+  tempo: {
+    bpm: number;
+    time: number;
+  }[];
 }
 
 export interface Note {
