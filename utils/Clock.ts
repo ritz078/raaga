@@ -5,6 +5,7 @@ export class Clock {
   isPlaying: boolean;
   cb: Function;
   duration: number;
+  speed = 1;
 
   constructor(interval: number) {
     this.interval = interval;
@@ -18,13 +19,19 @@ export class Clock {
     }
   };
 
+  public setSpeed = (speed: number) => {
+    console.log(speed);
+    return (this.speed = speed);
+  };
+
   public start = (duration, cb) => {
     this.isPlaying = true;
     this.duration = duration;
     this.cb = cb;
     this.intervalId = self.setInterval(() => {
       cb(this.progress);
-      this.progress = this.progress + this.interval / (duration * 1000);
+      this.progress =
+        this.progress + (this.interval / (duration * 1000)) * this.speed;
     }, this.interval);
   };
 

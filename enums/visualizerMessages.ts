@@ -7,7 +7,8 @@ export enum VISUALIZER_MESSAGES {
   PLAY_NOTE,
   STOP_NOTE,
   SET_MODE,
-  TOGGLE
+  TOGGLE,
+  SET_SPEED
 }
 
 export enum VISUALIZER_MODE {

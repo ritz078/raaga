@@ -9,6 +9,7 @@ import { SelectMenu, Position, Icon } from "evergreen-ui";
 import { AnyAction, Dispatch } from "redux";
 import ProgressBar from "@components/ProgressBar";
 import { MidiJSON, Note } from "@typings/midi";
+import { PlaybackSpeed } from "@components/PlaybackSpeed";
 
 export interface HeaderProps {
   dispatch: Dispatch<AnyAction>;
@@ -58,6 +59,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         <Icon icon={playName} color="#fff" size={25} onClick={onTogglePlay} />
 
         <ProgressBar duration={midiDuration} />
+
+        <PlaybackSpeed />
 
         {mode === VISUALIZER_MODE.WRITE && (
           <SelectMenu

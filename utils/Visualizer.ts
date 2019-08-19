@@ -38,6 +38,10 @@ export class Visualizer {
     this.setMode(mode);
   }
 
+  public setSpeed = (speed: number) => {
+    this.clock.setSpeed(speed);
+  };
+
   /**
    * Sets the dimension of the canvas.
    * @param width
@@ -177,6 +181,7 @@ export class Visualizer {
   };
 
   private cleanup = () => {
+    this.setSpeed(1);
     this.clock.stop();
     this.clearCanvas();
     this.writeIntervalId && clearInterval(this.writeIntervalId);

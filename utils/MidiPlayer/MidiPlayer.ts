@@ -294,5 +294,16 @@ export class MidiPlayer {
     this.canvasWorker.postMessage({
       type: VISUALIZER_MESSAGES.STOP_TRACK
     });
+
+    this.setSpeed(1);
+  };
+
+  public setSpeed = (speed: number) => {
+    Tone.Transport.bpm.value = speed * 120;
+
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.SET_SPEED,
+      speed
+    });
   };
 }

@@ -17,12 +17,23 @@ export interface IData {
   midi: number;
   mode: VISUALIZER_MODE;
   delay: number;
+  speed: number;
 }
 
 let visualizer, intervalId;
 
 export function controlVisualizer(data: Partial<IData>) {
-  const { canvas, track, message, range, dimensions, midi, mode, delay } = data;
+  const {
+    canvas,
+    track,
+    message,
+    range,
+    dimensions,
+    midi,
+    mode,
+    delay,
+    speed
+  } = data;
   if (message === VISUALIZER_MESSAGES.INIT) {
     clearInterval(intervalId);
     visualizer = new Visualizer(canvas, dimensions, range, mode);
@@ -43,5 +54,7 @@ export function controlVisualizer(data: Partial<IData>) {
     visualizer.setMode(mode);
   } else if (message === VISUALIZER_MESSAGES.TOGGLE) {
     visualizer.toggle();
+  } else if (message === VISUALIZER_MESSAGES.SET_SPEED) {
+    visualizer && visualizer.setSpeed(speed);
   }
 }

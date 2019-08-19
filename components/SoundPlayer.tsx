@@ -43,10 +43,10 @@ import { Range } from "@utils/typings/Visualizer";
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 
 const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
+const player = new MidiPlayer(canvasWorker, range);
+export const PlayerContext = React.createContext(player);
 
 function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
-  const player = useRef(new MidiPlayer(canvasWorker, range));
-
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
@@ -59,14 +59,14 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   const [loadedMidi, setMidi] = useState<MidiJSON>();
 
   const resetPlayer = useCallback(() => {
-    player.current.clear();
+    player.clear();
     setActiveMidis([]);
   }, []);
 
   const changeInstrument = useCallback((_instrument = instrument) => {
     (async () => {
       setLoading(true);
-      await player.current.loadInstruments({
+      await player.loadInstruments({
         instrumentIds: [getInstrumentIdByValue(_instrument)]
       });
       setInstrument(_instrument);
@@ -109,7 +109,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
 
   const onNoteStart = useCallback(
     (midi, velocity = 1) => {
-      player.current.playNote(midi, instrument, velocity);
+      player.playNote(midi, instrument, velocity);
 
       setActiveMidis(_activeMidis => _activeMidis.concat(midi));
     },
@@ -118,7 +118,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
 
   const onNoteStop = useCallback(
     midi => {
-      player.current.stopNote(midi, instrument);
+      player.stopNote(midi, instrument);
       setActiveMidis(_activeMidis =>
         _activeMidis.filter(activeMidi => activeMidi !== midi)
       );
@@ -132,22 +132,22 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
         setMidi(midi);
         setPlayingMidiInfo(playingInfo);
         setMode(VISUALIZER_MODE.READ);
-        player.current.clear();
+        player.clear();
         setActiveMidis([]);
 
-        player.current.setMidi(midi);
+        player.setMidi(midi);
 
         setLoading(true);
 
         const _range = setRange(
           midi.tracks[playingInfo.selectedTrackIndex].notes
         );
-        player.current.setRange(_range);
+        player.setRange(_range);
 
-        await player.current.loadInstruments();
+        await player.loadInstruments();
         setLoading(false);
 
-        player.current.scheduleAndPlay(
+        player.scheduleAndPlay(
           playingInfo,
           (
             notes: NoteWithIdAndEvent[],
@@ -155,7 +155,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
             isComplete?: boolean
           ) => {
             if (isComplete) {
-              player.current.clear();
+              player.clear();
               setPlaying(false);
               setActiveMidis([]);
               return;
@@ -175,7 +175,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
     if (Tone.Transport.state === "stopped") {
       onMidiAndTrackSelect(loadedMidi, playingMidiInfo);
     } else {
-      player.current.togglePlay();
+      player.togglePlay();
     }
 
     setPlaying(!isPlaying);
@@ -191,16 +191,14 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
     setMidiDevice();
   }, []);
 
-  useEffect(() => player.current.setRange(keyboardRange), [keyboardRange]);
-
-  useEffect(resetPlayer, [mode]);
+  useEffect(() => player.setRange(keyboardRange), [keyboardRange]);
 
   useEffect(setMidiDevice, [midiDevice]);
 
   const _instrument = getInstrumentByValue(instrument);
 
   return (
-    <>
+    <PlayerContext.Provider value={player}>
       <div className={flexOne}>
         <Toast className={toastStyle} />
 
@@ -252,7 +250,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
           />
         </div>
       </div>
-    </>
+    </PlayerContext.Provider>
   );
 }
 
