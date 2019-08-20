@@ -174,8 +174,6 @@ export class MidiParser {
                 family: group,
                 number: param1
               };
-            } else {
-              // console.log("skip program for drums");
             }
           } else {
             if (subtype == MidiEvents.EVENT_MIDI_CONTROLLER) {
@@ -189,8 +187,6 @@ export class MidiParser {
               if (subtype == MidiEvents.EVENT_MIDI_PITCH_BEND) {
                 //console.log('	bend', channel, param1, param2);
                 this.addSlide(event);
-              } else {
-                // console.log("unknown", channel, event);
               }
             }
           }

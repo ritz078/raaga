@@ -17,17 +17,3 @@ export const playerWrapper = css({
   display: "flex",
   flexDirection: "column"
 });
-
-export const mainHeader = css({
-  backgroundColor: "#232323",
-  padding: "8px 30px",
-  color: "white",
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  height: 50,
-  "> a": {
-    textDecoration: "none"
-  }
-});
