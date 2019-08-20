@@ -1,6 +1,6 @@
 let id = 1;
 
-export function promiseWorker(
+export function promisifyWorker(
   worker: Worker,
   payload,
   transferables?

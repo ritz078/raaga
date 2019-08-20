@@ -1,6 +1,6 @@
 import * as styles from "./TrackList.styles";
 import React, { useRef, memo } from "react";
-import { promiseWorker } from "@utils/promiseWorker";
+import { promisifyWorker } from "@utils/promisifyWorker";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import { IMidiJSON } from "@typings/midi";
@@ -16,7 +16,7 @@ function Sidebar({ onMidiLoad }) {
 
   const loadFile = async e => {
     const file = e.target.files[0];
-    const midi: IMidiJSON = await promiseWorker(midiParseWorker, {
+    const midi: IMidiJSON = await promisifyWorker(midiParseWorker, {
       filePath: file,
       name: file.name
     });
@@ -28,7 +28,7 @@ function Sidebar({ onMidiLoad }) {
   };
 
   const selectSample = async ({ label, url }) => {
-    const midi = await promiseWorker(midiParseWorker, {
+    const midi = await promisifyWorker(midiParseWorker, {
       filePath: url,
       name: label
     });

@@ -1,6 +1,6 @@
 import Tone from "tone";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
-import { promiseWorker } from "@utils/promiseWorker";
+import { promisifyWorker } from "@utils/promisifyWorker";
 import { range as _range } from "lodash";
 import { EVENT_TYPE } from "@enums/piano";
 import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
@@ -89,7 +89,7 @@ export class MidiPlayer {
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
 
-    const data = await promiseWorker(loadInstrumentWorker, {
+    const data = await promisifyWorker(loadInstrumentWorker, {
       instrumentIds,
       drums
     });
