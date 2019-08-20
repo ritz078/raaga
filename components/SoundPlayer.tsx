@@ -19,7 +19,6 @@ import Visualizer from "@components/Visualizer";
 import { connect } from "react-redux";
 import { Store } from "@typings/store";
 import { Piano } from "./Piano";
-import { css, cx } from "emotion";
 import { Header } from "@components/Header";
 import CanvasWorker, {
   CanvasWorkerFallback
@@ -199,8 +198,8 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
 
   return (
     <PlayerContext.Provider value={player}>
-      <div className={flexOne}>
-        <Toast className={toastStyle} />
+      <div css={flexOne}>
+        <Toast css={toastStyle} />
 
         <GlobalHeader
           mode={mode}
@@ -234,19 +233,15 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
         />
       </div>
       <div style={{ height: PIANO_HEIGHT, display: "flex" }}>
-        <div className={pianoWrapper}>
-          {loading && (
-            <Loader className={loaderClass} color={colors.white.base} />
-          )}
+        <div css={pianoWrapper}>
+          {loading && <Loader css={loaderClass} color={colors.white.base} />}
           <Piano
             activeMidis={activeMidis}
             onPlay={onNoteStart}
             onStop={onNoteStop}
             min={keyboardRange.first}
             max={keyboardRange.last}
-            className={cx({
-              [css({ opacity: 0.2 })]: loading
-            })}
+            css={loading ? { opacity: 0.2 } : undefined}
           />
         </div>
       </div>

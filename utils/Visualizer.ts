@@ -16,7 +16,7 @@ import {
   TRACK_PLAYING_SPEED,
   RADIUS
 } from "@config/piano";
-import { INote, Track } from "@typings/midi";
+import { INote, ITrack } from "@typings/midi";
 
 function now() {
   return performance.now() / 1000;
@@ -101,7 +101,7 @@ export class Visualizer {
    * by key
    * @param track
    */
-  private getTrackInfo = (track?: Track) => {
+  private getTrackInfo = (track?: ITrack) => {
     const notes =
       this.mode === VISUALIZER_MODE.WRITE ? this.notes : track && track.notes;
     const midiNumbers = getAllMidiNumbersInRange(this.range);
@@ -202,7 +202,7 @@ export class Visualizer {
     }
   };
 
-  public play = (track: Track, delay = 0) => {
+  public play = (track: ITrack, delay = 0) => {
     this.cleanup();
     this.clock.start(track.duration + delay, progress => {
       this.renderNotesInReadMode(track, progress, delay);
@@ -233,7 +233,7 @@ export class Visualizer {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
   private renderNotesInReadMode = (
-    track: Track,
+    track: ITrack,
     progress: number,
     delay = 0
   ) => {

@@ -1,5 +1,4 @@
 import React from "react";
-import { colors } from "@anarock/pebble";
 import { css, cx } from "emotion";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -10,12 +9,13 @@ interface IconProps
   size?: number;
   color?: string;
   className?: string;
+  style?: any;
 }
 
 const Icon: React.FunctionComponent<IconProps> = ({
   name,
   size = 20,
-  color = colors.white.base,
+  color = "#fff",
   className,
   style = {},
   ...props

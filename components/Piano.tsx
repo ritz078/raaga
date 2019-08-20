@@ -4,7 +4,6 @@ import {
   getNaturalKeyWidthRatio,
   getRelativeKeyPosition
 } from "@utils";
-import { css, cx } from "emotion";
 import {
   accidentalKeys,
   keys,
@@ -22,7 +21,7 @@ interface PianoProps {
   onPlay: (midi: number) => void;
   onStop: (midi: number) => void;
   activeMidis: number[];
-  className?: string;
+  css?: {};
 }
 
 const _Piano: FunctionComponent<PianoProps> = ({
@@ -31,7 +30,7 @@ const _Piano: FunctionComponent<PianoProps> = ({
   onStop,
   max,
   min,
-  className
+  css
 }) => {
   const [isMousePressed, setMousePressed] = useState(false);
 
@@ -62,23 +61,24 @@ const _Piano: FunctionComponent<PianoProps> = ({
   const midis = getAllMidiNumbersInRange(range);
 
   return (
-    <div className={cx(piano, className)}>
+    <div css={{ ...piano, ...css }}>
       {midis.map(midi => {
         const { isAccidental } = MidiNumbers.getAttributes(midi);
         const naturalKeyWidth = getNaturalKeyWidthRatio(range) * 100;
         const left = getRelativeKeyPosition(midi, range) * naturalKeyWidth;
 
         const width = isAccidental ? 0.65 * naturalKeyWidth : naturalKeyWidth;
-        const base = css({
+        const base = {
           left: `${left}%`,
           width: `${width}%`
-        });
+        };
 
-        const className = cx(base, keys, {
-          [accidentalKeys]: isAccidental,
-          [naturalKeys]: !isAccidental,
-          __active__: activeMidis.indexOf(midi) >= 0
-        });
+        const _css = {
+          ...base,
+          ...keys,
+          ...(isAccidental ? accidentalKeys : naturalKeys)
+        };
+
         return (
           <div
             data-id={midi}
@@ -86,11 +86,14 @@ const _Piano: FunctionComponent<PianoProps> = ({
             onMouseUp={() => onMouseUp(midi)}
             onMouseEnter={isMousePressed ? () => play(midi) : undefined}
             onMouseLeave={() => stop(midi)}
-            className={className}
+            className={
+              activeMidis.indexOf(midi) >= 0 ? "__active__" : undefined
+            }
+            css={_css}
             key={midi}
           >
             {!isAccidental && (
-              <div className={labelStyle}>
+              <div css={labelStyle}>
                 {Tone.Frequency(midi, "midi").toNote()}
               </div>
             )}

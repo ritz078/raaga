@@ -1,5 +1,4 @@
 import React, { useState, memo } from "react";
-import { colors } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { headerClass, headerRight, instrumentLabel } from "./Header.styles";
@@ -81,7 +80,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
         <Icon
           icon={volumeName}
-          color={colors.white.base}
+          color={"#fff"}
           onClick={_toggleMute}
           size={25}
           cursor="pointer"

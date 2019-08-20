@@ -5,7 +5,7 @@ import MidiFile from "midifile";
 import MidiEvents from "midievents";
 import { MidiNumbers } from "piano-utils";
 import UTF8 from "utf-8";
-import { IBeat, INote, Track } from "@typings/midi";
+import { IBeat, INote, ITrack } from "@typings/midi";
 
 export class MidiParser {
   readonly arrayBuffer: ArrayBuffer;
@@ -60,7 +60,7 @@ export class MidiParser {
   };
 
   startNote = ({ channel, playTime, param1 }) => {
-    const track: Track = this.takeTrack(channel);
+    const track: ITrack = this.takeTrack(channel);
     track.notes.push({
       time: playTime / 1000,
       midi: param1,
@@ -108,7 +108,7 @@ export class MidiParser {
       }
     }
 
-    const track: Partial<Track> = {
+    const track: Partial<ITrack> = {
       n,
       notes: [],
       volume: 1,

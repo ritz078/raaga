@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  FunctionComponent,
-  useMemo
-} from "react";
+import React, { useEffect, useRef, useState, FunctionComponent } from "react";
 import { debounce } from "lodash";
 import {
   VISUALIZER_MESSAGES,
@@ -18,7 +11,6 @@ import {
   noteSectionWrapper,
   visualizerWrapper
 } from "@components/styles/Visualizer.styles";
-import { css, cx } from "emotion";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 
@@ -96,14 +88,18 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
 
   const { width, height } = dimensions;
 
-  const className = cx(visualizerWrapper, {
-    [css({
-      transform: "rotate(180deg) scaleX(-1)"
-    })]: mode === VISUALIZER_MODE.READ
-  });
-
   return (
-    <div className={className} ref={visualizerRef}>
+    <div
+      css={{
+        ...visualizerWrapper,
+        ...(mode === VISUALIZER_MODE.READ
+          ? {
+              transform: "rotate(180deg) scaleX(-1)"
+            }
+          : {})
+      }}
+      ref={visualizerRef}
+    >
       <canvas
         width={width}
         height={height}
@@ -111,9 +107,9 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
         ref={canvasRef}
       />
 
-      <div className={noteSectionWrapper}>
+      <div css={noteSectionWrapper}>
         {getNaturalKeysInRange(range).map(x => (
-          <div className={noteSection} key={x} />
+          <div css={noteSection} key={x} />
         ))}
       </div>
     </div>

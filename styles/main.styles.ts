@@ -1,6 +1,4 @@
-import { css } from "emotion";
-
-export const bodyClass = css({
+export const bodyClass = {
   minWidth: 1100,
   backgroundColor: "#000",
   background: `linear-gradient(to top right,#000,rgba(0,0,0,0.9))`,
@@ -10,10 +8,10 @@ export const bodyClass = css({
   flexDirection: "column",
   display: "flex",
   width: "100%"
-});
+};
 
-export const playerWrapper = css({
+export const playerWrapper = {
   flex: 1,
   display: "flex",
   flexDirection: "column"
-});
+};

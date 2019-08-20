@@ -8,8 +8,8 @@ const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
 
 function Main() {
   return (
-    <div className={bodyClass}>
-      <div className={playerWrapper}>
+    <div css={bodyClass}>
+      <div css={playerWrapper}>
         <SoundPlayer />
       </div>
     </div>

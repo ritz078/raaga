@@ -3,14 +3,14 @@ import {
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
-import { Track } from "@typings/midi";
+import { ITrack } from "@typings/midi";
 
 interface Message {
   message: VISUALIZER_MESSAGES;
   canvas?: HTMLCanvasElement;
   dimensions?: Partial<ClientRect>;
   range?: Range;
-  track?: Track;
+  track?: ITrack;
   midi?: number;
   mode?: VISUALIZER_MODE;
 }

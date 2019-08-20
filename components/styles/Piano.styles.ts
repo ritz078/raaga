@@ -1,14 +1,13 @@
-import { css } from "emotion";
 import { colors } from "@anarock/pebble";
 import { HORIZONTAL_GAP_BETWEEN_NOTES, PIANO_HEIGHT } from "@config/piano";
 
-export const keys = css({
+export const keys = {
   display: "flex",
   transition: "all 200ms",
   userSelect: "none"
-});
+};
 
-export const accidentalKeys = css({
+export const accidentalKeys = {
   height: "7em",
   zIndex: 1,
   border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #000`,
@@ -26,9 +25,9 @@ export const accidentalKeys = css({
     boxShadow:
       "-1px -1px 2px rgba(255, 255, 255, 0.2) inset,0 -5px 2px 3px rgba(0, 0, 0, 0.2) inset, 0 2px 4px rgba(0, 0, 0, 0.2)"
   }
-});
+};
 
-export const naturalKeys = css({
+export const naturalKeys = {
   height: PIANO_HEIGHT,
   zIndex: 0,
   border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #4a4a4a`,
@@ -44,9 +43,9 @@ export const naturalKeys = css({
     backgroundImage: "linear-gradient(#42C9FF, #28E6FF)",
     borderBottomColor: "#42C9FF"
   }
-});
+};
 
-export const labelStyle = css({
+export const labelStyle = {
   textTransform: "uppercase",
   display: "flex",
   justifyContent: "center",
@@ -56,4 +55,4 @@ export const labelStyle = css({
   color: colors.gray.dark,
   userSelect: "none",
   fontSize: 12
-});
+};

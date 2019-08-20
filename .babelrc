@@ -1,23 +1,33 @@
 {
   "presets": [
-    "next/babel"
+    "next/babel",
+    [
+      "@emotion/babel-preset-css-prop",
+      {
+        "autoLabel": true,
+        "labelFormat": "[local]"
+      }
+    ]
   ],
   "plugins": [
     "lodash",
-    ["module-resolver", {
-      "root": ["."],
-      "alias": {
-        "@components": "./components",
-        "@styles": "./styles",
-        "@utils": "./utils",
-        "@config": "./config",
-        "@workers": "./workers",
-        "@enums": "./enums",
-        "@reducers": "./reducers",
-        "@typings": "./typings",
-        "@assets":  "./assets",
-        "@controllers": "./controllers"
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "@components": "./components",
+          "@styles": "./styles",
+          "@utils": "./utils",
+          "@config": "./config",
+          "@workers": "./workers",
+          "@enums": "./enums",
+          "@reducers": "./reducers",
+          "@typings": "./typings",
+          "@assets": "./assets",
+          "@controllers": "./controllers"
+        }
       }
-    }]
+    ]
   ]
 }
