@@ -29,7 +29,7 @@
     "midi-instruments": "^1.1.4",
     "midievents": "^2.0.0",
     "midifile": "^2.0.0",
-    "next": "9.0.3",
+    "next": "9.0.4",
     "piano-utils": "^0.1.0",
     "pretty-ms": "^5.0.0",
     "react": "^16.9.0",
