@@ -2,9 +2,9 @@ import { css } from "emotion";
 import { colors } from "@anarock/pebble";
 
 export const modeToggleWrapper = css({
-  backgroundColor: "rgba(47, 47, 47, 0.58)",
-  height: 40,
-  width: 200,
+  backgroundColor: "#000",
+  height: 34,
+  width: 180,
   padding: 5,
   borderRadius: 20,
   display: "flex",
@@ -14,6 +14,7 @@ export const modeToggleWrapper = css({
   justifyItems: "center",
   userSelect: "none",
   cursor: "pointer",
+  marginRight: 15,
   "& > div": {
     flex: 1,
     textAlign: "center",
@@ -32,7 +33,7 @@ export const modeToggleWrapper = css({
 export const modeBackground = css({
   position: "absolute",
   width: "50%",
-  height: 30,
+  height: 24,
   borderRadius: 17,
   backgroundColor: "rgba(230, 230, 230, 0.16)",
   transition: "all 200ms",

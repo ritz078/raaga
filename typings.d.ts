@@ -23,3 +23,22 @@ declare module "@workers/canvas.worker" {
 
   export default WebpackWorker;
 }
+
+declare module "@workers/loadInstrument.worker" {
+  class WebpackWorker extends Worker {
+    constructor();
+  }
+
+  export default WebpackWorker;
+}
+
+declare module "@workers/midiParse.worker" {
+  class WebpackWorker extends Worker {
+    constructor();
+  }
+
+  export default WebpackWorker;
+}
+
+declare const IN_BROWSER: boolean;
+declare const IS_DEV: boolean;

@@ -5,17 +5,36 @@ const config = {
   webpack(config, options) {
     config.plugins.push(
       new webpack.DefinePlugin({
-        "process.env.DEV": JSON.stringify(options.dev)
+        "process.env.DEV": JSON.stringify(options.dev),
+        IN_BROWSER: !options.isServer,
+        IS_DEV: options.dev
       })
     );
 
-    config.module.rules.unshift({
-      test: /\.worker\.ts/,
-      use: {
-        loader: "worker-loader",
-        options: { fallback: true, inline: true }
+    config.module.rules.unshift(
+      {
+        test: /\.worker\.ts/,
+        use: {
+          loader: "worker-loader",
+          options: { fallback: true, inline: true }
+        }
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "@svgr/webpack",
+            options: {
+              svgoConfig: {
+                plugins: {
+                  removeViewBox: false
+                }
+              }
+            }
+          }
+        ]
       }
-    });
+    );
 
     config.output.globalObject = 'typeof self !== "object" ? self : this';
 

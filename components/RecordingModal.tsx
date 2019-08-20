@@ -6,19 +6,19 @@ import { description, iconClose, title } from "./styles/RecordingModal.styles";
 import { getInstrumentIdByName, Instrument } from "midi-instruments";
 import { AnyAction, Dispatch } from "redux";
 import { ReducersType } from "@enums/reducers";
-import { Midi, Note } from "@typings/midi";
+import { INote } from "@typings/midi";
 import { Midi as MIDI } from "@tonejs/midi";
 import { Button } from "evergreen-ui";
 
 interface RecordingModalProps {
-  notes: Note[];
+  notes: INote[];
   instrument: Instrument;
   dispatch: Dispatch<AnyAction>;
   visible: boolean;
   onActionComplete: () => void;
 }
 
-function createMidi(name: string, notes: Note[], instrument: Instrument) {
+function createMidi(name: string, notes: INote[], instrument: Instrument) {
   const midi = new MIDI();
 
   const tracks = midi.addTrack();
@@ -29,7 +29,7 @@ function createMidi(name: string, notes: Note[], instrument: Instrument) {
   const duration = tracks.duration;
 
   // @ts-ignore
-  let midiJson: Midi = midi.toJSON();
+  const midiJson: Midi = midi.toJSON();
 
   return {
     ...midiJson,

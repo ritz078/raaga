@@ -1,29 +1,35 @@
-import React, { FunctionComponent, useEffect, useState, memo } from "react";
-import { progressBar } from "./styles/PlayerController.styles";
+import React, { FunctionComponent, memo, useEffect, useState } from "react";
+import { progressBar, timeCn } from "./styles/PlayerController.styles";
 import Tone from "tone";
+import { formatTime } from "@utils/formatTime";
 
-const ProgressBar: FunctionComponent<{}> = () => {
+interface ProgressBarProps {
+  duration: number;
+}
+
+const ProgressBar: FunctionComponent<ProgressBarProps> = ({ duration }) => {
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
-    const id = setInterval(() => {
-      setProgress(Tone.Transport.seconds / Tone.Transport.duration);
-    });
+    const intervalId = setInterval(
+      () => setProgress(Tone.Transport.seconds / duration),
+      500
+    );
 
-    return function cleanup() {
-      clearInterval(id);
-    };
-  });
+    return () => clearInterval(intervalId);
+  }, [duration]);
 
   return (
-    <div className={progressBar}>
-      <div
-        className={"__track__"}
-        style={{
-          width: `${progress * 100}%`
-        }}
-      />
-    </div>
+    <>
+      <div className={progressBar}>
+        <div
+          className={"__track__"}
+          style={{
+            width: `${progress * 100}%`
+          }}
+        />
+      </div>
+      <span className={timeCn}>{formatTime((1 - progress) * duration)}</span>
+    </>
   );
 };
 

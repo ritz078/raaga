@@ -4,7 +4,7 @@ import {
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
-import { Note, Track } from "@typings/midi";
+import { INote, Track } from "@typings/midi";
 
 interface Message {
   message: VISUALIZER_MESSAGES;
@@ -35,7 +35,7 @@ export interface Sampler {
   ) => void;
 }
 
-export interface NoteWithEvent extends Note {
+export interface NoteWithEvent extends INote {
   event: EVENT_TYPE;
   id: string;
 }

@@ -17,14 +17,15 @@ export const pianoWrapper = css([
   piano,
   {
     alignItems: "center",
-    borderTop: "5px solid #000"
+    borderTop: "1px solid #000"
   }
 ]);
 
 export const flexOne = css({
   display: "flex",
   flex: 1,
-  position: "relative"
+  position: "relative",
+  flexDirection: "column"
 });
 
 export const toastStyle = css({

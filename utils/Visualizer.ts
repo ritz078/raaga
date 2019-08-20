@@ -1,4 +1,4 @@
-import { MidiNumbers } from "react-piano";
+import { MidiNumbers } from "piano-utils";
 import { groupBy } from "lodash";
 import {
   getAllMidiNumbersInRange,
@@ -13,19 +13,20 @@ import {
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
   NATURAL_KEY_COLOR,
-  TRACK_PLAYING_SPEED
+  TRACK_PLAYING_SPEED,
+  RADIUS
 } from "@config/piano";
-import { Note, Track } from "@typings/midi";
+import { INote, Track } from "@typings/midi";
 
 function now() {
-  return Date.now() / 1000;
+  return performance.now() / 1000;
 }
 
 export class Visualizer {
   ctx: CanvasRenderingContext2D;
   range: Range;
   mode: VISUALIZER_MODE;
-  notes: Partial<Note>[];
+  notes: Partial<INote>[];
   writeIntervalId: number;
   clock = new Clock(MS_PER_SECOND);
 
@@ -36,6 +37,10 @@ export class Visualizer {
     this.setDimensions(dimensions);
     this.setMode(mode);
   }
+
+  public setSpeed = (speed: number) => {
+    this.clock.setSpeed(speed);
+  };
 
   /**
    * Sets the dimension of the canvas.
@@ -68,13 +73,23 @@ export class Visualizer {
   ) => {
     this.ctx.beginPath();
 
-    const dimensions = [x, y, width - HORIZONTAL_GAP_BETWEEN_NOTES, height].map(
-      num => Math.floor(num)
-    );
+    const dimensions = [
+      x + RADIUS / 2 + HORIZONTAL_GAP_BETWEEN_NOTES / 2,
+      y + RADIUS / 2,
+      width - RADIUS - HORIZONTAL_GAP_BETWEEN_NOTES,
+      height - RADIUS
+    ].map(num => Math.floor(num));
 
-    this.ctx.fillStyle = isAccidental
-      ? ACCIDENTAL_KEY_COLOR
-      : NATURAL_KEY_COLOR;
+    const color = isAccidental ? ACCIDENTAL_KEY_COLOR : NATURAL_KEY_COLOR;
+
+    this.ctx.lineJoin = "round";
+    this.ctx.lineWidth = RADIUS;
+    this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = color;
+
+    // Change origin and dimensions to match true size (a stroke makes the shape a bit larger)
+    // @ts-ignore
+    this.ctx.strokeRect(...dimensions);
 
     // @ts-ignore
     this.ctx.fillRect(...dimensions);
@@ -114,7 +129,7 @@ export class Visualizer {
   };
 
   private getVerticalCoordinatesInWriteMode = (
-    note: Partial<Note>
+    note: Partial<INote>
   ): {
     top: number;
     height: number;
@@ -166,6 +181,7 @@ export class Visualizer {
   };
 
   private cleanup = () => {
+    this.setSpeed(1);
     this.clock.stop();
     this.clearCanvas();
     this.writeIntervalId && clearInterval(this.writeIntervalId);
@@ -186,10 +202,10 @@ export class Visualizer {
     }
   };
 
-  public play = (track: Track) => {
+  public play = (track: Track, delay = 0) => {
     this.cleanup();
-    this.clock.start(track.duration, progress => {
-      this.renderNotesInReadMode(track, progress);
+    this.clock.start(track.duration + delay, progress => {
+      this.renderNotesInReadMode(track, progress, delay);
     });
   };
 
@@ -216,10 +232,14 @@ export class Visualizer {
   private clearCanvas = () =>
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-  private renderNotesInReadMode = (track: Track, progress: number) => {
+  private renderNotesInReadMode = (
+    track: Track,
+    progress: number,
+    delay = 0
+  ) => {
     this.clearCanvas();
 
-    const timeElapsed = track.duration * progress;
+    const timeElapsed = (track.duration + delay) * progress;
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
 
@@ -231,7 +251,7 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time - timeElapsed) * TRACK_PLAYING_SPEED;
+        const top = (note.time + delay - timeElapsed) * TRACK_PLAYING_SPEED;
         const height = note.duration * TRACK_PLAYING_SPEED;
 
         // These are past notes which have been shown.

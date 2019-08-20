@@ -1,6 +1,5 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import { colors, Toast } from "@anarock/pebble";
-import Icon from "@components/Icon";
 import webMidi from "webmidi";
 import {
   deviceAvailable,
@@ -8,7 +7,7 @@ import {
   noMidiIconWrapper
 } from "@components/styles/MidiSelect.styles";
 import { ReducersType } from "@enums/reducers";
-import { SelectMenu, Pane } from "evergreen-ui";
+import { SelectMenu, Pane, Icon } from "evergreen-ui";
 
 const MidiSelect = ({ dispatch, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
@@ -76,15 +75,20 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
           payload: value
         });
         Toast.show(
-          // @ts-ignore
-          `Connected to ${webMidi.getInputById(value as string).name}`,
+          `Connected to ${(webMidi.getInputById(value as string) as any).name}`,
           "success"
         );
       }}
     >
-      <Pane>
-        <Icon className="icon-padding" name="midi" />
-        {inputMidis.length && (
+      <Pane display="inline-flex">
+        <Icon
+          icon="projects"
+          color={"#fff"}
+          size={22}
+          cursor="pointer"
+          marginX={15}
+        />
+        {!!inputMidis.length && (
           <Icon
             name="record"
             size={10}

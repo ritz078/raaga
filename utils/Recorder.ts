@@ -1,8 +1,8 @@
 import Tone from "tone";
-import { Note } from "@typings/midi";
+import { INote } from "@typings/midi";
 
 export default class Recorder {
-  private notes: Partial<Note>[] = [];
+  private notes: Partial<INote>[] = [];
   private baseTime;
   private isRecording = false;
 
@@ -14,7 +14,7 @@ export default class Recorder {
     this.resetRecorder();
   };
 
-  private stopRecording = (): Partial<Note>[] => {
+  private stopRecording = (): Partial<INote>[] => {
     this.isRecording = false;
     const notes = this.notes;
     this.resetRecorder();

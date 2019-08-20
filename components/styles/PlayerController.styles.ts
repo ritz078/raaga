@@ -4,7 +4,7 @@ import { colors, mixins } from "@anarock/pebble";
 export const playerWrapper = css({
   position: "absolute",
   bottom: 0,
-  top: 0,
+  top: 50,
   left: 0,
   right: 0,
   display: "flex",
@@ -34,26 +34,12 @@ export const progressBar = css({
   borderRadius: 3,
   backgroundColor: "rgba(255, 255, 255, 0.4)",
   margin: "0 20px",
+  minWidth: 200,
   overflow: "hidden",
   "& .__track__": {
-    backgroundColor: colors.yellow.base,
+    backgroundColor: "#42c9ff",
     height: "inherit",
     borderRadius: 3
-  }
-});
-
-export const loadFileWrapper = css({
-  color: colors.white.base,
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  textAlign: "center",
-  width: "100%",
-  padding: "20px 10px",
-  backgroundColor: "rgba(255, 255, 255, 0.06)",
-  h3: {
-    lineHeight: "35px",
-    fontWeight: "normal"
   }
 });
 
@@ -73,15 +59,4 @@ export const controllerBottom = css({
   width: "100%"
 });
 
-export const loadFileIcon = css({
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  borderRadius: 2,
-  width: 58,
-  marginLeft: 20,
-  cursor: "pointer",
-  display: "flex",
-  flexDirection: "column",
-  fontSize: 12,
-  color: colors.white.base,
-  ...mixins.flexMiddleAlign
-});
+export const timeCn = css({ color: "#fff", display: "inline-flex", width: 50 });
