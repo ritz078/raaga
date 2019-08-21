@@ -28,21 +28,6 @@ export const playerController = css({
   }
 });
 
-export const progressBar = css({
-  flex: 1,
-  height: 4,
-  borderRadius: 2,
-  backgroundColor: "rgba(255, 255, 255, 0.4)",
-  margin: "0 15px",
-  minWidth: 150,
-  overflow: "hidden",
-  "& .__track__": {
-    backgroundColor: "#42c9ff",
-    height: "inherit",
-    borderRadius: 3
-  }
-});
-
 export const midiNameStyle = css({
   fontSize: 14,
   color: colors.white.base,

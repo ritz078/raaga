@@ -7,6 +7,7 @@ export const headerClass = css({
   backgroundColor: "#1c1c1c",
   zIndex: 10,
   padding: "0 10px",
+  borderBottom: "1px solid #292929",
   ...mixins.flexSpaceBetween
 });
 

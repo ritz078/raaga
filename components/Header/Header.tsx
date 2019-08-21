@@ -2,7 +2,12 @@ import React, { useState, memo } from "react";
 import { colors } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import { headerClass, headerRight, instrumentLabel } from "./Header.styles";
+import {
+  headerClass,
+  headerLeft,
+  headerRight,
+  instrumentLabel
+} from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Icon } from "evergreen-ui";
@@ -54,15 +59,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
   return (
     <div className={headerClass}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 15
-        }}
-      >
-        {midi && mode === VISUALIZER_MODE.READ && (
+      <div className={headerLeft}>
+        {
           <>
             <Icon
               icon={playName}
@@ -75,7 +73,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
             <PlaybackSpeed />
           </>
-        )}
+        }
       </div>
 
       <div className={headerRight}>

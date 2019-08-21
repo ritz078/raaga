@@ -227,6 +227,7 @@ export class MidiPlayer {
 
     this.canvasWorker.postMessage({
       track: mainTrack,
+      midiDuration: this.midi.duration,
       range: this.range,
       message: VISUALIZER_MESSAGES.PLAY_TRACK,
       delay: getDelay()
@@ -304,6 +305,16 @@ export class MidiPlayer {
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.SET_SPEED,
       speed
+    });
+  };
+
+  public seek = (progress: number) => {
+    debugger;
+    Tone.Transport.seconds = this.midi.duration * progress;
+
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.SEEK,
+      progress
     });
   };
 }

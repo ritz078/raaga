@@ -18,6 +18,8 @@ export interface IData {
   mode: VISUALIZER_MODE;
   delay: number;
   speed: number;
+  progress: number;
+  midiDuration: number;
 }
 
 let visualizer, intervalId;
@@ -32,7 +34,9 @@ export function controlVisualizer(data: Partial<IData>) {
     midi,
     mode,
     delay,
-    speed
+    speed,
+    progress,
+    midiDuration
   } = data;
   if (message === VISUALIZER_MESSAGES.INIT) {
     clearInterval(intervalId);
@@ -43,7 +47,7 @@ export function controlVisualizer(data: Partial<IData>) {
     visualizer.setRange(range);
   } else if (message === VISUALIZER_MESSAGES.PLAY_TRACK) {
     visualizer.setRange(range);
-    visualizer.play(track, delay);
+    visualizer.play(track, delay, midiDuration);
   } else if (message === VISUALIZER_MESSAGES.STOP_TRACK) {
     visualizer.cleanup();
   } else if (message === VISUALIZER_MESSAGES.PLAY_NOTE) {
@@ -56,5 +60,7 @@ export function controlVisualizer(data: Partial<IData>) {
     visualizer.toggle();
   } else if (message === VISUALIZER_MESSAGES.SET_SPEED) {
     visualizer && visualizer.setSpeed(speed);
+  } else if (message === VISUALIZER_MESSAGES.SEEK) {
+    visualizer.seek(progress);
   }
 }

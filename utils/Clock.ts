@@ -20,8 +20,11 @@ export class Clock {
   };
 
   public setSpeed = (speed: number) => {
-    console.log(speed);
-    return (this.speed = speed);
+    this.speed = speed;
+  };
+
+  public seek = (progress: number) => {
+    this.progress = progress;
   };
 
   public start = (duration, cb) => {

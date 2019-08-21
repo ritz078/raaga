@@ -42,6 +42,10 @@ export class Visualizer {
     this.clock.setSpeed(speed);
   };
 
+  public seek = (progress: number) => {
+    this.clock.seek(progress);
+  };
+
   /**
    * Sets the dimension of the canvas.
    * @param width
@@ -202,10 +206,10 @@ export class Visualizer {
     }
   };
 
-  public play = (track: Track, delay = 0) => {
+  public play = (track: Track, delay = 0, midiDuration) => {
     this.cleanup();
-    this.clock.start(track.duration + delay, progress => {
-      this.renderNotesInReadMode(track, progress, delay);
+    this.clock.start(midiDuration + delay, progress => {
+      this.renderNotesInReadMode(track, progress, delay, midiDuration);
     });
   };
 
@@ -235,11 +239,12 @@ export class Visualizer {
   private renderNotesInReadMode = (
     track: Track,
     progress: number,
-    delay = 0
+    delay = 0,
+    midiDuration
   ) => {
     this.clearCanvas();
 
-    const timeElapsed = (track.duration + delay) * progress;
+    const timeElapsed = (midiDuration + delay) * progress;
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
 
