@@ -84,7 +84,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
         <Icon
           icon="projects"
           color={"#fff"}
-          size={22}
+          size={16}
           cursor="pointer"
           marginX={15}
         />

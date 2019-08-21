@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SoundPlayerProps } from "./typings/SoundPlayer";
 import {
   getMidiRange,
@@ -129,6 +128,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   const onMidiAndTrackSelect = useCallback(
     (midi: IMidiJSON, playingInfo: TrackSelectionInfo) => {
       (async () => {
+        setPlaying(true);
         setMidi(midi);
         setPlayingMidiInfo(playingInfo);
         setMode(VISUALIZER_MODE.READ);
@@ -216,7 +216,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
           onInstrumentChange={changeInstrument}
           midiDeviceId={midiDevice}
           isPlaying={isPlaying}
-          midiDuration={loadedMidi && loadedMidi.duration}
+          midi={loadedMidi}
         />
 
         <RecordingModal

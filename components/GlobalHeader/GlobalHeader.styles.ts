@@ -21,6 +21,7 @@ export const mainHeader = css({
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
+  borderBottom: "1px solid #131313",
   height: GLOBAL_HEADER_HEIGHT,
   "> a": {
     textDecoration: "none"

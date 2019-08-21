@@ -2,14 +2,19 @@ import { css } from "emotion";
 import { colors, mixins } from "@anarock/pebble";
 
 export const headerClass = css({
-  height: 65,
-  position: "absolute",
-  top: 50,
+  height: 48,
   width: "100%",
-  background: `linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%)`,
+  backgroundColor: "#1c1c1c",
   zIndex: 10,
   padding: "0 10px",
   ...mixins.flexSpaceBetween
+});
+
+export const headerLeft = css({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  paddingLeft: 15
 });
 
 export const headerRight = css({

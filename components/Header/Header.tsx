@@ -21,7 +21,7 @@ export interface HeaderProps {
   onTrackSelect?: (midi: IMidiJSON, i) => void;
   midiDeviceId: string;
   isPlaying: boolean;
-  midiDuration: number;
+  midi: IMidiJSON;
 }
 
 const instrumentOptions = Object.keys(instruments).map(id => {
@@ -40,7 +40,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   midiDeviceId,
   onTogglePlay,
   isPlaying,
-  midiDuration
+  midi
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -54,14 +54,31 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
   return (
     <div className={headerClass}>
-      <span />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingLeft: 15
+        }}
+      >
+        {midi && mode === VISUALIZER_MODE.READ && (
+          <>
+            <Icon
+              icon={playName}
+              color="#fff"
+              size={19}
+              onClick={onTogglePlay}
+            />
+
+            <ProgressBar duration={midi && midi.duration} />
+
+            <PlaybackSpeed />
+          </>
+        )}
+      </div>
+
       <div className={headerRight}>
-        <Icon icon={playName} color="#fff" size={25} onClick={onTogglePlay} />
-
-        <ProgressBar duration={midiDuration} />
-
-        <PlaybackSpeed />
-
         {mode === VISUALIZER_MODE.WRITE && (
           <SelectMenu
             options={instrumentOptions}
@@ -83,7 +100,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           icon={volumeName}
           color={colors.white.base}
           onClick={_toggleMute}
-          size={25}
+          size={18}
           cursor="pointer"
           marginX={15}
         />

@@ -29,7 +29,7 @@ const _PlaybackSpeed = function() {
       <div onClick={decrease} className={classNames.actionButton}>
         <Icon icon="minus" size={20} color="#fff" />
       </div>
-      <span className={classNames.speedValue}>{Math.round(speed * 100)}</span>
+      <span className={classNames.speedValue}>{Math.round(speed * 100)}%</span>
       <div onClick={increase} className={classNames.actionButton}>
         <Icon icon="plus" size={20} color="#fff" />
       </div>

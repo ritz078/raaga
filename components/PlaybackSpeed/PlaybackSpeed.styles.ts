@@ -1,7 +1,7 @@
 import { css } from "emotion";
 
 export const wrapper = css({
-  backgroundColor: "rgba(64, 64, 64, 0.2)",
+  backgroundColor: "#252525",
   borderRadius: "2px",
   display: "flex",
   alignItems: "center",
@@ -11,9 +11,8 @@ export const wrapper = css({
 });
 
 export const actionButton = css({
-  padding: "5px",
+  padding: 2,
   display: "flex",
-  backgroundColor: "rgba(255, 255, 255, 0.04)",
   borderRadius: "2px",
   cursor: "pointer",
   transition: "all 200ms",
@@ -23,6 +22,8 @@ export const actionButton = css({
 });
 
 export const speedValue = css({
-  display: "inline-flex",
-  padding: "0 10px"
+  display: "block",
+  fontSize: 12,
+  width: 45,
+  textAlign: "center"
 });
