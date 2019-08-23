@@ -1,12 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  FunctionComponent,
-  useMemo
-} from "react";
-import { debounce } from "lodash";
+import React, { useEffect, useRef, FunctionComponent } from "react";
 import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
@@ -21,6 +13,7 @@ import {
 import { css, cx } from "emotion";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
+import { useWindowResize } from "@hooks/useWindowResize";
 
 interface VisualizerProps {
   range: Range;
@@ -36,7 +29,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const visualizerRef = useRef<HTMLDivElement>(null);
 
-  const [dimensions, setDimensions] = useState({
+  const dimensions = useWindowResize(visualizerRef, {
     width: 1100,
     height: 400
   });
@@ -48,15 +41,6 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
     } else {
       canvas = canvasRef.current;
     }
-
-    const updateDimensions = () => {
-      const { width, height } = visualizerRef.current.getBoundingClientRect();
-      setDimensions({ width, height });
-    };
-
-    const debounced = debounce(updateDimensions, 1000);
-
-    updateDimensions();
 
     // This has been done because it wasn't getting correctly transferred
     // in firefox.
@@ -74,10 +58,6 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
       },
       [canvas]
     );
-
-    window.addEventListener("resize", debounced);
-
-    return () => window.removeEventListener("resize", debounced);
   }, []);
 
   useEffect(() => {

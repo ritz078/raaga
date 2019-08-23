@@ -18,7 +18,7 @@ import {
 } from "@config/piano";
 import { INote, Track } from "@typings/midi";
 
-function now() {
+function nowInSeconds() {
   return performance.now() / 1000;
 }
 
@@ -136,7 +136,8 @@ export class Visualizer {
   } => {
     const canvasHeight = this.ctx.canvas.height;
 
-    const top = (note.time - now()) * TRACK_PLAYING_SPEED + canvasHeight;
+    const top =
+      (note.time - nowInSeconds()) * TRACK_PLAYING_SPEED + canvasHeight;
     const height =
       (note.duration || Number.MAX_SAFE_INTEGER / TRACK_PLAYING_SPEED) *
       TRACK_PLAYING_SPEED;
@@ -220,13 +221,13 @@ export class Visualizer {
   public addNote = midi => {
     this.notes.push({
       midi,
-      time: now()
+      time: nowInSeconds()
     });
   };
 
   public endNote = midi => {
     const note = this.notes.find(note => note.midi === midi && !note.duration);
-    note.duration = now() - note.time;
+    note.duration = nowInSeconds() - note.time;
   };
 
   private clearCanvas = () =>
