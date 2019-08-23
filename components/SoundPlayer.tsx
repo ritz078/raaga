@@ -1,11 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { SoundPlayerProps } from "./typings/SoundPlayer";
-import {
-  getMidiRange,
-  IScheduleOptions,
-  isWithinRange,
-  MidiPlayer
-} from "@utils";
+import { getMidiRange, isWithinRange } from "@utils";
 import {
   flexOne,
   loaderClass,
@@ -38,6 +33,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
+import { IScheduleOptions, MidiPlayer } from "@utils/MidiPlayer";
 
 const { range } = getPianoRangeAndShortcuts([38, 88]);
 

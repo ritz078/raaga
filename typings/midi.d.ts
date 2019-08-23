@@ -1,5 +1,5 @@
 export interface IHeader {
-  name?: string;
+  name: string[];
   ppq: number;
   tempo: {
     bpm: number;

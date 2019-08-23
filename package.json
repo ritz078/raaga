@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS=\"--inspect\" next dev",
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx'",
     "build:fonts": "node ./scripts/generate-fonts",
@@ -58,6 +58,7 @@
     "husky": "^3.0.4",
     "imagemin-lint-staged": "^0.4.0",
     "lint-staged": "^9.2.3",
+    "next-images": "^1.1.2",
     "patch-package": "^6.1.2",
     "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.18.2",

@@ -1,5 +1,6 @@
 const withCSS = require("@zeit/next-css");
 const webpack = require("webpack");
+const withImages = require("next-images");
 
 const config = {
   webpack(config, options) {
@@ -51,4 +52,4 @@ const config = {
   target: "serverless"
 };
 
-module.exports = withCSS(config);
+module.exports = withImages(withCSS(config));

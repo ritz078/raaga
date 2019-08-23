@@ -8,6 +8,11 @@ declare module "*.svg" {
   export default value;
 }
 
+declare module "*.png" {
+  const value: any;
+  export default value;
+}
+
 declare module "@workers/midiload.worker" {
   class WebpackWorker extends Worker {
     constructor();
