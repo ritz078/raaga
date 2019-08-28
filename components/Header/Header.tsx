@@ -6,13 +6,11 @@ import { headerClass, headerRight, instrumentLabel } from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { SelectMenu, Position, Icon } from "evergreen-ui";
-import { AnyAction, Dispatch } from "redux";
 import ProgressBar from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 
 export interface HeaderProps {
-  dispatch: Dispatch<AnyAction>;
   mode: VISUALIZER_MODE;
   instrument: string;
   onTogglePlay: () => void;
@@ -22,6 +20,7 @@ export interface HeaderProps {
   midiDeviceId: string;
   isPlaying: boolean;
   midi: IMidiJSON;
+  onMidiDeviceChange: (midiDevice: string) => void;
 }
 
 const instrumentOptions = Object.keys(instruments).map(id => {
@@ -33,14 +32,14 @@ const instrumentOptions = Object.keys(instruments).map(id => {
 });
 
 const _Header: React.FunctionComponent<HeaderProps> = ({
-  dispatch,
   mode,
   instrument,
   onInstrumentChange,
   midiDeviceId,
   onTogglePlay,
   isPlaying,
-  midi
+  midi,
+  onMidiDeviceChange
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -105,7 +104,10 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           marginX={15}
         />
 
-        <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
+        <MidiSelect
+          onMidiDeviceChange={onMidiDeviceChange}
+          midiDeviceId={midiDeviceId}
+        />
       </div>
     </div>
   );
