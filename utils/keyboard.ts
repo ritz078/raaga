@@ -68,7 +68,10 @@ export function getPianoRangeAndShortcuts(range: number[]) {
   const _last =
     last - first > MINIMUM_KEYS_IN_READ_MODE
       ? find(naturalMidiNumbers, midi => midi > last)
-      : first + MINIMUM_KEYS_IN_READ_MODE;
+      : find(
+          naturalMidiNumbers,
+          midi => midi > first + MINIMUM_KEYS_IN_READ_MODE
+        );
 
   const keyboardShortcuts = KeyboardShortcuts.create({
     firstNote: _first,
