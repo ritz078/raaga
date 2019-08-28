@@ -1,4 +1,4 @@
-import App, { Container } from "next/app";
+import App from "next/app";
 import React from "react";
 import Head from "next/head";
 
@@ -10,9 +10,7 @@ export default class MyApp extends App {
         <Head>
           <title>Piano</title>
         </Head>
-        <Container>
-          <Component {...pageProps} />
-        </Container>
+        <Component {...pageProps} />
       </>
     );
   }
