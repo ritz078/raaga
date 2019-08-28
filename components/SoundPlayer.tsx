@@ -39,7 +39,10 @@ import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 
-const { range } = getPianoRangeAndShortcuts([38, 88]);
+const range = {
+  first: 38,
+  last: 88
+};
 
 const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 const player = new MidiPlayer(canvasWorker, range);

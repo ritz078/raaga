@@ -4,13 +4,13 @@ import {
 } from "@enums/visualizerMessages";
 import { Visualizer } from "@utils/Visualizer";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
-import { Track } from "@typings/midi";
+import { ITrack } from "@typings/midi";
 
 export interface IData {
   canvas: {
     getContext: (x: string) => CanvasRenderingContext2D;
   };
-  track: Track;
+  track: ITrack;
   message: VISUALIZER_MESSAGES;
   range: Range;
   dimensions: Dimensions;

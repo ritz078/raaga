@@ -22,7 +22,7 @@ export interface IInstrument {
   family: string;
 }
 
-export interface Track {
+export interface ITrack {
   n: number;
   volume: number;
   name: string;
@@ -46,6 +46,6 @@ export interface IBeat {
 export interface IMidiJSON {
   beats: IBeat[];
   duration: number;
-  tracks: Track[];
+  tracks: ITrack[];
   header: IHeader;
 }
