@@ -9,7 +9,7 @@ import {
 import { ReducersType } from "@enums/reducers";
 import { SelectMenu, Pane, Icon } from "evergreen-ui";
 
-const MidiSelect = ({ dispatch, midiDeviceId }) => {
+const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
   const [error, setError] = useState("");
 
@@ -17,10 +17,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
     setInputMidis(webMidi.inputs);
 
     if (!webMidi.inputs.length) {
-      dispatch({
-        type: ReducersType.SET_MIDI_DEVICE,
-        payload: null
-      });
+      onMidiDeviceChange(null);
     }
   }, [webMidi]);
 
@@ -70,10 +67,7 @@ const MidiSelect = ({ dispatch, midiDeviceId }) => {
       }
       selected={midiDeviceId}
       onSelect={({ value }) => {
-        dispatch({
-          type: ReducersType.SET_MIDI_DEVICE,
-          payload: value
-        });
+        onMidiDeviceChange(value);
         Toast.show(
           `Connected to ${(webMidi.getInputById(value as string) as any).name}`,
           "success"

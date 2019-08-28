@@ -4,8 +4,6 @@ import Icon from "@components/Icon";
 import { colors, Input, mixins } from "@anarock/pebble";
 import { description, iconClose, title } from "./styles/RecordingModal.styles";
 import { getInstrumentIdByName, Instrument } from "midi-instruments";
-import { AnyAction, Dispatch } from "redux";
-import { ReducersType } from "@enums/reducers";
 import { INote } from "@typings/midi";
 import { Midi as MIDI } from "@tonejs/midi";
 import { Button } from "evergreen-ui";
@@ -13,7 +11,6 @@ import { Button } from "evergreen-ui";
 interface RecordingModalProps {
   notes: INote[];
   instrument: Instrument;
-  dispatch: Dispatch<AnyAction>;
   visible: boolean;
   onActionComplete: () => void;
 }
@@ -54,7 +51,7 @@ function createMidi(name: string, notes: INote[], instrument: Instrument) {
 const RecordingModal: React.FunctionComponent<RecordingModalProps> = ({
   notes = [],
   instrument,
-  dispatch,
+  // dispatch,
   visible,
   onActionComplete
 }) => {
@@ -63,13 +60,13 @@ const RecordingModal: React.FunctionComponent<RecordingModalProps> = ({
   const saveFile = useCallback(() => {
     const midi = createMidi(name, notes, instrument);
 
-    dispatch({
-      type: ReducersType.SAVE_RECORDING,
-      payload: {
-        ...midi,
-        id: Date.now()
-      }
-    });
+    // dispatch({
+    //   type: ReducersType.SAVE_RECORDING,
+    //   payload: {
+    //     ...midi,
+    //     id: Date.now()
+    //   }
+    // });
 
     onActionComplete();
   }, [name, instrument]);
