@@ -78,7 +78,7 @@ export class Visualizer {
       y + RADIUS / 2,
       width - RADIUS - HORIZONTAL_GAP_BETWEEN_NOTES,
       height - RADIUS
-    ].map(num => Math.floor(num));
+    ];
 
     const color = isAccidental ? ACCIDENTAL_KEY_COLOR : NATURAL_KEY_COLOR;
 
