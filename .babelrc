@@ -16,7 +16,8 @@
         "@reducers": "./reducers",
         "@typings": "./typings",
         "@assets":  "./assets",
-        "@controllers": "./controllers"
+        "@controllers": "./controllers",
+        "@hooks": "./hooks"
       }
     }]
   ]
