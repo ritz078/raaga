@@ -30,7 +30,11 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import RecordingModal from "@components/RecordingModal";
 import webMidi from "webmidi";
 import Tone from "tone";
-import { PIANO_HEIGHT } from "@config/piano";
+import {
+  DEFAULT_FIRST_KEY,
+  DEFAULT_LAST_KEY,
+  PIANO_HEIGHT
+} from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
@@ -38,8 +42,8 @@ import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 
 const range = {
-  first: 38,
-  last: 88
+  first: DEFAULT_FIRST_KEY,
+  last: DEFAULT_LAST_KEY
 };
 
 const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
@@ -54,7 +58,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   const [isPlaying, setPlaying] = useState(false);
   const [isRecording, setRecording] = useState(false);
   const [recordedNotes, setRecordedNotes] = useState();
-  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
+  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
   const [loadedMidi, setMidi] = useState<IMidiJSON>();
   const [midiDevice, setSelectedMidiDevice] = useState(null);
@@ -75,22 +79,19 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
     })();
   }, []);
 
-  const setRange = useCallback(
-    notes => {
-      // change piano range.
-      const requiredRange = getMidiRange(notes);
+  const setRange = notes => {
+    // change piano range.
+    const requiredRange = getMidiRange(notes);
 
-      if (!isWithinRange(requiredRange, [range.first, range.last])) {
-        const _range = getPianoRangeAndShortcuts(requiredRange).range;
-        setKeyboardRange(_range);
-        setPlaying(true);
-        return _range;
-      }
+    if (!isWithinRange(requiredRange, [range.first, range.last])) {
+      const _range = getPianoRangeAndShortcuts(requiredRange).range;
+      setKeyboardRange(_range);
+      setPlaying(true);
+      return _range;
+    }
 
-      return keyboardRange;
-    },
-    [keyboardRange]
-  );
+    return keyboardRange;
+  };
 
   const setMidiDevice = useCallback(() => {
     if (midiDevice) {
@@ -218,6 +219,12 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
           midiDeviceId={midiDevice}
           isPlaying={isPlaying}
           midi={loadedMidi}
+          range={keyboardRange}
+          onRangeChange={_range => {
+            const { range } = getPianoRangeAndShortcuts(_range);
+            player.setRange(range);
+            setKeyboardRange(range);
+          }}
           onMidiDeviceChange={setSelectedMidiDevice}
         />
 

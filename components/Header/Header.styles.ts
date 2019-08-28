@@ -22,18 +22,9 @@ export const headerRight = css({
   alignItems: "center"
 });
 
-export const instrumentLabel = css({
-  display: "inline-flex",
-  color: colors.white.base,
-  backgroundColor: "rgba(47,47,47,0.8)",
-  padding: "12px 20px",
-  borderRadius: 4,
-  fontSize: 13,
-  cursor: "pointer",
-  marginLeft: 20,
-  marginRight: 10,
-  outline: "none",
-  border: "none"
+export const buttonCn = css({
+  padding: "8px 15px",
+  fontSize: 12
 });
 
 export const recordBtn = css({
