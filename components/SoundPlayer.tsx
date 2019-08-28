@@ -15,8 +15,6 @@ import {
 import { colors, Loader, Toast } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import Visualizer from "@components/Visualizer";
-import { connect } from "react-redux";
-import { Store } from "@typings/store";
 import { Piano } from "./Piano";
 import { css, cx } from "emotion";
 import { Header } from "@components/Header";
@@ -52,7 +50,7 @@ const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 const player = new MidiPlayer(canvasWorker, range);
 export const PlayerContext = React.createContext(player);
 
-function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
+const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
@@ -63,6 +61,7 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
   const [loadedMidi, setMidi] = useState<IMidiJSON>();
+  const [midiDevice, setSelectedMidiDevice] = useState(null);
 
   const resetPlayer = useCallback(() => {
     player.clear();
@@ -213,7 +212,6 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
         />
 
         <Header
-          dispatch={dispatch}
           onTogglePlay={onTogglePlay}
           instrument={instrument}
           mode={mode}
@@ -227,11 +225,11 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
             player.setRange(range);
             setKeyboardRange(range);
           }}
+          onMidiDeviceChange={setSelectedMidiDevice}
         />
 
         <RecordingModal
           visible={!isRecording && !!recordedNotes}
-          dispatch={dispatch}
           notes={recordedNotes as any}
           instrument={_instrument}
           onActionComplete={() => setRecordedNotes(undefined)}
@@ -262,8 +260,6 @@ function SoundPlayer({ midiDevice, dispatch }: SoundPlayerProps) {
       </div>
     </PlayerContext.Provider>
   );
-}
+};
 
-export default connect(({ midiDevice }: Store) => ({
-  midiDevice
-}))(SoundPlayer);
+export default SoundPlayer;

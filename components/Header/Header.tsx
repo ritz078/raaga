@@ -11,7 +11,6 @@ import {
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { Icon, Pane, SelectMenu } from "evergreen-ui";
-import { AnyAction, Dispatch } from "redux";
 import ProgressBar from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
@@ -20,7 +19,6 @@ import { MidiNumbers } from "piano-utils";
 import { Range } from "@utils/typings/Visualizer";
 
 export interface HeaderProps {
-  dispatch: Dispatch<AnyAction>;
   mode: VISUALIZER_MODE;
   instrument: string;
   onTogglePlay: () => void;
@@ -32,6 +30,7 @@ export interface HeaderProps {
   midi: IMidiJSON;
   range: Range;
   onRangeChange: (range: number[]) => void;
+  onMidiDeviceChange: (midiDevice: string) => void;
 }
 
 const instrumentOptions = Object.keys(instruments).map(id => {
@@ -51,7 +50,6 @@ const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map(midi => {
 });
 
 const _Header: React.FunctionComponent<HeaderProps> = ({
-  dispatch,
   mode,
   instrument,
   onInstrumentChange,
@@ -60,7 +58,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   isPlaying,
   midi,
   range,
-  onRangeChange
+  onRangeChange,
+  onMidiDeviceChange
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -158,7 +157,10 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           marginX={15}
         />
 
-        <MidiSelect dispatch={dispatch} midiDeviceId={midiDeviceId} />
+        <MidiSelect
+          onMidiDeviceChange={onMidiDeviceChange}
+          midiDeviceId={midiDeviceId}
+        />
       </div>
     </div>
   );
