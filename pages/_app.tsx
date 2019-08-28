@@ -1,4 +1,4 @@
-import App, { Container } from "next/app";
+import App from "next/app";
 import React from "react";
 import withReduxStore from "../store";
 import { Provider } from "react-redux";
@@ -18,11 +18,9 @@ class MyApp extends App<AppProps> {
         <Head>
           <title>Piano</title>
         </Head>
-        <Container>
-          <Provider store={reduxStore}>
-            <Component {...pageProps} />
-          </Provider>
-        </Container>
+        <Provider store={reduxStore}>
+          <Component {...pageProps} />
+        </Provider>
       </>
     );
   }
