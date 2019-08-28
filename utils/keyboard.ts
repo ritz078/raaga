@@ -1,7 +1,8 @@
 import { MidiNumbers, KeyboardShortcuts } from "piano-utils";
-import { range } from "lodash";
+import { range, findLast, find } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
 import { INote } from "@typings/midi";
+import { MINIMUM_KEYS_IN_READ_MODE } from "@config/piano";
 
 const pitchPositions = {
   C: 0,
@@ -58,13 +59,22 @@ export function getRelativeKeyPosition(
   );
 }
 
+const naturalMidiNumbers = MidiNumbers.NATURAL_MIDI_NUMBERS;
+
 export function getPianoRangeAndShortcuts(range: number[]) {
   const [first, last] = range;
+
+  const _first = findLast(naturalMidiNumbers, midi => midi < first);
+  const _last =
+    last - first > MINIMUM_KEYS_IN_READ_MODE
+      ? find(naturalMidiNumbers, midi => midi > last)
+      : first + MINIMUM_KEYS_IN_READ_MODE;
+
   const keyboardShortcuts = KeyboardShortcuts.create({
-    firstNote: first,
-    lastNote: last,
+    firstNote: _first,
+    lastNote: _last,
     keyboardConfig: KeyboardShortcuts.HOME_ROW
   });
 
-  return { keyboardShortcuts, range: { first, last } };
+  return { keyboardShortcuts, range: { first: _first, last: _last } };
 }
