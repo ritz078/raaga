@@ -7,3 +7,5 @@ export const NATURAL_KEY_COLOR = "#42C9FF";
 export const RADIUS = 3;
 export const GLOBAL_HEADER_HEIGHT = 50;
 export const MINIMUM_KEYS_IN_READ_MODE = 40;
+export const DEFAULT_FIRST_KEY = 38;
+export const DEFAULT_LAST_KEY = 88;

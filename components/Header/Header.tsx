@@ -1,15 +1,23 @@
-import React, { useState, memo } from "react";
+import React, { memo, useState } from "react";
 import { colors } from "@anarock/pebble";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import { headerClass, headerRight, instrumentLabel } from "./Header.styles";
+import {
+  buttonCn,
+  headerClass,
+  headerLeft,
+  headerRight
+} from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
-import { SelectMenu, Position, Icon } from "evergreen-ui";
+import { Icon, Pane, SelectMenu } from "evergreen-ui";
 import { AnyAction, Dispatch } from "redux";
 import ProgressBar from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
+import { Button } from "@components/Button";
+import { MidiNumbers } from "piano-utils";
+import { Range } from "@utils/typings/Visualizer";
 
 export interface HeaderProps {
   dispatch: Dispatch<AnyAction>;
@@ -22,6 +30,8 @@ export interface HeaderProps {
   midiDeviceId: string;
   isPlaying: boolean;
   midi: IMidiJSON;
+  range: Range;
+  onRangeChange: (range: number[]) => void;
 }
 
 const instrumentOptions = Object.keys(instruments).map(id => {
@@ -29,6 +39,14 @@ const instrumentOptions = Object.keys(instruments).map(id => {
   return {
     label: name,
     value
+  };
+});
+
+const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map(midi => {
+  const { note } = MidiNumbers.getAttributes(midi);
+  return {
+    label: note,
+    value: midi
   };
 });
 
@@ -40,7 +58,9 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   midiDeviceId,
   onTogglePlay,
   isPlaying,
-  midi
+  midi,
+  range,
+  onRangeChange
 }) => {
   const [mute, toggleMute] = useState(false);
 
@@ -54,14 +74,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
   return (
     <div className={headerClass}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 15
-        }}
-      >
+      <div className={headerLeft}>
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
             <Icon
@@ -76,6 +89,45 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
             <PlaybackSpeed />
           </>
         )}
+
+        {mode === VISUALIZER_MODE.WRITE && (
+          <>
+            <Pane color="#fff" marginRight={15} fontSize={14}>
+              Range
+            </Pane>
+            <SelectMenu
+              options={naturalKeys}
+              selected={range.first}
+              onSelect={item => {
+                onRangeChange([item.value, range.last]);
+              }}
+              title="First Key"
+              closeOnSelect
+            >
+              <Pane>
+                <Button className={buttonCn}>
+                  {MidiNumbers.getAttributes(range.first).note}
+                </Button>
+              </Pane>
+            </SelectMenu>
+            <Icon icon="minus" color="#fff" size={12} marginX={10} />
+            <SelectMenu
+              options={naturalKeys.filter(({ value }) => value > range.first)}
+              selected={range.last}
+              onSelect={item => {
+                onRangeChange([range.first, item.value]);
+              }}
+              title="Last Key"
+              closeOnSelect
+            >
+              <Pane>
+                <Button className={buttonCn}>
+                  {MidiNumbers.getAttributes(range.last).note}
+                </Button>
+              </Pane>
+            </SelectMenu>
+          </>
+        )}
       </div>
 
       <div className={headerRight}>
@@ -87,12 +139,13 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               onInstrumentChange(item.value);
             }}
             title="Instruments"
-            position={Position.BOTTOM}
             closeOnSelect
           >
-            <div className={instrumentLabel}>
-              {getInstrumentByValue(instrument).name}
-            </div>
+            <Pane>
+              <Button className={buttonCn}>
+                {getInstrumentByValue(instrument).name}
+              </Button>
+            </Pane>
           </SelectMenu>
         )}
 

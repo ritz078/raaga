@@ -69,6 +69,10 @@ export class MidiPlayer {
 
   public setRange(range: Range) {
     this.range = range;
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.UPDATE_RANGE,
+      range
+    });
   }
 
   /**
