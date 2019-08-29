@@ -21,19 +21,11 @@ import { Header } from "@components/Header";
 import CanvasWorker, {
   CanvasWorkerFallback
 } from "@controllers/visualizer.controller";
-import {
-  getInstrumentByValue,
-  getInstrumentIdByValue,
-  instruments
-} from "midi-instruments";
+import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import {
-  DEFAULT_FIRST_KEY,
-  DEFAULT_LAST_KEY,
-  PIANO_HEIGHT
-} from "@config/piano";
+import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
@@ -56,8 +48,10 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
-  const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
-  const [loadedMidi, setMidi] = useState<IMidiJSON>();
+  const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>(
+    null
+  );
+  const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
 
   const resetPlayer = useCallback(() => {
@@ -127,11 +121,11 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   );
 
   const onMidiAndTrackSelect = useCallback(
-    (midi: IMidiJSON, playingInfo: TrackSelectionInfo) => {
+    (midi: IMidiJSON, trackSelectionInfo: TrackSelectionInfo) => {
       (async () => {
         setPlaying(true);
         setMidi(midi);
-        setPlayingMidiInfo(playingInfo);
+        setPlayingMidiInfo(trackSelectionInfo);
         setMode(VISUALIZER_MODE.READ);
         player.clear();
         setActiveMidis([]);
@@ -141,7 +135,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
         setLoading(true);
 
         const _range = setRange(
-          midi.tracks[playingInfo.selectedTrackIndex].notes
+          midi.tracks[trackSelectionInfo.selectedTrackIndex].notes
         );
         player.setRange(_range);
 
@@ -149,13 +143,13 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
         setLoading(false);
 
         player.scheduleAndPlay(
-          playingInfo,
+          trackSelectionInfo,
           (
             notes: NoteWithIdAndEvent[],
             trackIndex: number,
             isComplete?: boolean
           ) => {
-            if (trackIndex === playingInfo.selectedTrackIndex) {
+            if (trackIndex === trackSelectionInfo.selectedTrackIndex) {
               if (isComplete) {
                 player.clear();
                 setPlaying(false);
@@ -185,6 +179,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   useEffect(() => {
     resetPlayer();
     setPlaying(false);
+    player.setMode(mode);
   }, [mode]);
 
   useEffect(() => {
@@ -230,22 +225,20 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
           canvasWorker={canvasWorker}
         />
       </div>
-      <div style={{ height: PIANO_HEIGHT, display: "flex" }}>
-        <div className={pianoWrapper}>
-          {loading && (
-            <Loader className={loaderClass} color={colors.white.base} />
-          )}
-          <Piano
-            activeMidis={activeMidis}
-            onPlay={onNoteStart}
-            onStop={onNoteStop}
-            min={keyboardRange.first}
-            max={keyboardRange.last}
-            className={cx({
-              [css({ opacity: 0.2 })]: loading
-            })}
-          />
-        </div>
+      <div className={pianoWrapper}>
+        {loading && (
+          <Loader className={loaderClass} color={colors.white.base} />
+        )}
+        <Piano
+          activeMidis={activeMidis}
+          onPlay={onNoteStart}
+          onStop={onNoteStop}
+          min={keyboardRange.first}
+          max={keyboardRange.last}
+          className={cx({
+            [css({ opacity: 0.2 })]: loading
+          })}
+        />
       </div>
     </PlayerContext.Provider>
   );

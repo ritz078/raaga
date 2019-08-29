@@ -1,4 +1,5 @@
 import { css } from "emotion";
+import { PIANO_HEIGHT } from "@config/piano";
 
 export const loaderClass = css({
   position: "absolute",
@@ -17,7 +18,8 @@ export const pianoWrapper = css([
   piano,
   {
     alignItems: "center",
-    borderTop: "1px solid #000"
+    borderTop: "1px solid #000",
+    height: PIANO_HEIGHT
   }
 ]);
 

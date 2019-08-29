@@ -5,11 +5,7 @@ import {
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
-import {
-  noteSection,
-  noteSectionWrapper,
-  visualizerWrapper
-} from "@components/styles/Visualizer.styles";
+import * as classNames from "@components/styles/Visualizer.styles";
 import { css, cx } from "emotion";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
@@ -35,12 +31,9 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   });
 
   useEffect(() => {
-    let canvas;
-    if (offScreenCanvasIsSupported) {
-      canvas = canvasRef.current.transferControlToOffscreen();
-    } else {
-      canvas = canvasRef.current;
-    }
+    const canvas = offScreenCanvasIsSupported
+      ? canvasRef.current.transferControlToOffscreen()
+      : canvasRef.current;
 
     // This has been done because it wasn't getting correctly transferred
     // in firefox.
@@ -67,16 +60,9 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
     });
   }, [dimensions]);
 
-  useEffect(() => {
-    canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.SET_MODE,
-      mode
-    });
-  }, [mode]);
-
   const { width, height } = dimensions;
 
-  const className = cx(visualizerWrapper, {
+  const className = cx(classNames.visualizerWrapper, {
     [css({
       transform: "rotate(180deg) scaleX(-1)"
     })]: mode === VISUALIZER_MODE.READ
@@ -91,9 +77,9 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
         ref={canvasRef}
       />
 
-      <div className={noteSectionWrapper}>
+      <div className={classNames.noteSectionWrapper}>
         {getNaturalKeysInRange(range).map(x => (
-          <div className={noteSection} key={x} />
+          <div className={classNames.noteSection} key={x} />
         ))}
       </div>
     </div>

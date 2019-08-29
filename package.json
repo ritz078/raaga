@@ -35,7 +35,6 @@
     "react-dom": "^16.9.0",
     "react-draggable": "^3.3.2",
     "react-modal": "^3.10.1",
-    "react-spring": "^8.0.27",
     "tone": "^13.8.25",
     "utf-8": "^2.0.0",
     "webmidi": "^2.5.1"

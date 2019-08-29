@@ -3,7 +3,10 @@ import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promisifyWorker } from "@utils/promisifyWorker";
 import { range as _range } from "lodash";
 import { EVENT_TYPE } from "@enums/piano";
-import { VISUALIZER_MESSAGES } from "@enums/visualizerMessages";
+import {
+  VISUALIZER_MESSAGES,
+  VISUALIZER_MODE
+} from "@enums/visualizerMessages";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import {
   getDelay,
@@ -315,6 +318,13 @@ export class MidiPlayer {
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.SET_SPEED,
       speed
+    });
+  };
+
+  public setMode = (mode: VISUALIZER_MODE) => {
+    this.canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.SET_MODE,
+      mode
     });
   };
 }
