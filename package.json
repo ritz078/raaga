@@ -18,7 +18,6 @@
     ]
   },
   "dependencies": {
-    "@anarock/pebble": "^0.46.1",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "evergreen-ui": "^4.18.1",
@@ -42,6 +41,7 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.5.0",
     "@svgr/webpack": "^4.3.2",
+    "@tonejs/midi": "^2.0.7",
     "@types/lodash": "^4.14.138",
     "@types/next": "^8.0.6",
     "@types/react": "^16.9.2",

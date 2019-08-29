@@ -9,10 +9,8 @@ import {
 import {
   flexOne,
   loaderClass,
-  pianoWrapper,
-  toastStyle
+  pianoWrapper
 } from "@components/styles/SoundPlayer.styles";
-import { colors, Loader, Toast } from "@anarock/pebble";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import Visualizer from "@components/Visualizer";
 import { Piano } from "./Piano";
@@ -31,6 +29,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
+import { Spinner } from "evergreen-ui";
 
 const range = {
   first: DEFAULT_FIRST_KEY,
@@ -194,8 +193,6 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   return (
     <PlayerContext.Provider value={player}>
       <div className={flexOne}>
-        <Toast className={toastStyle} />
-
         <GlobalHeader
           mode={mode}
           onToggleMode={setMode}
@@ -226,9 +223,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
         />
       </div>
       <div className={pianoWrapper}>
-        {loading && (
-          <Loader className={loaderClass} color={colors.white.base} />
-        )}
+        {loading && <Spinner className={loaderClass} color={"#fff"} />}
         <Piano
           activeMidis={activeMidis}
           onPlay={onNoteStart}

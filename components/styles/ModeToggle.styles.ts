@@ -1,5 +1,4 @@
 import { css } from "emotion";
-import { colors } from "@anarock/pebble";
 
 export const modeToggleWrapper = css({
   backgroundColor: "#000",
@@ -10,7 +9,7 @@ export const modeToggleWrapper = css({
   display: "flex",
   position: "relative",
   flexDirection: "row",
-  color: colors.gray.light,
+  color: "#E0E0E0",
   justifyItems: "center",
   userSelect: "none",
   cursor: "pointer",

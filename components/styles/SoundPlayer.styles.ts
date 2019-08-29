@@ -29,11 +29,3 @@ export const flexOne = css({
   position: "relative",
   flexDirection: "column"
 });
-
-export const toastStyle = css({
-  position: "absolute",
-  bottom: 20,
-  right: 20,
-  left: "auto",
-  transform: "translateX(0) !important"
-});
