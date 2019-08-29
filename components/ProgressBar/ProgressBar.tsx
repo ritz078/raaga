@@ -1,13 +1,13 @@
 import React, { FunctionComponent, memo, useEffect, useState } from "react";
-import { progressBar, timeCn } from "./styles/PlayerController.styles";
 import Tone from "tone";
 import { formatTime } from "@utils/formatTime";
+import { progressBar, timeCn } from "./ProgressBar.styles";
 
 interface ProgressBarProps {
   duration: number;
 }
 
-const ProgressBar: FunctionComponent<ProgressBarProps> = ({ duration }) => {
+const _ProgressBar: FunctionComponent<ProgressBarProps> = ({ duration }) => {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     const intervalId = setInterval(
@@ -33,4 +33,4 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({ duration }) => {
   );
 };
 
-export default memo(ProgressBar);
+export const ProgressBar = memo(_ProgressBar);

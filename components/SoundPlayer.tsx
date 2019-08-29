@@ -66,6 +66,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   const resetPlayer = useCallback(() => {
     player.clear();
     setActiveMidis([]);
+    setKeyboardRange(range);
   }, []);
 
   const changeInstrument = useCallback((_instrument = instrument) => {

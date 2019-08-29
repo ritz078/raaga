@@ -8,7 +8,7 @@ export default class MyApp extends App {
     return (
       <>
         <Head>
-          <title>Piano</title>
+          <title>Raaga</title>
         </Head>
         <Component {...pageProps} />
       </>

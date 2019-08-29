@@ -11,7 +11,7 @@ import {
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { Icon, Pane, SelectMenu } from "evergreen-ui";
-import ProgressBar from "@components/ProgressBar";
+import { ProgressBar } from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 import { Button } from "@components/Button";

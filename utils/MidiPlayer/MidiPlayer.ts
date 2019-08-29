@@ -13,8 +13,14 @@ import {
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
 import { IMidiJSON } from "@typings/midi";
+import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
+
+const defaultRange = {
+  first: DEFAULT_FIRST_KEY,
+  last: DEFAULT_LAST_KEY
+};
 
 export interface IScheduleOptions {
   selectedTrackIndex: number;
@@ -298,6 +304,7 @@ export class MidiPlayer {
     this.canvasWorker.postMessage({
       type: VISUALIZER_MESSAGES.STOP_TRACK
     });
+    this.setRange(defaultRange);
 
     this.setSpeed(1);
   };

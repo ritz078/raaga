@@ -9,7 +9,7 @@ export const keys = css({
 });
 
 export const accidentalKeys = css({
-  height: "7em",
+  height: "6em",
   zIndex: 1,
   border: `${HORIZONTAL_GAP_BETWEEN_NOTES / 2}px solid #000`,
   borderRadius: "0 0 3px 3px",
@@ -20,7 +20,7 @@ export const accidentalKeys = css({
   top: 0,
   cursor: "pointer",
   "&.__active__": {
-    height: "6.8em",
+    height: "5.8em",
     backgroundImage: "linear-gradient(#FBD95C, #FBCF32)",
     borderColor: "#b49b45",
     boxShadow:
