@@ -9,8 +9,7 @@ import {
 import {
   flexOne,
   loaderClass,
-  pianoWrapper,
-  toastStyle
+  pianoWrapper
 } from "@components/styles/SoundPlayer.styles";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import Visualizer from "@components/Visualizer";
