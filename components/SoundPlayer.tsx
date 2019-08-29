@@ -27,7 +27,6 @@ import {
   instruments
 } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import RecordingModal from "@components/RecordingModal";
 import webMidi from "webmidi";
 import Tone from "tone";
 import {
@@ -56,8 +55,6 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
   const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
-  const [isRecording, setRecording] = useState(false);
-  const [recordedNotes, setRecordedNotes] = useState();
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>();
   const [loadedMidi, setMidi] = useState<IMidiJSON>();
@@ -199,8 +196,6 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
 
   useEffect(setMidiDevice, [midiDevice]);
 
-  const _instrument = getInstrumentByValue(instrument);
-
   return (
     <PlayerContext.Provider value={player}>
       <div className={flexOne}>
@@ -227,13 +222,6 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
             setKeyboardRange(range);
           }}
           onMidiDeviceChange={setSelectedMidiDevice}
-        />
-
-        <RecordingModal
-          visible={!isRecording && !!recordedNotes}
-          notes={recordedNotes as any}
-          instrument={_instrument}
-          onActionComplete={() => setRecordedNotes(undefined)}
         />
 
         <Visualizer

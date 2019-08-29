@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@anarock/pebble": "^0.46.1",
-    "@tonejs/midi": "^2.0.7",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "evergreen-ui": "^4.18.1",
