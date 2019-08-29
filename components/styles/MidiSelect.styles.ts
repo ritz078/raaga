@@ -1,12 +1,11 @@
 import { css } from "emotion";
-import { colors } from "@anarock/pebble";
 
 export const midiWrapper = css({
   padding: 30,
   backgroundColor: "white",
   borderRadius: 4,
   textAlign: "center",
-  color: colors.gray.dark,
+  color: "#6B7785",
   fontSize: 14,
   lineHeight: "22px",
   userSelect: "none"

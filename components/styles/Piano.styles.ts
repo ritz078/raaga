@@ -1,5 +1,4 @@
 import { css } from "emotion";
-import { colors } from "@anarock/pebble";
 import { HORIZONTAL_GAP_BETWEEN_NOTES, PIANO_HEIGHT } from "@config/piano";
 
 export const keys = css({
@@ -53,7 +52,7 @@ export const labelStyle = css({
   alignSelf: "flex-end",
   width: "100%",
   paddingBottom: 15,
-  color: colors.gray.dark,
+  color: "#6B7785",
   userSelect: "none",
   fontSize: 12
 });

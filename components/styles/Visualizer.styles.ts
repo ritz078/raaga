@@ -1,5 +1,4 @@
 import { css } from "emotion";
-import { colors } from "@anarock/pebble";
 
 export const visualizerWrapper = css({
   display: "flex",
@@ -10,7 +9,7 @@ export const visualizerWrapper = css({
 });
 
 export const noteSectionWrapper = css({
-  color: colors.white.base,
+  color: "#fff",
   flex: 1,
   position: "absolute",
   display: "flex",

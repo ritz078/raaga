@@ -2,7 +2,6 @@ import * as React from "react";
 import { Button } from "@components/Button";
 import ModeToggle from "@components/ModeToggle";
 import Icon from "@components/Icon";
-import { colors } from "@anarock/pebble";
 import {
   globalHeaderRight,
   uploadButton,
@@ -51,7 +50,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
         <ModeToggle mode={mode} onToggle={onToggleMode} disabled={false} />
 
         <a target="_blank" href="https://github.com/ritz078/raaga">
-          <Icon name="github" color={colors.white.base} size={23} />
+          <Icon name="github" color={"#fff"} size={23} />
         </a>
       </div>
 

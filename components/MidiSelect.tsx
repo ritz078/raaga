@@ -1,12 +1,10 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
-import { colors, Toast } from "@anarock/pebble";
 import webMidi from "webmidi";
 import {
   deviceAvailable,
   midiWrapper,
   noMidiIconWrapper
 } from "@components/styles/MidiSelect.styles";
-import { ReducersType } from "@enums/reducers";
 import { SelectMenu, Pane, Icon } from "evergreen-ui";
 
 const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
@@ -59,7 +57,7 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
       emptyView={
         <div className={midiWrapper}>
           <div className={noMidiIconWrapper}>
-            <Icon name="midi" color={colors.gray.darker} size={26} />
+            <Icon name="midi" color={"#101721"} size={26} />
           </div>
           {error ||
             "No device detected. Make sure your device is MIDI compatible and properly connected."}
@@ -68,9 +66,8 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
       selected={midiDeviceId}
       onSelect={({ value }) => {
         onMidiDeviceChange(value);
-        Toast.show(
-          `Connected to ${(webMidi.getInputById(value as string) as any).name}`,
-          "success"
+        console.log(
+          `Connected to ${(webMidi.getInputById(value as string) as any).name}`
         );
       }}
     >
@@ -86,7 +83,7 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
           <Icon
             name="record"
             size={10}
-            color={colors.green.base}
+            color={"#69C022"}
             className={deviceAvailable}
           />
         )}
