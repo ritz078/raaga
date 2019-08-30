@@ -1,12 +1,6 @@
 import React, { memo, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import {
-  buttonCn,
-  headerClass,
-  headerLeft,
-  headerRight
-} from "./Header.styles";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
 import { Icon, Pane, SelectMenu } from "evergreen-ui";
@@ -71,8 +65,13 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   const playName = isPlaying ? "pause" : "play";
 
   return (
-    <div className={headerClass}>
-      <div className={headerLeft}>
+    <div
+      className="h-12 w-full z-10 px-3 flex flex-row justify-between"
+      style={{
+        backgroundColor: "#1c1c1c"
+      }}
+    >
+      <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
             <Icon
@@ -90,9 +89,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
         {mode === VISUALIZER_MODE.WRITE && (
           <>
-            <Pane color="#fff" marginRight={15} fontSize={14}>
-              Range
-            </Pane>
+            <div className="text-white text-sm mr-4">Range</div>
             <SelectMenu
               options={naturalKeys}
               selected={range.first}
@@ -103,7 +100,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className={buttonCn}>
+                <Button className="h-8">
                   {MidiNumbers.getAttributes(range.first).note}
                 </Button>
               </Pane>
@@ -119,7 +116,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className={buttonCn}>
+                <Button className="h-8">
                   {MidiNumbers.getAttributes(range.last).note}
                 </Button>
               </Pane>
@@ -128,7 +125,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
       </div>
 
-      <div className={headerRight}>
+      <div className="flex flex-row justify-between items-center">
         {mode === VISUALIZER_MODE.WRITE && (
           <SelectMenu
             options={instrumentOptions}
@@ -140,7 +137,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
             closeOnSelect
           >
             <Pane>
-              <Button className={buttonCn}>
+              <Button className="h-8 mr-2">
                 {getInstrumentByValue(instrument).name}
               </Button>
             </Pane>

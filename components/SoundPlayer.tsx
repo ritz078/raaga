@@ -26,7 +26,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
-import { Spinner } from "evergreen-ui";
+import Loader from "@assets/images/loader.svg";
 
 const range = {
   first: DEFAULT_FIRST_KEY,
@@ -206,7 +206,7 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
           midi={loadedMidi}
           range={keyboardRange}
           onRangeChange={_range => {
-            const { range } = getPianoRangeAndShortcuts(_range);
+            const { range } = getPianoRangeAndShortcuts(_range, false);
             player.setRange(range);
             setKeyboardRange(range);
           }}
@@ -225,7 +225,7 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
           height: PIANO_HEIGHT
         }}
       >
-        {loading && <Spinner className="absolute z-10" color={"#fff"} />}
+        {loading && <Loader className="absolute z-10" />}
         <Piano
           activeMidis={activeMidis}
           onPlay={onNoteStart}

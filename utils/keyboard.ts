@@ -61,17 +61,22 @@ export function getRelativeKeyPosition(
 
 const naturalMidiNumbers = MidiNumbers.NATURAL_MIDI_NUMBERS;
 
-export function getPianoRangeAndShortcuts(range: number[]) {
+export function getPianoRangeAndShortcuts(range: number[], autoSet = true) {
   const [first, last] = range;
 
-  const _first = findLast(naturalMidiNumbers, midi => midi < first);
-  const _last =
-    last - first > MINIMUM_KEYS_IN_READ_MODE
-      ? find(naturalMidiNumbers, midi => midi > last)
-      : find(
-          naturalMidiNumbers,
-          midi => midi > first + MINIMUM_KEYS_IN_READ_MODE
-        );
+  let _first = first;
+  let _last = last;
+
+  if (autoSet) {
+    _first = findLast(naturalMidiNumbers, midi => midi < first);
+    _last =
+      last - first > MINIMUM_KEYS_IN_READ_MODE
+        ? find(naturalMidiNumbers, midi => midi > last)
+        : find(
+            naturalMidiNumbers,
+            midi => midi > first + MINIMUM_KEYS_IN_READ_MODE
+          );
+  }
 
   const keyboardShortcuts = KeyboardShortcuts.create({
     firstNote: _first,
