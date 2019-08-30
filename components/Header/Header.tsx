@@ -65,12 +65,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   const playName = isPlaying ? "pause" : "play";
 
   return (
-    <div
-      className="h-12 w-full z-10 px-3 flex flex-row justify-between"
-      style={{
-        backgroundColor: "#1c1c1c"
-      }}
-    >
+    <div className="header">
       <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>

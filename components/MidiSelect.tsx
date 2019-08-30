@@ -1,10 +1,5 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import webMidi from "webmidi";
-import {
-  deviceAvailable,
-  midiWrapper,
-  noMidiIconWrapper
-} from "@components/styles/MidiSelect.styles";
 import { SelectMenu, Pane, Icon } from "evergreen-ui";
 
 const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
@@ -55,8 +50,8 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
         value: id
       }))}
       emptyView={
-        <div className={midiWrapper}>
-          <div className={noMidiIconWrapper}>
+        <div className="p-8 bg-white rounded text-center text-gray-700 text-xs select-none">
+          <div className="flex justify-center mb-5 text-center">
             <Icon name="midi" color={"#101721"} size={26} />
           </div>
           {error ||
@@ -79,14 +74,6 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
           cursor="pointer"
           marginX={15}
         />
-        {!!inputMidis.length && (
-          <Icon
-            name="record"
-            size={10}
-            color={"#69C022"}
-            className={deviceAvailable}
-          />
-        )}
       </Pane>
     </SelectMenu>
   );

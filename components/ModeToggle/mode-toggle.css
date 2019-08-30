@@ -1,0 +1,25 @@
+.mode-toggle-wrapper {
+  @apply bg-black flex relative flex-row justify-center select-none cursor-pointer mr-4 p-1 h-8 w-40;
+  border-radius: 20px;
+}
+
+.mode-toggle-wrapper.__disabled__ {
+  @apply opacity-75 cursor-not-allowed;
+}
+
+.mode-toggle-wrapper > div:not(.mode-toggle-background) {
+  @apply flex flex-1 items-center justify-center z-10 text-xs text-center;
+}
+
+.mode-toggle-background {
+  @apply absolute h-6;
+  border-radius: 17px;
+  background-color: rgba(230, 230, 230, 0.16);
+  transition: all 200ms;
+  left: 4px;
+  width: 76px;
+}
+
+.mode-toggle-background.__write__ {
+  transform: translateX(76px);
+}

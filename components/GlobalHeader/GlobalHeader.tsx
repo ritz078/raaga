@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button } from "@components/Button";
-import ModeToggle from "@components/ModeToggle";
+import { ModeToggle } from "@components/ModeToggle";
 import Icon from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
@@ -29,11 +29,9 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
 
   return (
     <header
-      className="px-2 py-4 text-white flex flex-row items-center justify-between border-b"
+      className="global-header"
       style={{
-        height: GLOBAL_HEADER_HEIGHT,
-        backgroundColor: "#232323",
-        borderColor: "#131313"
+        height: GLOBAL_HEADER_HEIGHT
       }}
     >
       <span>🎹</span>
