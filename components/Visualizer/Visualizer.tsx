@@ -5,11 +5,10 @@ import {
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
-import * as classNames from "@components/styles/Visualizer.styles";
-import { css, cx } from "emotion";
 import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 import { useWindowResize } from "@hooks/useWindowResize";
+import cn from "@sindresorhus/class-names";
 
 interface VisualizerProps {
   range: Range;
@@ -62,10 +61,8 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
 
   const { width, height } = dimensions;
 
-  const className = cx(classNames.visualizerWrapper, {
-    [css({
-      transform: "rotate(180deg) scaleX(-1)"
-    })]: mode === VISUALIZER_MODE.READ
+  const className = cn("vis-wrapper", {
+    "read-mode": mode === VISUALIZER_MODE.READ
   });
 
   return (
@@ -77,13 +74,13 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
         ref={canvasRef}
       />
 
-      <div className={classNames.noteSectionWrapper}>
+      <div className="text-white flex flex-1 absolute flex-row inset-0">
         {getNaturalKeysInRange(range).map(x => (
-          <div className={classNames.noteSection} key={x} />
+          <div className="vis-note-section" key={x} />
         ))}
       </div>
     </div>
   );
 };
 
-export default React.memo(_Visualizer);
+export const Visualizer = React.memo(_Visualizer);

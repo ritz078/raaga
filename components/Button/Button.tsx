@@ -1,7 +1,6 @@
-import * as styles from "./Button.styles";
 import * as React from "react";
 import { Icon } from "evergreen-ui";
-import { cx } from "emotion";
+import cn from "@sindresorhus/class-names";
 
 interface ButtonProps {
   children: React.ReactChild;
@@ -19,7 +18,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   className
 }) => {
   return (
-    <div className={cx(styles.uploadButton, className)} onClick={onClick}>
+    <div className={cn("button", className)} onClick={onClick}>
       {icon && <Icon size={13} marginRight={8} icon={icon} {...iconProps} />}
       {children}
     </div>

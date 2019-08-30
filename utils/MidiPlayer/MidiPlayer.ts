@@ -37,10 +37,28 @@ type IEventCallback = (
   isLastEvent?: boolean
 ) => void;
 
+export interface Sampler {
+  connect: (master: any) => void;
+  triggerAttack: (note: string, time?: number, velocity?: number) => void;
+  triggerRelease: (note: string) => void;
+  add: (key: string, buffer: ArrayBuffer, cb: () => void) => void;
+  context: AudioContext;
+  dispose: () => void;
+  triggerAttackRelease: (
+    note: string,
+    duration: number,
+    time: number,
+    velocity?: number
+  ) => void;
+  volume: {
+    value: number;
+  };
+}
+
 export class MidiPlayer {
   private midi: IMidiJSON;
-  private trackSamplers = [];
-  private drumSampler;
+  private trackSamplers: Sampler[] = [];
+  private drumSampler: Sampler;
   private trackPart = [];
   private drumPart = [];
   private range;
