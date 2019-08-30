@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import webMidi from "webmidi";
-import { SelectMenu, Pane, Icon } from "evergreen-ui";
+import { SelectMenu, Pane } from "evergreen-ui";
+import { Icon } from "@components/Icon";
 
 const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
@@ -52,7 +53,7 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
       emptyView={
         <div className="p-8 bg-white rounded text-center text-gray-700 text-xs select-none">
           <div className="flex justify-center mb-5 text-center">
-            <Icon name="midi" color={"#101721"} size={26} />
+            <Icon name="piano" color={"#101721"} size={26} />
           </div>
           {error ||
             "No device detected. Make sure your device is MIDI compatible and properly connected."}
@@ -68,11 +69,10 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
     >
       <Pane display="inline-flex">
         <Icon
-          icon="projects"
+          name="piano"
           color={"#fff"}
           size={16}
-          cursor="pointer"
-          marginX={15}
+          className="mx-4 cursor-pointer"
         />
       </Pane>
     </SelectMenu>

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Button } from "@components/Button";
 import { ModeToggle } from "@components/ModeToggle";
-import Icon from "@components/Icon";
+import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
 import { IMidiJSON } from "@typings/midi";
@@ -38,12 +38,8 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
 
       <div className="flex items-center">
         <Button
-          icon="upload"
           onClick={() => toggleTrackSelectionModal(true)}
           className="mr-4 text-xs bg-gray-900 h-8"
-          iconProps={{
-            size: 10
-          }}
         >
           Open File
         </Button>

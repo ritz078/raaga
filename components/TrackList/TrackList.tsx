@@ -3,7 +3,7 @@ import * as React from "react";
 import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import * as styles from "./TrackList.styles";
-import ZeroState from "@assets/images/zero-state.svg";
+import { ReactComponent as ZeroState } from "@assets/images/zero-state.svg";
 import { IMidiJSON } from "@typings/midi";
 
 export interface TrackSelectionInfo {

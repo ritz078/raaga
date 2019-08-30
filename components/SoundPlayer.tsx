@@ -26,7 +26,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
-import Loader from "@assets/images/loader.svg";
+import { ReactComponent as Loader } from "@assets/images/loader.svg";
 
 const range = {
   first: DEFAULT_FIRST_KEY,

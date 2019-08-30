@@ -38,7 +38,15 @@ function Sidebar({ onMidiLoad }) {
   return (
     <div className={styles.sidebar}>
       <label htmlFor="upload-midi">
-        <Button icon="upload">Browse in Computer</Button>
+        <Button
+          icon="browse"
+          className="h-10"
+          iconProps={{
+            size: 15
+          }}
+        >
+          Browse in Computer
+        </Button>
       </label>
       <input
         onChange={loadFile}

@@ -31,6 +31,9 @@ const config = {
                 }
               }
             }
+          },
+          {
+            loader: "url-loader"
           }
         ]
       }

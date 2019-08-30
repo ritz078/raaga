@@ -1,5 +1,5 @@
-import DrumSet from "@assets/images/instruments/drum-set.svg";
-import AcousticGuitar from "@assets/images/instruments/acoustic-guitar.svg";
+import { ReactComponent as DrumSet } from "@assets/images/instruments/drum-set.svg";
+import { ReactComponent as AcousticGuitar } from "@assets/images/instruments/acoustic-guitar.svg";
 import * as React from "react";
 import { Pane, Icon, Text } from "evergreen-ui";
 
