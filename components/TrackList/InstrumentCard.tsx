@@ -1,7 +1,8 @@
 import { ReactComponent as DrumSet } from "@assets/images/instruments/drum-set.svg";
 import { ReactComponent as AcousticGuitar } from "@assets/images/instruments/acoustic-guitar.svg";
 import * as React from "react";
-import { Pane, Icon, Text } from "evergreen-ui";
+import { Text } from "evergreen-ui";
+import { Icon } from "@components/Icon";
 
 interface InstrumentCardProps {
   instrumentName: string;
@@ -26,59 +27,37 @@ const InstrumentCard: React.FunctionComponent<InstrumentCardProps> = ({
   };
 
   return (
-    <Pane
-      paddingX={5}
-      marginRight={15}
-      paddingY={5}
+    <div
+      className="instrument-card"
       onClick={onClick}
-      backgroundColor={"#353535"}
-      borderRadius={2}
-      height={60}
-      cursor="pointer"
-      css={{
-        border: isSelected ? "1px solid #4CAF50" : "1px solid transparent",
-        transition: "all 200ms",
-        "&:hover": {
-          backgroundColor: "#2a2a2a"
-        }
+      style={{
+        borderColor: isSelected ? "#4CAF50" : "transparent"
       }}
-      display="flex"
-      flexDirection="row"
-      marginBottom={14}
-      width={230}
     >
-      <Pane
-        borderRadius={2}
-        backgroundColor={"#5d5d5d"}
-        paddingX={8}
-        paddingY={8}
-      >
+      <div className="instrument-illustration">
         {drums ? <DrumSet height={35} /> : <AcousticGuitar height={35} />}
-      </Pane>
+      </div>
 
-      <Pane
-        marginLeft={15}
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
-      >
+      <div className="flex flex-col justify-between ml-2">
         <Text size={400} color="#eee" fontSize={13} textTransform="capitalize">
           {instrumentName}
         </Text>
 
-        <Pane
-          width={20}
+        <div
           onClick={_onIconClick}
-          opacity={!onIconClick ? 0.2 : 1}
+          className="w-5"
+          style={{
+            opacity: !onIconClick ? 0.2 : 1
+          }}
         >
           {disabled ? (
-            <Icon icon="disable" color="red" size={15} />
+            <Icon name="volume-off" color="red" size={14} className="mb-1" />
           ) : (
-            <Icon icon="volume-up" color="#b5b5b5" size={15} />
+            <Icon name="volume" color="#b5b5b5" size={14} className="mb-1" />
           )}
-        </Pane>
-      </Pane>
-    </Pane>
+        </div>
+      </div>
+    </div>
   );
 };
 

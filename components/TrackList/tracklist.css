@@ -1,0 +1,18 @@
+.instrument-card {
+  @apply px-1 py-1 cursor-pointer flex flex-row mb-4 border rounded-sm;
+  height: 60px;
+  transition: all 200ms;
+  margin-bottom: 14px;
+  width: 230px;
+  background-color: #353535;
+  margin-right: 14px;
+}
+
+.instrument-card.hover {
+  background-color: #2a2a2a;
+}
+
+.instrument-illustration {
+  @apply px-2 py-2 rounded-sm;
+  background-color: #5d5d5d;
+}
