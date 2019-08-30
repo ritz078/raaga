@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Icon } from "evergreen-ui";
 import cn from "@sindresorhus/class-names";
+import { Icon } from "@components/Icon";
 
 interface ButtonProps {
   children: React.ReactChild;
@@ -19,7 +19,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
 }) => {
   return (
     <div className={cn("button", className)} onClick={onClick}>
-      {icon && <Icon size={13} marginRight={8} icon={icon} {...iconProps} />}
+      {icon && <Icon size={13} className="mr-2" name={icon} {...iconProps} />}
       {children}
     </div>
   );

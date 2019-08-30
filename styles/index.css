@@ -5,3 +5,7 @@
 @import "../components/Piano/piano.css";
 @import "../components/Button/button.css";
 @import "../components/Visualizer/visualizer.css";
+@import "../components/ModeToggle/mode-toggle.css";
+@import "../components/Header/header.css";
+@import "../components/GlobalHeader/global-header.css";
+@import "../components/TrackList/tracklist.css";

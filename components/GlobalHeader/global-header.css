@@ -1,0 +1,5 @@
+.global-header {
+  @apply px-6 py-4 text-white flex flex-row items-center justify-between border-b;
+  background-color: #232323;
+  border-color: #131313;
+}

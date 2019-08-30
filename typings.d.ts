@@ -6,6 +6,7 @@ declare module "*.json" {
 declare module "*.svg" {
   const value: any;
   export default value;
+  export const ReactComponent: any;
 }
 
 declare module "@workers/midiload.worker" {

@@ -2,11 +2,12 @@ import * as styles from "@components/TrackList/TrackList.styles";
 import InstrumentCard from "@components/TrackList/InstrumentCard";
 import { cx } from "emotion";
 import * as React from "react";
-import { Heading, Text, Icon, Switch, Checkbox } from "evergreen-ui";
+import { Heading, Text, Switch, Checkbox } from "evergreen-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { range } from "lodash";
 import { IBeat, ITrack } from "@typings/midi";
+import { Icon } from "@components/Icon";
 
 function toggleInArray(arr: number[], num: number) {
   return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];
@@ -103,12 +104,10 @@ function TrackSelection({ midi, onClose, onPlay }) {
           </div>
         </div>
         <Icon
-          icon="cross"
-          size={20}
-          cursor="pointer"
-          marginTop={-30}
+          name="close"
+          size={16}
           onClick={onClose}
-          color="#b5b5b5"
+          className="absolute cursor-pointer top-0 right-0 m-5"
         />
       </div>
       <div className={styles.content}>

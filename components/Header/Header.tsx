@@ -3,13 +3,14 @@ import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
-import { Icon, Pane, SelectMenu } from "evergreen-ui";
+import { Pane, SelectMenu } from "evergreen-ui";
 import { ProgressBar } from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 import { Button } from "@components/Button";
 import { MidiNumbers } from "piano-utils";
 import { Range } from "@utils/typings/Visualizer";
+import { Icon } from "@components/Icon";
 
 export interface HeaderProps {
   mode: VISUALIZER_MODE;
@@ -61,21 +62,16 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
     toggleMute(!mute);
   };
 
-  const volumeName = mute ? "volume-off" : "volume-up";
+  const volumeName = mute ? "volume-off" : "volume";
   const playName = isPlaying ? "pause" : "play";
 
   return (
-    <div
-      className="h-12 w-full z-10 px-3 flex flex-row justify-between"
-      style={{
-        backgroundColor: "#1c1c1c"
-      }}
-    >
+    <div className="header">
       <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
             <Icon
-              icon={playName}
+              name={playName}
               color="#fff"
               size={19}
               onClick={onTogglePlay}
@@ -105,7 +101,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
                 </Button>
               </Pane>
             </SelectMenu>
-            <Icon icon="minus" color="#fff" size={12} marginX={10} />
+            <Icon name="minus" color="#fff" size={12} className="mx-3" />
             <SelectMenu
               options={naturalKeys.filter(({ value }) => value > range.first)}
               selected={range.last}
@@ -145,12 +141,11 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
 
         <Icon
-          icon={volumeName}
+          name={volumeName}
           color={"#fff"}
           onClick={_toggleMute}
           size={18}
-          cursor="pointer"
-          marginX={15}
+          className="mx-4 cursor-pointer"
         />
 
         <MidiSelect

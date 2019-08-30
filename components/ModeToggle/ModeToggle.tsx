@@ -1,7 +1,6 @@
 import React, { memo } from "react";
-import { modeBackground, modeToggleWrapper } from "./styles/ModeToggle.styles";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import { cx } from "emotion";
+import cn from "@sindresorhus/class-names";
 
 interface ModeToggleProps {
   mode: VISUALIZER_MODE;
@@ -9,18 +8,18 @@ interface ModeToggleProps {
   disabled: boolean;
 }
 
-const ModeToggle: React.FunctionComponent<ModeToggleProps> = ({
+const _ModeToggle: React.FunctionComponent<ModeToggleProps> = ({
   mode,
   onToggle,
   disabled
 }) => {
   const isWriteMode = mode === VISUALIZER_MODE.WRITE;
 
-  const modeActiveBackground = cx(modeBackground, {
+  const modeActiveBackground = cn("mode-toggle-background", {
     __write__: isWriteMode
   });
 
-  const wrapperCn = cx(modeToggleWrapper, {
+  const wrapperCn = cn("mode-toggle-wrapper", {
     __disabled__: disabled
   });
 
@@ -38,4 +37,4 @@ const ModeToggle: React.FunctionComponent<ModeToggleProps> = ({
   );
 };
 
-export default memo(ModeToggle);
+export const ModeToggle = memo(_ModeToggle);
