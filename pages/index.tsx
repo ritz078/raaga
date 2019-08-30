@@ -1,8 +1,14 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
+import { ReactComponent as Loader } from "@assets/images/loader.svg";
 
 const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
-  ssr: false
+  ssr: false,
+  loading: () => (
+    <div className="h-screen w-screen flex flex-1 items-center justify-center">
+      <Loader />
+    </div>
+  )
 });
 
 function Main() {
