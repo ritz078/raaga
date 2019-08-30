@@ -1,20 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SoundPlayerProps } from "./typings/SoundPlayer";
 import {
   getMidiRange,
   IScheduleOptions,
   isWithinRange,
   MidiPlayer
 } from "@utils";
-import {
-  flexOne,
-  loaderClass,
-  pianoWrapper
-} from "@components/styles/SoundPlayer.styles";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
-import Visualizer from "@components/Visualizer";
+import { Visualizer } from "@components/Visualizer";
 import { Piano } from "./Piano";
-import { css, cx } from "emotion";
 import { Header } from "@components/Header";
 import CanvasWorker, {
   CanvasWorkerFallback
@@ -23,7 +16,11 @@ import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
+import {
+  DEFAULT_FIRST_KEY,
+  DEFAULT_LAST_KEY,
+  PIANO_HEIGHT
+} from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
@@ -40,7 +37,7 @@ const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
 const player = new MidiPlayer(canvasWorker, range);
 export const PlayerContext = React.createContext(player);
 
-const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
+const SoundPlayer: React.FunctionComponent<{}> = () => {
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
@@ -192,7 +189,7 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
 
   return (
     <PlayerContext.Provider value={player}>
-      <div className={flexOne}>
+      <div className="flex flex-1 relative flex-col">
         <GlobalHeader
           mode={mode}
           onToggleMode={setMode}
@@ -222,17 +219,20 @@ const SoundPlayer: React.FunctionComponent<SoundPlayerProps> = () => {
           canvasWorker={canvasWorker}
         />
       </div>
-      <div className={pianoWrapper}>
-        {loading && <Spinner className={loaderClass} color={"#fff"} />}
+      <div
+        className="flex justify-center relative items-center border-t border-black"
+        style={{
+          height: PIANO_HEIGHT
+        }}
+      >
+        {loading && <Spinner className="absolute z-10" color={"#fff"} />}
         <Piano
           activeMidis={activeMidis}
           onPlay={onNoteStart}
           onStop={onNoteStop}
           min={keyboardRange.first}
           max={keyboardRange.last}
-          className={cx({
-            [css({ opacity: 0.2 })]: loading
-          })}
+          className={loading ? "opacity-25" : undefined}
         />
       </div>
     </PlayerContext.Provider>

@@ -4,17 +4,10 @@ import {
   getNaturalKeyWidthRatio,
   getRelativeKeyPosition
 } from "@utils";
-import { css, cx } from "emotion";
-import {
-  accidentalKeys,
-  keys,
-  labelStyle,
-  naturalKeys
-} from "@components/styles/Piano.styles";
 import { MidiNumbers } from "piano-utils";
-import { piano } from "@components/styles/SoundPlayer.styles";
 import Tone from "tone";
 import { FunctionComponent, useState } from "react";
+import cn from "@sindresorhus/class-names";
 
 interface PianoProps {
   min: number;
@@ -62,21 +55,26 @@ const _Piano: FunctionComponent<PianoProps> = ({
   const midis = getAllMidiNumbersInRange(range);
 
   return (
-    <div className={cx(piano, className)}>
+    <div
+      className={cn(
+        "flex justify-center w-full relative overflow-x-hidden",
+        className
+      )}
+    >
       {midis.map(midi => {
         const { isAccidental } = MidiNumbers.getAttributes(midi);
         const naturalKeyWidth = getNaturalKeyWidthRatio(range) * 100;
         const left = getRelativeKeyPosition(midi, range) * naturalKeyWidth;
 
         const width = isAccidental ? 0.65 * naturalKeyWidth : naturalKeyWidth;
-        const base = css({
+        const style = {
           left: `${left}%`,
           width: `${width}%`
-        });
+        };
 
-        const className = cx(base, keys, {
-          [accidentalKeys]: isAccidental,
-          [naturalKeys]: !isAccidental,
+        const className = cn({
+          "accidental-keys": isAccidental,
+          "natural-keys": !isAccidental,
           __active__: activeMidis.indexOf(midi) >= 0
         });
         return (
@@ -88,9 +86,10 @@ const _Piano: FunctionComponent<PianoProps> = ({
             onMouseLeave={() => stop(midi)}
             className={className}
             key={midi}
+            style={style}
           >
             {!isAccidental && (
-              <div className={labelStyle}>
+              <div className="uppercase flex justify-center self-end w-full pb-4 select-none text-sm text-gray-700">
                 {Tone.Frequency(midi, "midi").toNote()}
               </div>
             )}

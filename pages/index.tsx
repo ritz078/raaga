@@ -1,6 +1,5 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { bodyClass, playerWrapper } from "@styles/main.styles";
 
 const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
   ssr: false
@@ -8,8 +7,8 @@ const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
 
 function Main() {
   return (
-    <div className={bodyClass}>
-      <div className={playerWrapper}>
+    <div className="bg-black h-screen overflow-hidden flex flex-col w-full min-w-1100">
+      <div className="flex flex-1 flex-col">
         <SoundPlayer />
       </div>
     </div>

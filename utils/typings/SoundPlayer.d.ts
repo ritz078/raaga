@@ -14,7 +14,3 @@ interface Message {
   midi?: number;
   mode?: VISUALIZER_MODE;
 }
-
-export interface CanvasWorkerInterface extends Worker {
-  postMessage(message: Message, transfer?: any[]): void;
-}
