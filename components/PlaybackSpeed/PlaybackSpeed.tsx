@@ -1,8 +1,7 @@
 import { Icon } from "evergreen-ui";
 import React, { useContext, useEffect, useState } from "react";
-import * as classNames from "./PlaybackSpeed.styles";
-import Tone from "tone";
 import { PlayerContext } from "@components/SoundPlayer";
+import { Button } from "@components/Button";
 
 const _PlaybackSpeed = function() {
   const [speed, setSpeed] = useState(1);
@@ -25,14 +24,17 @@ const _PlaybackSpeed = function() {
   }, [speed]);
 
   return (
-    <div className={classNames.wrapper}>
-      <div onClick={decrease} className={classNames.actionButton}>
-        <Icon icon="minus" size={20} color="#fff" />
-      </div>
-      <span className={classNames.speedValue}>{Math.round(speed * 100)}%</span>
-      <div onClick={increase} className={classNames.actionButton}>
-        <Icon icon="plus" size={20} color="#fff" />
-      </div>
+    <div className="playback-speed-wrapper">
+      <div className="text-gray-500 text-xs mr-4">Speed</div>
+      <Button onClick={decrease} className="playback-speed-btn">
+        <Icon icon="minus" size={15} color="#fff" />
+      </Button>
+      <span className="block text-xs text-center w-12">
+        {Math.round(speed * 100)}%
+      </span>
+      <Button onClick={increase} className="playback-speed-btn">
+        <Icon icon="plus" size={15} color="#fff" />
+      </Button>
     </div>
   );
 };

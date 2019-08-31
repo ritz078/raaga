@@ -1,26 +1,7 @@
 import * as React from "react";
 import Document, { Main, NextScript, Head } from "next/document";
-import { extractCritical } from "emotion-server";
-import { injectGlobal } from "emotion";
 
-injectGlobal`
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-font-family: "Voces";
--webkit-font-smoothing: antialiased;
-}`;
-
-export default class MyDocument extends Document<{
-  css: string;
-}> {
-  static getInitialProps({ renderPage }) {
-    const page = renderPage();
-    const styles = extractCritical(page.html);
-    return { ...page, ...styles };
-  }
-
+export default class MyDocument extends Document<{}> {
   constructor(props) {
     super(props);
     const { __NEXT_DATA__, ids } = props;
@@ -38,7 +19,6 @@ export default class MyDocument extends Document<{
             href="https://fonts.googleapis.com/css?family=Voces"
           />
           <link rel="stylesheet" href={"/static/fonts/synth.css"} />
-          <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <link
             rel="shortcut icon"
             type="image/png"

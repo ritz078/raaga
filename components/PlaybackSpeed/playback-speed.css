@@ -1,0 +1,7 @@
+.playback-speed-wrapper {
+  @apply header-range-wrapper text-white;
+}
+
+.playback-speed-btn {
+  @apply h-6 w-8 px-1 flex justify-center;
+}

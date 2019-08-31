@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Voces", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.flex-space-between-center {
+  @apply flex flex-row items-center justify-between;
+}

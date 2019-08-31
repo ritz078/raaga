@@ -11,7 +11,7 @@ interface IconProps {
 
 const _Icon: FunctionComponent<IconProps> = ({
   name,
-  size,
+  size = 16,
   color = "#fff",
   className,
   onClick

@@ -70,22 +70,25 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
       <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
-            <Icon
-              name={playName}
-              color="#fff"
-              size={19}
-              onClick={onTogglePlay}
-            />
+            <div className="player-wrapper">
+              <Icon
+                name={playName}
+                color="#fff"
+                size={13}
+                className="cursor-pointer"
+                onClick={onTogglePlay}
+              />
 
-            <ProgressBar duration={midi && midi.duration} />
+              <ProgressBar duration={midi && midi.duration} />
+            </div>
 
             <PlaybackSpeed />
           </>
         )}
 
         {mode === VISUALIZER_MODE.WRITE && (
-          <>
-            <div className="text-white text-sm mr-4">Range</div>
+          <div className="header-range-wrapper">
+            <div className="text-gray-500 text-xs mr-4">Range</div>
             <SelectMenu
               options={naturalKeys}
               selected={range.first}
@@ -96,12 +99,12 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className="h-8">
+                <Button className="h-6">
                   {MidiNumbers.getAttributes(range.first).note}
                 </Button>
               </Pane>
             </SelectMenu>
-            <Icon name="minus" color="#fff" size={12} className="mx-3" />
+            <Icon name="minus" color="#fff" size={8} className="mx-2" />
             <SelectMenu
               options={naturalKeys.filter(({ value }) => value > range.first)}
               selected={range.last}
@@ -112,12 +115,12 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className="h-8">
+                <Button className="h-6">
                   {MidiNumbers.getAttributes(range.last).note}
                 </Button>
               </Pane>
             </SelectMenu>
-          </>
+          </div>
         )}
       </div>
 

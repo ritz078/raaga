@@ -1,7 +1,6 @@
 import { ReactComponent as DrumSet } from "@assets/images/instruments/drum-set.svg";
 import { ReactComponent as AcousticGuitar } from "@assets/images/instruments/acoustic-guitar.svg";
 import * as React from "react";
-import { Text } from "evergreen-ui";
 import { Icon } from "@components/Icon";
 
 interface InstrumentCardProps {
@@ -39,9 +38,9 @@ const InstrumentCard: React.FunctionComponent<InstrumentCardProps> = ({
       </div>
 
       <div className="flex flex-col justify-between ml-2">
-        <Text size={400} color="#eee" fontSize={13} textTransform="capitalize">
+        <span className="text-xs capitalize text-gray-400">
           {instrumentName}
-        </Text>
+        </span>
 
         <div
           onClick={_onIconClick}
@@ -51,9 +50,9 @@ const InstrumentCard: React.FunctionComponent<InstrumentCardProps> = ({
           }}
         >
           {disabled ? (
-            <Icon name="volume-off" color="red" size={14} className="mb-1" />
+            <Icon name="volume-off" color="red" size={12} className="mb-1" />
           ) : (
-            <Icon name="volume" color="#b5b5b5" size={14} className="mb-1" />
+            <Icon name="volume" color="#b5b5b5" size={12} className="mb-1" />
           )}
         </div>
       </div>

@@ -1,7 +1,9 @@
 @import "~tailwindcss/base.css";
 @import "~tailwindcss/components.css";
 @import "~tailwindcss/utilities.css";
+@import "~nprogress/nprogress.css";
 
+@import "./mixins.css";
 @import "../components/Piano/piano.css";
 @import "../components/Button/button.css";
 @import "../components/Visualizer/visualizer.css";
@@ -9,3 +11,5 @@
 @import "../components/Header/header.css";
 @import "../components/GlobalHeader/global-header.css";
 @import "../components/TrackList/tracklist.css";
+@import "../components/ProgressBar/progress-bar.css";
+@import "../components/PlaybackSpeed/playback-speed.css";

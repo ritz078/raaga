@@ -3,8 +3,8 @@
   height: 60px;
   transition: all 200ms;
   margin-bottom: 14px;
-  width: 230px;
-  background-color: #353535;
+  width: 228px;
+  background-color: #212121;
   margin-right: 14px;
 }
 
@@ -15,4 +15,63 @@
 .instrument-illustration {
   @apply px-2 py-2 rounded-sm;
   background-color: #5d5d5d;
+}
+
+.tl-sidebar-sample-midi {
+  @apply capitalize truncate cursor-pointer pl-1;
+  color: #909090;
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+.tl-sidebar {
+  @apply p-5 w-64;
+  background-color: #272727;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.tl-sidebar-sample-midi:hover {
+  @apply text-white;
+}
+
+.tl-song-info {
+  font-size: 13px;
+  color: #8a8a8a;
+}
+
+.ts-content {
+  @apply flex flex-col flex-1 overflow-y-scroll pr-4 pb-5 pl-5;
+  background-color: #131313;
+}
+
+.ts-section-title {
+  @apply flex-space-between-center my-5;
+}
+
+.ts-footer {
+  @apply flex-space-between-center border-t p-5;
+  height: 50px;
+  border-color: #2a2a2a;
+}
+
+.ts-header {
+  @apply flex-space-between-center border-b;
+  padding: 20px 15px 10px 20px;
+  border-bottom-color: #2a2a2a;
+}
+
+.ts-header-subtext {
+  margin-top: 2px;
+}
+
+.tl-zero-state-illus-wrapper {
+  @apply flex items-center justify-center;
+  min-height: 500px;
+}
+
+.tl-zero-state-illus-wrapper > div {
+  @apply text-center flex flex-col items-center;
+  width: 550px;
+  color: #7b7b7b;
 }
