@@ -7,3 +7,8 @@
   @apply flex flex-row rounded-sm items-center p-1 pl-3 border;
   border-color: #171717;
 }
+
+.player-wrapper {
+  @apply flex items-center mr-3 px-2 rounded-sm h-8;
+  background-color: #191919;
+}

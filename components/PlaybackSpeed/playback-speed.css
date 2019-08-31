@@ -1,15 +1,7 @@
 .playback-speed-wrapper {
-  @apply p-1 items-center flex rounded-sm text-white;
-  background-color: #252525;
-  margin: 0 15px;
+  @apply header-range-wrapper text-white;
 }
 
 .playback-speed-btn {
-  @apply flex rounded-sm cursor-pointer;
-  padding: 2px;
-  transition: all 200ms;
-}
-
-.playback-speed-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  @apply h-6 w-8 px-1 flex justify-center;
 }

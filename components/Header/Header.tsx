@@ -70,14 +70,17 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
       <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
-            <Icon
-              name={playName}
-              color="#fff"
-              size={19}
-              onClick={onTogglePlay}
-            />
+            <div className="player-wrapper">
+              <Icon
+                name={playName}
+                color="#fff"
+                size={13}
+                className="cursor-pointer"
+                onClick={onTogglePlay}
+              />
 
-            <ProgressBar duration={midi && midi.duration} />
+              <ProgressBar duration={midi && midi.duration} />
+            </div>
 
             <PlaybackSpeed />
           </>
