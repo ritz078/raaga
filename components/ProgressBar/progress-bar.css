@@ -1,0 +1,13 @@
+.progress-bar {
+  @apply flex-1 h-1 overflow-hidden;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.4);
+  margin: 0 15px;
+  min-width: 100px;
+}
+
+.progress-bar > div {
+  background-color: #42c9ff;
+  height: inherit;
+  border-radius: 2px;
+}

@@ -1,9 +1,9 @@
-import * as styles from "./TrackList.styles";
 import React, { useRef, memo } from "react";
 import { promisifyWorker } from "@utils/promisifyWorker";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import { IMidiJSON } from "@typings/midi";
+import Nprogress from "nprogress";
 
 let midiParseWorker;
 if (IN_BROWSER) {
@@ -16,6 +16,7 @@ function Sidebar({ onMidiLoad }) {
 
   const loadFile = async e => {
     const file = e.target.files[0];
+    Nprogress.start();
     const midi: IMidiJSON = await promisifyWorker(midiParseWorker, {
       filePath: file,
       name: file.name
@@ -25,18 +26,22 @@ function Sidebar({ onMidiLoad }) {
       // @ts-ignore
       inputRef.current.value = "";
     }
+
+    Nprogress.done();
   };
 
   const selectSample = async ({ label, url }) => {
+    Nprogress.start();
     const midi = await promisifyWorker(midiParseWorker, {
       filePath: url,
       name: label
     });
     onMidiLoad(midi);
+    Nprogress.done();
   };
 
   return (
-    <div className={styles.sidebar}>
+    <div className="tl-sidebar">
       <label htmlFor="upload-midi">
         <Button
           icon="browse"
@@ -57,13 +62,13 @@ function Sidebar({ onMidiLoad }) {
         id="upload-midi"
         accept=".mid"
       />
-      <div className={styles.sampleTitle}>Samples</div>
+      <div className="text-sm text-white pt-4 pb-1">Samples</div>
       {sampleMidis.map(sampleMidi => {
         return (
           <div
             key={sampleMidi.label}
             onClick={() => selectSample(sampleMidi)}
-            className={styles.sample}
+            className="tl-sidebar-sample-midi"
           >
             {sampleMidi.label.toLowerCase()}
           </div>

@@ -84,8 +84,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
 
         {mode === VISUALIZER_MODE.WRITE && (
-          <>
-            <div className="text-white text-sm mr-4">Range</div>
+          <div className="header-range-wrapper">
+            <div className="text-gray-500 text-xs mr-4">Range</div>
             <SelectMenu
               options={naturalKeys}
               selected={range.first}
@@ -96,12 +96,12 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className="h-8">
+                <Button className="h-6">
                   {MidiNumbers.getAttributes(range.first).note}
                 </Button>
               </Pane>
             </SelectMenu>
-            <Icon name="minus" color="#fff" size={12} className="mx-3" />
+            <Icon name="minus" color="#fff" size={8} className="mx-2" />
             <SelectMenu
               options={naturalKeys.filter(({ value }) => value > range.first)}
               selected={range.last}
@@ -112,12 +112,12 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
               closeOnSelect
             >
               <Pane>
-                <Button className="h-8">
+                <Button className="h-6">
                   {MidiNumbers.getAttributes(range.last).note}
                 </Button>
               </Pane>
             </SelectMenu>
-          </>
+          </div>
         )}
       </div>
 

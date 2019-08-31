@@ -2,7 +2,6 @@ import { Dialog, Text } from "evergreen-ui";
 import * as React from "react";
 import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
-import * as styles from "./TrackList.styles";
 import { ReactComponent as ZeroState } from "@assets/images/zero-state.svg";
 import { IMidiJSON } from "@typings/midi";
 
@@ -43,12 +42,12 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
       shouldCloseOnOverlayClickbool={false}
       width={1265}
     >
-      <div className={styles.trackList}>
+      <div className="flex flex-row flex-1">
         <Sidebar onMidiLoad={setMidi} />
-        <div className={styles.dialogWrapper}>
+        <div className="flex flex-1 flex-col overflow-hidden">
           {!midi ? (
-            <div className={styles.zeroStateWrapper}>
-              <div className={styles.zeroStateIllustration}>
+            <div className="tl-zero-state-illus-wrapper">
+              <div>
                 <ZeroState width={300} height={250} />
                 <Text color="#7b7b7b" marginTop={10}>
                   Seems you haven't selected any MIDI. You can either upload a

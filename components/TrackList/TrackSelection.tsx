@@ -1,13 +1,12 @@
-import * as styles from "@components/TrackList/TrackList.styles";
 import InstrumentCard from "@components/TrackList/InstrumentCard";
-import { cx } from "emotion";
 import * as React from "react";
-import { Heading, Text, Switch, Checkbox } from "evergreen-ui";
+import { Switch, Checkbox } from "evergreen-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { range } from "lodash";
 import { IBeat, ITrack } from "@typings/midi";
 import { Icon } from "@components/Icon";
+import { Button } from "@components/Button";
 
 function toggleInArray(arr: number[], num: number) {
   return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];
@@ -88,19 +87,19 @@ function TrackSelection({ midi, onClose, onPlay }) {
 
   return (
     <>
-      <div className={styles.header}>
+      <div className="ts-header">
         <div>
-          <Heading color="#fff" size={600} textTransform="capitalize">
+          <span className="text-xl capitalize text-white leading-none">
             {header.name[0] || "Unknown"}
-          </Heading>
+          </span>
 
-          <div className={styles.titleSubText}>
-            <Text color="#8a8a8a">
+          <div className="ts-header-subtext">
+            <span className="tl-song-info">
               {tracks.length} Tracks &middot; {"  "}
               {beats.length} Beats &middot; {"  "}
               {duration && duration.toFixed(2)} seconds &middot; {"  "}
               {header.ppq} ticks/beat
-            </Text>
+            </span>
           </div>
         </div>
         <Icon
@@ -110,9 +109,9 @@ function TrackSelection({ midi, onClose, onPlay }) {
           className="absolute cursor-pointer top-0 right-0 m-5"
         />
       </div>
-      <div className={styles.content}>
-        <div className={styles.sectionTitle}>
-          <Heading color="#fff">Tracks</Heading>
+      <div className="ts-content">
+        <div className="ts-section-title">
+          <span className="text-base text-white">Tracks</span>
           <Switch
             checked={playingTracksIndex.length === tracks.length}
             marginRight={15}
@@ -120,7 +119,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
           />
         </div>
 
-        <div className={styles.instrumentWrapper}>
+        <div className="flex flex-row flex-wrap">
           {midi &&
             tracks &&
             tracks.map((track: ITrack, i) => {
@@ -142,15 +141,15 @@ function TrackSelection({ midi, onClose, onPlay }) {
 
         {midi && beats && !!beats.length && (
           <>
-            <div className={styles.sectionTitle}>
-              <Heading color="#fff">Beats</Heading>
+            <div className="ts-section-title">
+              <span className="text-base text-white">Beats</span>
               <Switch
                 checked={playingBeatsIndex.length === beats.length}
                 marginRight={15}
                 onChange={toggleAllBeats}
               />
             </div>
-            <div className={styles.instrumentWrapper}>
+            <div className="flex flex-row flex-wrap">
               {beats.map((beat: IBeat, i) => (
                 <InstrumentCard
                   disabled={!playingBeatsIndex.includes(i)}
@@ -166,27 +165,24 @@ function TrackSelection({ midi, onClose, onPlay }) {
         )}
       </div>
 
-      <div className={styles.footer}>
-        {tracks.length + beats.length > 1 && (
+      <div className="ts-footer">
+        {tracks.length + beats.length > 1 ? (
           <Checkbox
             checked={playInstrumentsInBackground}
             marginY={0}
             label={
-              <Text color="#fff" fontSize={14}>
+              <span className="text-xs text-white">
                 Play other instruments in Background
-              </Text>
+              </span>
             }
             onChange={handleBackgroundPlayChange}
           />
+        ) : (
+          <span />
         )}
-        <div
-          className={cx(styles.playButton, {
-            __disabled__: selectedTrackIndex === null
-          })}
-          onClick={_onPlayClick}
-        >
+        <Button onClick={_onPlayClick} className="h-8">
           Play Track
-        </div>
+        </Button>
       </div>
     </>
   );

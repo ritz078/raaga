@@ -2,3 +2,8 @@
   @apply h-12 w-full z-10 px-3 flex flex-row justify-between;
   background-color: rgba(255, 255, 255, 0.06);
 }
+
+.header-range-wrapper {
+  @apply flex flex-row rounded-sm items-center p-1 pl-3 border;
+  border-color: #171717;
+}

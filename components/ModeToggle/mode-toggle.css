@@ -1,6 +1,7 @@
 .mode-toggle-wrapper {
-  @apply bg-black flex relative flex-row justify-center select-none cursor-pointer mr-4 p-1 h-8 w-40;
+  @apply flex relative flex-row justify-center select-none cursor-pointer mr-4 p-1 h-8 w-40;
   border-radius: 20px;
+  background-color: #171717;
 }
 
 .mode-toggle-wrapper.__disabled__ {
