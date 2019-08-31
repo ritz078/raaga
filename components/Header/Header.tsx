@@ -70,6 +70,11 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
       <div className="flex flex-row items-center pl-4">
         {midi && mode === VISUALIZER_MODE.READ && (
           <>
+            <Button className="h-8 mr-2">
+              <div className="header-midi-name" title={midi.header.name[0]}>
+                {midi.header.name[0]}
+              </div>
+            </Button>
             <div className="player-wrapper">
               <Icon
                 name={playName}

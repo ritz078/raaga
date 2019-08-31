@@ -6,7 +6,6 @@ import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
 import { IMidiJSON } from "@typings/midi";
-import { GLOBAL_HEADER_HEIGHT } from "@config/piano";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
@@ -28,12 +27,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   };
 
   return (
-    <header
-      className="global-header"
-      style={{
-        height: GLOBAL_HEADER_HEIGHT
-      }}
-    >
+    <header className="global-header">
       <span>🎹</span>
 
       <div className="flex items-center">
