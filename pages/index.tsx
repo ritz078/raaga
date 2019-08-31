@@ -13,7 +13,7 @@ const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
 function Main() {
   return (
     <div className="bg-black h-screen overflow-hidden flex flex-col w-full min-w-1100">
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <SoundPlayer />
       </div>
     </div>

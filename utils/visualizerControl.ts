@@ -37,7 +37,11 @@ export function controlVisualizer(data: Partial<IData>) {
   try {
     if (message === VISUALIZER_MESSAGES.INIT) {
       visualizer = new Visualizer(canvas, dimensions, range, mode);
-    } else if (message === VISUALIZER_MESSAGES.UPDATE_DIMENSIONS) {
+    }
+
+    if (!visualizer) return;
+
+    if (message === VISUALIZER_MESSAGES.UPDATE_DIMENSIONS) {
       visualizer.setDimensions(dimensions);
     } else if (message === VISUALIZER_MESSAGES.UPDATE_RANGE) {
       visualizer.setRange(range);
@@ -55,7 +59,7 @@ export function controlVisualizer(data: Partial<IData>) {
     } else if (message === VISUALIZER_MESSAGES.TOGGLE) {
       visualizer.toggle();
     } else if (message === VISUALIZER_MESSAGES.SET_SPEED) {
-      visualizer && visualizer.setSpeed(speed);
+      visualizer.setSpeed(speed);
     }
   } catch (e) {
     console.log(e);

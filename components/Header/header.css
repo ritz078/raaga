@@ -9,6 +9,11 @@
 }
 
 .player-wrapper {
-  @apply flex items-center mr-3 px-2 rounded-sm h-8;
+  @apply flex items-center mr-3 px-3 rounded-sm h-8;
   background-color: #191919;
+}
+
+.header-midi-name {
+  @apply truncate capitalize;
+  max-width: 130px;
 }
