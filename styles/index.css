@@ -3,6 +3,7 @@
 @import "~tailwindcss/utilities.css";
 @import "~nprogress/nprogress.css";
 
+@import "./variables.css";
 @import "./mixins.css";
 @import "../components/Piano/piano.css";
 @import "../components/Button/button.css";
@@ -13,3 +14,8 @@
 @import "../components/TrackList/tracklist.css";
 @import "../components/ProgressBar/progress-bar.css";
 @import "../components/PlaybackSpeed/playback-speed.css";
+
+.piano-wrapper {
+  @apply flex justify-center relative items-center border-t border-black;
+  height: var(--piano-height);
+}

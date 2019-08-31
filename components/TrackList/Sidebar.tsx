@@ -45,7 +45,7 @@ function Sidebar({ onMidiLoad }) {
       <label htmlFor="upload-midi">
         <Button
           icon="browse"
-          className="h-10"
+          className="h-10 text-13"
           iconProps={{
             size: 15
           }}

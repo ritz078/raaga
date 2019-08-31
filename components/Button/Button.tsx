@@ -6,7 +6,7 @@ interface ButtonProps {
   children: React.ReactChild;
   icon?: string;
   onClick?: () => void;
-  iconProps?: any;
+  iconProps?: Partial<React.ComponentProps<typeof Icon>>;
   className?: string;
 }
 

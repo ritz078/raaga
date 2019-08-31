@@ -309,6 +309,9 @@ export class MidiPlayer {
    * This needs to be called every time we want to reset everything.
    */
   public clear = () => {
+    this.canvasWorker.postMessage({
+      type: VISUALIZER_MESSAGES.STOP_TRACK
+    });
     Tone.Transport.stop();
 
     [...this.trackPart, ...this.drumPart].forEach(trackPart => {
@@ -321,10 +324,6 @@ export class MidiPlayer {
 
     this.trackPart = [];
     this.drumPart = [];
-
-    this.canvasWorker.postMessage({
-      type: VISUALIZER_MESSAGES.STOP_TRACK
-    });
     this.setRange(defaultRange);
 
     this.setSpeed(1);

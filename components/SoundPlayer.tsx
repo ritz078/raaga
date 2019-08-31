@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState
+} from "react";
 import {
   getMidiRange,
   IScheduleOptions,
@@ -13,14 +18,13 @@ import CanvasWorker, {
   CanvasWorkerFallback
 } from "@controllers/visualizer.controller";
 import { getInstrumentIdByValue, instruments } from "midi-instruments";
-import { VISUALIZER_MODE } from "@enums/visualizerMessages";
+import {
+  VISUALIZER_MESSAGES,
+  VISUALIZER_MODE
+} from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import {
-  DEFAULT_FIRST_KEY,
-  DEFAULT_LAST_KEY,
-  PIANO_HEIGHT
-} from "@config/piano";
+import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { TrackSelectionInfo } from "@components/TrackList";
@@ -50,11 +54,11 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
 
-  const resetPlayer = useCallback(() => {
+  const resetPlayer = () => {
     player.clear();
     setActiveMidis([]);
     setKeyboardRange(range);
-  }, []);
+  };
 
   const changeInstrument = useCallback((_instrument = instrument) => {
     (async () => {
@@ -172,9 +176,16 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
     setPlaying(!isPlaying);
   }, [isPlaying]);
 
+  useLayoutEffect(() => {
+    canvasWorker.postMessage({
+      message: VISUALIZER_MESSAGES.STOP_TRACK
+    });
+    setActiveMidis([]);
+    setPlaying(false);
+  }, [mode]);
+
   useEffect(() => {
     resetPlayer();
-    setPlaying(false);
     player.setMode(mode);
   }, [mode]);
 
@@ -219,13 +230,8 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
           canvasWorker={canvasWorker}
         />
       </div>
-      <div
-        className="flex justify-center relative items-center border-t border-black"
-        style={{
-          height: PIANO_HEIGHT
-        }}
-      >
-        {loading && <Loader className="absolute z-10" />}
+      <div className="piano-wrapper">
+        {loading && <Loader className="absolute z-10 h-4" />}
         <Piano
           activeMidis={activeMidis}
           onPlay={onNoteStart}
