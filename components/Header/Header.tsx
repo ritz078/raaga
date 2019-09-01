@@ -72,7 +72,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           <>
             <Button className="h-8 mr-2">
               <div className="header-midi-name" title={midi.header.name[0]}>
-                {midi.header.name[0]}
+                {midi.header.label}
               </div>
             </Button>
             <div className="player-wrapper">

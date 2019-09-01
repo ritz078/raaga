@@ -90,7 +90,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
       <div className="ts-header">
         <div>
           <span className="text-xl capitalize text-white leading-none">
-            {header.name[0] || "Unknown"}
+            {header.label}
           </span>
 
           <div className="ts-header-subtext">
