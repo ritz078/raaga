@@ -14,6 +14,7 @@ export class MidiParser {
     tracks: [],
     beats: [],
     header: {
+      label: "Unknown",
       ppq: 480,
       name: [],
       format: null,
@@ -207,6 +208,10 @@ export class MidiParser {
     this.song.duration = Math.max(
       ...this.song.tracks.map(track => track.duration)
     );
+
+    this.song.header.label = (
+      this.song.header.name[1] || this.song.header.name[0]
+    ).replace(/_/g, " ");
 
     return this.song;
   };

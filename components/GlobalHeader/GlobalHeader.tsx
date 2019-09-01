@@ -21,10 +21,8 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState();
 
-  const onSelect = (info: TrackSelectionInfo) => {
-    toggleTrackSelectionModal(false);
+  const onSelect = (info: TrackSelectionInfo) =>
     onMidiAndTrackSelect(loadedMidi, info);
-  };
 
   return (
     <header className="global-header">

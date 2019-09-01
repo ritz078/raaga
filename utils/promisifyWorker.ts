@@ -1,3 +1,5 @@
+import { reject } from "q";
+
 let id = 1;
 
 export function promisifyWorker(
@@ -9,10 +11,14 @@ export function promisifyWorker(
   worker.postMessage({ ...payload, id: _id }, transferables);
   id++;
 
-  return new Promise(resolve => {
-    worker.onmessage = e => {
-      if (e.data.id === _id) {
-        resolve(e.data.payload);
+  return new Promise((resolve, reject) => {
+    worker.onmessage = ({ data: { id, error, payload } }) => {
+      if (id === _id) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(payload);
+        }
       }
     };
   });

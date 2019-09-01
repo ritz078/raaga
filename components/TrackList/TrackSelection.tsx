@@ -90,7 +90,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
       <div className="ts-header">
         <div>
           <span className="text-xl capitalize text-white leading-none">
-            {header.name[0] || "Unknown"}
+            {header.label}
           </span>
 
           <div className="ts-header-subtext">
@@ -171,7 +171,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
             checked={playInstrumentsInBackground}
             marginY={0}
             label={
-              <span className="text-xs text-white">
+              <span className="text-13 text-white">
                 Play other instruments in Background
               </span>
             }
