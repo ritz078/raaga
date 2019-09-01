@@ -200,7 +200,7 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
 
   return (
     <PlayerContext.Provider value={player}>
-      <div className="flex flex-1 relative flex-col">
+      <div className="flex flex-1 relative flex-col overflow-hidden">
         <GlobalHeader
           mode={mode}
           onToggleMode={setMode}

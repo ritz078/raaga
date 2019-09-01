@@ -171,7 +171,7 @@ function TrackSelection({ midi, onClose, onPlay }) {
             checked={playInstrumentsInBackground}
             marginY={0}
             label={
-              <span className="text-xs text-white">
+              <span className="text-13 text-white">
                 Play other instruments in Background
               </span>
             }

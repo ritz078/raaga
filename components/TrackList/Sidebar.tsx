@@ -4,6 +4,7 @@ import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import { IMidiJSON } from "@typings/midi";
 import Nprogress from "nprogress";
+import { Error } from "@components/Error";
 
 let midiParseWorker;
 if (IN_BROWSER) {
@@ -17,16 +18,19 @@ function Sidebar({ onMidiLoad }) {
   const loadFile = async e => {
     const file = e.target.files[0];
     Nprogress.start();
-    const midi: IMidiJSON = await promisifyWorker(midiParseWorker, {
-      filePath: file,
-      name: file.name
-    });
-    onMidiLoad(midi);
+    try {
+      const midi: IMidiJSON = await promisifyWorker(midiParseWorker, {
+        filePath: file,
+        name: file.name
+      });
+      onMidiLoad(midi);
+    } catch (e) {
+      Error.show(e);
+    }
     if (inputRef.current) {
       // @ts-ignore
       inputRef.current.value = "";
     }
-
     Nprogress.done();
   };
 

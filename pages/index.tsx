@@ -1,5 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
+import { Error } from "@components/Error";
 
 const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
   ssr: false,
@@ -13,6 +14,7 @@ const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
 function Main() {
   return (
     <div className="bg-black h-screen overflow-hidden flex flex-col w-full min-w-1100">
+      <Error />
       <div className="flex flex-1 flex-col overflow-hidden">
         <SoundPlayer />
       </div>

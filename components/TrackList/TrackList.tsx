@@ -64,6 +64,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
     }
 
     setTrackSelectionInfo(null);
+    onClose();
   };
   /**==================================**/
 
