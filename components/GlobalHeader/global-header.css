@@ -4,3 +4,8 @@
   border-color: #131313;
   height: var(--global-header-height);
 }
+
+.instrument-selector {
+  background-color: rgba(64, 64, 64, 0.63) !important;
+  color: #d0d0d0;
+}

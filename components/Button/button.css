@@ -1,5 +1,5 @@
 .button {
-  @apply text-xs text-gray-200 px-3 .rounded-sm flex items-center cursor-pointer;
+  @apply text-xs text-gray-200 px-3 .rounded-sm flex items-center cursor-pointer select-none;
   background-color: rgba(255, 255, 255, 0.08);
   transition: all 200ms;
 }

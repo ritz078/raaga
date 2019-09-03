@@ -1,7 +1,8 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import webMidi from "webmidi";
-import { SelectMenu, Pane } from "evergreen-ui";
 import { Icon } from "@components/Icon";
+import { Dropdown } from "@components/Dropdown";
+import cn from "@sindresorhus/class-names";
 
 const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
@@ -43,39 +44,48 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   }, []);
 
   return (
-    <SelectMenu
-      hasFilter={false}
-      hasTitle={false}
-      options={inputMidis.map(({ label, id }) => ({
-        label,
-        value: id
-      }))}
-      emptyView={
-        <div className="p-8 bg-white rounded text-center text-gray-700 text-xs select-none">
-          <div className="flex justify-center mb-5 text-center">
-            <Icon name="piano" color={"#101721"} size={26} />
-          </div>
-          {error ||
-            "No device detected. Make sure your device is MIDI compatible and properly connected."}
-        </div>
-      }
-      selected={midiDeviceId}
-      onSelect={({ value }) => {
-        onMidiDeviceChange(value);
-        console.log(
-          `Connected to ${(webMidi.getInputById(value as string) as any).name}`
-        );
-      }}
-    >
-      <Pane display="inline-flex">
+    <Dropdown
+      position="right"
+      label={() => (
         <Icon
           name="piano"
           color={"#fff"}
           size={16}
-          className="mx-4 cursor-pointer"
+          className="ml-4 mb-3 cursor-pointer"
         />
-      </Pane>
-    </SelectMenu>
+      )}
+    >
+      {close => (
+        <div style={{ width: 180 }}>
+          {inputMidis.length ? (
+            inputMidis.map(({ label, id }) => {
+              return (
+                <div
+                  className={cn("instrument-list", {
+                    selected: id === midiDeviceId
+                  })}
+                  key={id}
+                  onClick={() => {
+                    onMidiDeviceChange(id);
+                    close();
+                  }}
+                >
+                  {label}
+                </div>
+              );
+            })
+          ) : (
+            <div className="p-6 text-center text-gray-100 text-xs select-none">
+              <div className="flex justify-center mb-5 text-center">
+                <Icon name="piano" color={"#fff"} size={26} />
+              </div>
+              {error ||
+                "No device detected. Make sure your device is MIDI compatible and properly connected."}
+            </div>
+          )}
+        </div>
+      )}
+    </Dropdown>
   );
 };
 
