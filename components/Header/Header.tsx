@@ -1,16 +1,18 @@
-import React, { memo, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
-import { Pane, SelectMenu } from "evergreen-ui";
 import { ProgressBar } from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 import { Button } from "@components/Button";
-import { MidiNumbers } from "piano-utils";
 import { Range } from "@utils/typings/Visualizer";
 import { Icon } from "@components/Icon";
+import { Dropdown } from "@components/Dropdown";
+import FuzzySearch from "fuzzy-search";
+import cn from "@sindresorhus/class-names";
+import { PianoRangeSelector } from "@components/PianoRangeSelector";
 
 export interface HeaderProps {
   mode: VISUALIZER_MODE;
@@ -35,14 +37,6 @@ const instrumentOptions = Object.keys(instruments).map(id => {
   };
 });
 
-const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map(midi => {
-  const { note } = MidiNumbers.getAttributes(midi);
-  return {
-    label: note,
-    value: midi
-  };
-});
-
 const _Header: React.FunctionComponent<HeaderProps> = ({
   mode,
   instrument,
@@ -56,6 +50,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   onMidiDeviceChange
 }) => {
   const [mute, toggleMute] = useState(false);
+  const fuzzySearch = useRef(new FuzzySearch(instrumentOptions, ["label"]));
+  const [instrumentList, setInstrumentList] = useState(instrumentOptions);
 
   const _toggleMute = () => {
     Tone.Master.mute = !mute;
@@ -64,6 +60,10 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
   const volumeName = mute ? "volume-off" : "volume";
   const playName = isPlaying ? "pause" : "play";
+
+  const onSearchChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setInstrumentList(fuzzySearch.current.search(e.currentTarget.value));
+  };
 
   return (
     <div className="header">
@@ -92,60 +92,48 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
 
         {mode === VISUALIZER_MODE.WRITE && (
-          <div className="header-range-wrapper">
-            <div className="text-gray-500 text-xs mr-4">Range</div>
-            <SelectMenu
-              options={naturalKeys}
-              selected={range.first}
-              onSelect={item => {
-                onRangeChange([item.value, range.last]);
-              }}
-              title="First Key"
-              closeOnSelect
-            >
-              <Pane>
-                <Button className="h-6">
-                  {MidiNumbers.getAttributes(range.first).note}
-                </Button>
-              </Pane>
-            </SelectMenu>
-            <Icon name="minus" color="#fff" size={8} className="mx-2" />
-            <SelectMenu
-              options={naturalKeys.filter(({ value }) => value > range.first)}
-              selected={range.last}
-              onSelect={item => {
-                onRangeChange([range.first, item.value]);
-              }}
-              title="Last Key"
-              closeOnSelect
-            >
-              <Pane>
-                <Button className="h-6">
-                  {MidiNumbers.getAttributes(range.last).note}
-                </Button>
-              </Pane>
-            </SelectMenu>
-          </div>
+          <PianoRangeSelector range={range} onRangeChange={onRangeChange} />
         )}
       </div>
 
       <div className="flex flex-row justify-between items-center">
         {mode === VISUALIZER_MODE.WRITE && (
-          <SelectMenu
-            options={instrumentOptions}
-            selected={instrument}
-            onSelect={item => {
-              onInstrumentChange(item.value);
-            }}
-            title="Instruments"
-            closeOnSelect
-          >
-            <Pane>
-              <Button className="h-8 mr-2">
+          <Dropdown
+            contentClassName={"instrument-selector"}
+            label={() => (
+              <Button className="h-8">
                 {getInstrumentByValue(instrument).name}
               </Button>
-            </Pane>
-          </SelectMenu>
+            )}
+          >
+            {close => {
+              return (
+                <div className="py-2" style={{ width: 180 }}>
+                  <input
+                    onChange={onSearchChange}
+                    type="text"
+                    placeholder="Search"
+                    className="instrument-searchbox"
+                  />
+
+                  {instrumentList.map(({ label, value }) => (
+                    <div
+                      className={cn("instrument-list", {
+                        selected: value === instrument
+                      })}
+                      key={value}
+                      onClick={() => {
+                        onInstrumentChange(value);
+                        close();
+                      }}
+                    >
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          </Dropdown>
         )}
 
         <Icon

@@ -6,6 +6,7 @@ import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, TrackSelectionInfo } from "@components/TrackList";
 import { IMidiJSON } from "@typings/midi";
+import { Dropdown } from "@components/Dropdown";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;

@@ -17,3 +17,20 @@
   @apply truncate capitalize;
   max-width: 130px;
 }
+
+.instrument-list {
+  @apply text-xs px-3 py-1 cursor-pointer;
+}
+
+.instrument-list:hover {
+  @apply bg-gray-800 text-white;
+}
+
+.instrument-list.selected {
+  background-color: #3f51b5;
+}
+
+.instrument-searchbox {
+  @apply mb-3 border-0 px-3 text-xs w-full py-1 outline-none;
+  background-color: #3c3c3c;
+}
