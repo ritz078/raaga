@@ -13,6 +13,7 @@ import { Dropdown } from "@components/Dropdown";
 import FuzzySearch from "fuzzy-search";
 import cn from "@sindresorhus/class-names";
 import { PianoRangeSelector } from "@components/PianoRangeSelector";
+import Settings from "@components/Settings/Settings";
 
 export interface HeaderProps {
   mode: VISUALIZER_MODE;
@@ -92,50 +93,52 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
         )}
 
         {mode === VISUALIZER_MODE.WRITE && (
-          <PianoRangeSelector range={range} onRangeChange={onRangeChange} />
+          <>
+            <div className="mr-4">
+              <PianoRangeSelector range={range} onRangeChange={onRangeChange} />
+            </div>
+
+            <Dropdown
+              contentClassName={"instrument-selector"}
+              label={() => (
+                <Button className="h-8">
+                  {getInstrumentByValue(instrument).name}
+                </Button>
+              )}
+            >
+              {close => {
+                return (
+                  <div className="py-2" style={{ width: 180 }}>
+                    <input
+                      onChange={onSearchChange}
+                      type="text"
+                      placeholder="Search"
+                      className="instrument-searchbox"
+                    />
+
+                    {instrumentList.map(({ label, value }) => (
+                      <div
+                        className={cn("instrument-list", {
+                          selected: value === instrument
+                        })}
+                        key={value}
+                        onClick={() => {
+                          onInstrumentChange(value);
+                          close();
+                        }}
+                      >
+                        {label}
+                      </div>
+                    ))}
+                  </div>
+                );
+              }}
+            </Dropdown>
+          </>
         )}
       </div>
 
       <div className="flex flex-row justify-between items-center">
-        {mode === VISUALIZER_MODE.WRITE && (
-          <Dropdown
-            contentClassName={"instrument-selector"}
-            label={() => (
-              <Button className="h-8">
-                {getInstrumentByValue(instrument).name}
-              </Button>
-            )}
-          >
-            {close => {
-              return (
-                <div className="py-2" style={{ width: 180 }}>
-                  <input
-                    onChange={onSearchChange}
-                    type="text"
-                    placeholder="Search"
-                    className="instrument-searchbox"
-                  />
-
-                  {instrumentList.map(({ label, value }) => (
-                    <div
-                      className={cn("instrument-list", {
-                        selected: value === instrument
-                      })}
-                      key={value}
-                      onClick={() => {
-                        onInstrumentChange(value);
-                        close();
-                      }}
-                    >
-                      {label}
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          </Dropdown>
-        )}
-
         <Icon
           name={volumeName}
           color={"#fff"}
@@ -148,6 +151,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           onMidiDeviceChange={onMidiDeviceChange}
           midiDeviceId={midiDeviceId}
         />
+
+        {false && <Settings />}
       </div>
     </div>
   );

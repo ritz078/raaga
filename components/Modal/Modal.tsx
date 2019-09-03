@@ -1,0 +1,73 @@
+import React, { memo, useEffect, useRef } from "react";
+import * as ReactDOM from "react-dom";
+import { useTransition, animated } from "react-spring";
+import { useOnClickOutside } from "@hooks/useOnClickOutside";
+
+interface ModalProps {
+  visible: boolean;
+  children: React.ReactChildren | React.ReactNode;
+  onClose: () => void;
+}
+
+const node = document.createElement("div");
+
+const _Modal: React.FunctionComponent<ModalProps> = ({
+  visible,
+  children,
+  onClose
+}) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    document.body.appendChild(node);
+
+    return () => document.body.removeChild(node);
+  }, []);
+
+  useEffect(() => {
+    if (visible) {
+      document.getElementsByTagName("body")[0].style.overflow = "hidden";
+    } else {
+      document.getElementsByTagName("body")[0].style.overflow = "";
+    }
+  }, [visible]);
+
+  const overlayTransition = useTransition(visible, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: {
+      duration: 200
+    }
+  });
+
+  const contentTransitions = useTransition(visible, null, {
+    from: { opacity: 0, transform: "scale(0.8) translateX(-50%)" },
+    enter: { opacity: 1, transform: "scale(1) translateX(-50%)" },
+    leave: { opacity: 0, transform: "scale(0.8) translateX(-50%)" },
+    config: {
+      duration: 200
+    }
+  });
+
+  useOnClickOutside(ref, onClose);
+
+  return ReactDOM.createPortal(
+    overlayTransition.map(({ key, item, props }) =>
+      item ? (
+        <animated.div style={props} className="modal-overlay" key={key}>
+          {contentTransitions.map(({ key, item, props }) =>
+            item ? (
+              <animated.div key={key} ref={ref} style={props} className="modal">
+                {children}
+              </animated.div>
+            ) : null
+          )}
+        </animated.div>
+      ) : null
+    ),
+    node
+  );
+};
+
+export const Modal = memo(_Modal);

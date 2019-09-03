@@ -1,0 +1,11 @@
+.modal {
+  @apply fixed rounded-sm;
+  left: 50%;
+  top: 200px;
+  background-color: #42c9ff;
+}
+
+.modal-overlay {
+  @apply z-50 fixed inset-0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
