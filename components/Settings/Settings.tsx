@@ -17,7 +17,7 @@ const _Settings = () => {
         onClick={() => setVisibility(!visible)}
       />
 
-      <Modal onClose={() => setVisibility(false)} visible={true}>
+      <Modal onCloseRequest={() => setVisibility(false)} visible={true}>
         <div className="settings-content p-4">
           <div className="settings-section-title">COLORS</div>
 

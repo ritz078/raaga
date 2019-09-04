@@ -2,19 +2,26 @@ import React, { memo, useEffect, useRef } from "react";
 import * as ReactDOM from "react-dom";
 import { useTransition, animated } from "react-spring";
 import { useOnClickOutside } from "@hooks/useOnClickOutside";
+import cn from "@sindresorhus/class-names";
 
 interface ModalProps {
   visible: boolean;
   children: React.ReactChildren | React.ReactNode;
-  onClose: () => void;
+  onCloseRequest?: () => void;
+  onCloseComplete?: () => void;
+  contentClassName?: string;
 }
+
+function noop() {}
 
 const node = document.createElement("div");
 
 const _Modal: React.FunctionComponent<ModalProps> = ({
   visible,
   children,
-  onClose
+  onCloseRequest = noop,
+  onCloseComplete = noop,
+  contentClassName
 }) => {
   const ref = useRef(null);
 
@@ -42,15 +49,16 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
   });
 
   const contentTransitions = useTransition(visible, null, {
-    from: { opacity: 0, transform: "scale(0.8) translateX(-50%)" },
-    enter: { opacity: 1, transform: "scale(1) translateX(-50%)" },
-    leave: { opacity: 0, transform: "scale(0.8) translateX(-50%)" },
+    from: { opacity: 0, transform: "scale(0.8)" },
+    enter: { opacity: 1, transform: "scale(1)" },
+    leave: { opacity: 0, transform: "scale(0.8)" },
     config: {
       duration: 200
-    }
+    },
+    onDestroyed: isDestroyed => isDestroyed && onCloseComplete()
   });
 
-  useOnClickOutside(ref, onClose);
+  useOnClickOutside(ref, onCloseRequest);
 
   return ReactDOM.createPortal(
     overlayTransition.map(({ key, item, props }) =>
@@ -58,7 +66,12 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
         <animated.div style={props} className="modal-overlay" key={key}>
           {contentTransitions.map(({ key, item, props }) =>
             item ? (
-              <animated.div key={key} ref={ref} style={props} className="modal">
+              <animated.div
+                key={key}
+                ref={ref}
+                style={props}
+                className={cn("modal", contentClassName)}
+              >
                 {children}
               </animated.div>
             ) : null

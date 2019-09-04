@@ -14,12 +14,12 @@
   "lint-staged": {
     "./assets/*/*.svg": [
       "imagemin-lint-staged",
+      "yarn build:icons",
       "git add"
     ]
   },
   "dependencies": {
     "@sindresorhus/class-names": "^1.1.0",
-    "evergreen-ui": "^4.18.1",
     "fuzzy-search": "^3.0.1",
     "idb-keyval": "^3.2.0",
     "lodash": "^4.17.15",
@@ -37,6 +37,7 @@
     "react-dom": "^16.9.0",
     "react-range": "^1.3.0",
     "react-spring": "^8.0.27",
+    "react-switch": "^5.0.1",
     "tone": "^13.8.25",
     "utf-8": "^2.0.0",
     "webmidi": "^2.5.1"

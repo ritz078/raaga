@@ -1,16 +1,29 @@
 import InstrumentCard from "@components/TrackList/InstrumentCard";
 import * as React from "react";
-import { Switch, Checkbox } from "evergreen-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { range } from "lodash";
 import { IBeat, ITrack } from "@typings/midi";
 import { Icon } from "@components/Icon";
 import { Button } from "@components/Button";
+import Switch from "react-switch";
 
 function toggleInArray(arr: number[], num: number) {
   return arr.includes(num) ? arr.filter(a => a !== num) : [...arr, ...[num]];
 }
+
+const switchProps = {
+  onColor: "#86d3ff",
+  onHandleColor: "#2693e6",
+  handleDiameter: 18,
+  uncheckedIcon: false,
+  checkedIcon: false,
+  boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.6)",
+  activeBoxShadow: "0px 0px 1px 10px rgba(0, 0, 0, 0.2)",
+  height: 8,
+  width: 26,
+  className: "mr-4"
+};
 
 function TrackSelection({ midi, onClose, onPlay }) {
   const { header, tracks, beats, duration } = midi;
@@ -33,8 +46,8 @@ function TrackSelection({ midi, onClose, onPlay }) {
   };
 
   // called when the status of all the tracks is toggled
-  const toggleAllTracks = e => {
-    if (e.target.checked) {
+  const toggleAllTracks = checked => {
+    if (checked) {
       setPlayingTracksIndex(range(tracks.length));
     } else {
       setPlayingTracksIndex(
@@ -44,8 +57,8 @@ function TrackSelection({ midi, onClose, onPlay }) {
   };
 
   // called when the status of all the beats is toggled
-  const toggleAllBeats = e => {
-    if (e.target.checked) {
+  const toggleAllBeats = checked => {
+    if (checked) {
       setPlayingBeatsIndex(range(beats.length));
     } else {
       setPlayingBeatsIndex([]);
@@ -114,8 +127,8 @@ function TrackSelection({ midi, onClose, onPlay }) {
           <span className="text-base text-white">Tracks</span>
           <Switch
             checked={playingTracksIndex.length === tracks.length}
-            marginRight={15}
             onChange={toggleAllTracks}
+            {...switchProps}
           />
         </div>
 
@@ -145,8 +158,8 @@ function TrackSelection({ midi, onClose, onPlay }) {
               <span className="text-base text-white">Beats</span>
               <Switch
                 checked={playingBeatsIndex.length === beats.length}
-                marginRight={15}
                 onChange={toggleAllBeats}
+                {...switchProps}
               />
             </div>
             <div className="flex flex-row flex-wrap">
@@ -167,16 +180,20 @@ function TrackSelection({ midi, onClose, onPlay }) {
 
       <div className="ts-footer">
         {tracks.length + beats.length > 1 ? (
-          <Checkbox
-            checked={playInstrumentsInBackground}
-            marginY={0}
-            label={
-              <span className="text-13 text-white">
-                Play other instruments in Background
-              </span>
-            }
-            onChange={handleBackgroundPlayChange}
-          />
+          <label
+            htmlFor="playAll"
+            className="flex flex-row items-center cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              id="playAll"
+              onChange={handleBackgroundPlayChange}
+              checked={playInstrumentsInBackground}
+            />
+            <div className="text-sm text-white ml-2">
+              Play sounds in background.
+            </div>
+          </label>
         ) : (
           <span />
         )}
