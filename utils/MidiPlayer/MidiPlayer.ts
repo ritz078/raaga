@@ -324,12 +324,9 @@ export class MidiPlayer {
     });
     Tone.Transport.stop();
 
-    [...this.trackPart, ...this.drumPart].forEach(trackPart => {
-      if (!trackPart) return;
-      trackPart.stop();
-      if (trackPart._state) {
-        trackPart.dispose();
-      }
+    [...this.trackPart, ...this.drumPart].filter(Boolean).forEach(part => {
+      part.stop(0);
+      part.dispose();
     });
 
     this.trackPart = [];
