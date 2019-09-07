@@ -25,7 +25,7 @@ const _Dropdown: FunctionComponent<DropdownProps> = ({
     enter: { opacity: 1, transform: "translateY(0)" },
     leave: { opacity: 0, transform: "translateY(8px)" },
     config: {
-      duration: 100
+      duration: 200
     }
   });
 

@@ -1,28 +1,20 @@
-import React, { useState } from "react";
+import React, { ComponentProps, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import { ReactComponent as ZeroState } from "@assets/images/zero-state.svg";
 import { IMidiJSON } from "@typings/midi";
 import { Modal } from "@components/Modal";
 
-export interface TrackSelectionInfo {
+export interface MidiSettings {
   selectedTrackIndex: number;
-  playingTracksIndex: number[];
-  playingBeatsIndex: number[];
+  playBackgroundTracks: boolean;
+  playBeats: boolean;
 }
 
-interface TrackListProps {
-  onPlay: (args: TrackSelectionInfo) => void;
-  midi: IMidiJSON;
+type TrackListProps = ComponentProps<typeof TrackSelection> & {
   visible: boolean;
-  onClose: () => void;
   setMidi?: (midi: IMidiJSON) => void;
   hasFileLoad?: boolean;
-}
-
-const contentContainerProps = {
-  paddingX: 0,
-  paddingY: 0
 };
 
 const TrackList_: React.FunctionComponent<TrackListProps> = ({
@@ -31,7 +23,8 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
   onClose,
   midi,
   setMidi,
-  hasFileLoad = true
+  hasFileLoad = true,
+  initialMidiSettings
 }) => {
   /**
    * This part is mainly written so that `onPlay` is called after the modal has
@@ -55,16 +48,17 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
    * Status:
    * Under Investigation/Benchmarking - not yet confirmed.
    */
-  const [trackSelectionInfo, setTrackSelectionInfo] = useState<
-    TrackSelectionInfo
-  >(null);
+  const [midiSettings, setMidiSettings] = useState<MidiSettings>(
+    initialMidiSettings
+  );
+
+  const [closeRequestedForPlay, setCloseRequestedForPlay] = useState(false);
 
   const _onClose = () => {
-    if (trackSelectionInfo) {
-      onPlay(trackSelectionInfo);
+    if (closeRequestedForPlay) {
+      onPlay(midiSettings);
     }
-
-    setTrackSelectionInfo(null);
+    setCloseRequestedForPlay(false);
     onClose();
   };
   /**==================================**/
@@ -90,8 +84,10 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
             </div>
           ) : (
             <TrackSelection
+              initialMidiSettings={midiSettings}
               onPlay={trackSelectionInfo => {
-                setTrackSelectionInfo(trackSelectionInfo);
+                setMidiSettings(trackSelectionInfo);
+                setCloseRequestedForPlay(true);
                 onClose();
               }}
               onClose={onClose}

@@ -1,7 +1,6 @@
 import Tone from "tone";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
 import { promisifyWorker } from "@utils/promisifyWorker";
-import { range as _range } from "lodash";
 import { EVENT_TYPE } from "@enums/piano";
 import {
   VISUALIZER_MESSAGES,
@@ -17,6 +16,7 @@ import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
 import { IMidiJSON } from "@typings/midi";
 import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
+import { MidiSettings } from "@components/TrackList";
 
 const loadInstrumentWorker = new LoadInstrumentWorker();
 
@@ -25,11 +25,7 @@ const defaultRange = {
   last: DEFAULT_LAST_KEY
 };
 
-export interface IScheduleOptions {
-  selectedTrackIndex: number;
-  playingTracksIndex: number[];
-  playingBeatsIndex: number[];
-}
+export type IScheduleOptions = MidiSettings;
 
 type IEventCallback = (
   notes: NoteWithIdAndEvent[],
@@ -53,6 +49,9 @@ export interface Sampler {
   volume: {
     value: number;
   };
+  _volume: {
+    mute: boolean;
+  };
 }
 
 export class MidiPlayer {
@@ -62,6 +61,7 @@ export class MidiPlayer {
   private trackPart = [];
   private drumPart = [];
   private range;
+  private mainTrackIndex = 0;
 
   static getTrackSampler = audio => {
     return new Promise(resolve => {
@@ -183,78 +183,69 @@ export class MidiPlayer {
 
   /**
    * Play a single track of a MIDI.
-   * @param trackIndex
-   * @param playingTracksIndex
+   * @param currentTrackIndex
    * @param cb
    */
-  private playTrack = (
-    trackIndex: number,
-    playingTracksIndex: number[],
-    cb: IEventCallback
-  ) => {
+  private playTrack = (currentTrackIndex: number, cb: IEventCallback) => {
     let notesPlaying = [];
-    const track = this.midi.tracks[trackIndex];
+    const track = this.midi.tracks[currentTrackIndex];
 
-    if (playingTracksIndex.includes(trackIndex)) {
-      const index = track.instrument.number;
+    const instrumentNumber = track.instrument.number;
 
-      this.trackSamplers[index].volume.value = track.volume;
-      this.trackPart[index] = new Tone.Part(
-        (time, note: NoteWithIdAndEvent) => {
-          if (note.event === EVENT_TYPE.NOTE_START) {
-            this.trackSamplers[index].triggerAttackRelease(
-              note.name,
-              note.duration,
-              time
-            );
+    const sampler = this.trackSamplers[instrumentNumber];
+    // make sure that the instrument is not muted.
+    sampler._volume.mute = false;
 
-            notesPlaying.push(note);
-            cb(notesPlaying, trackIndex);
-          } else if (
-            note.event === EVENT_TYPE.NOTE_STOP &&
-            notesPlaying.find(_note => _note.id === note.id)
-          ) {
-            notesPlaying = notesPlaying.filter(_n => _n.id !== note.id);
-            cb(notesPlaying, trackIndex);
-          } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
-            cb(notesPlaying, trackIndex, true);
-          }
-        },
-        getNotesWithNoteEndEvent(track.notes)
-      ).start();
-    }
+    // set the volume to the tracks volume.
+    sampler.volume.value = track.volume;
+
+    this.trackPart[instrumentNumber] = new Tone.Part(
+      (time, note: NoteWithIdAndEvent) => {
+        if (note.event === EVENT_TYPE.NOTE_START) {
+          sampler.triggerAttackRelease(note.name, note.duration, time);
+
+          notesPlaying.push(note);
+          cb(notesPlaying, currentTrackIndex);
+        } else if (
+          note.event === EVENT_TYPE.NOTE_STOP &&
+          notesPlaying.find(_note => _note.id === note.id)
+        ) {
+          notesPlaying = notesPlaying.filter(_n => _n.id !== note.id);
+          cb(notesPlaying, currentTrackIndex);
+        } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
+          cb(notesPlaying, currentTrackIndex, true);
+        }
+      },
+      getNotesWithNoteEndEvent(track.notes)
+    ).start();
   };
 
   /**
    * Play a single beat from a MIDI
-   * @param beatIndex
-   * @param playingBeatsIndex
+   * @param currentBeatIndex
    */
-  private playBeat = (beatIndex: number, playingBeatsIndex: number[]) => {
-    const beat = this.midi.beats[beatIndex];
-    if (playingBeatsIndex.includes(beatIndex)) {
-      const beatInstrumentNumber = beat.instrument.number;
-      this.drumPart[beatInstrumentNumber] = new Tone.Part(
-        time => {
-          this.drumSampler.triggerAttack(
-            Tone.Frequency(beatInstrumentNumber, "midi").toNote(),
-            time
-          );
-        },
-        beat.notes.map(_beat => ({
-          ..._beat,
-          note: Tone.Frequency(beatInstrumentNumber, "midi").toNote()
-        }))
-      ).start();
-    }
+  private playBeat = (currentBeatIndex: number) => {
+    const beat = this.midi.beats[currentBeatIndex];
+    const beatInstrumentNumber = beat.instrument.number;
+    this.drumPart[beatInstrumentNumber] = new Tone.Part(
+      time => {
+        this.drumSampler.triggerAttack(
+          Tone.Frequency(beatInstrumentNumber, "midi").toNote(),
+          time
+        );
+      },
+      beat.notes.map(_beat => ({
+        ..._beat,
+        note: Tone.Frequency(beatInstrumentNumber, "midi").toNote()
+      }))
+    ).start();
   };
 
   /**
    * Starts the visualizer with the main selected track.
-   * @param selectedTrackIndex
    */
-  private startVisualizer = selectedTrackIndex => {
-    const mainTrack = this.midi.tracks[selectedTrackIndex];
+  private startVisualizer = () => {
+    const mainTrack = this.midi.tracks[this.mainTrackIndex];
 
     this.canvasWorker.postMessage({
       track: mainTrack,
@@ -271,22 +262,25 @@ export class MidiPlayer {
    * @param cb
    */
   public scheduleAndPlay = (options: IScheduleOptions, cb: IEventCallback) => {
-    const {
-      selectedTrackIndex = 0,
-      playingBeatsIndex = _range(this.midi.beats.length),
-      playingTracksIndex = _range(this.midi.tracks.length)
-    } = options;
+    const { selectedTrackIndex = 0, playBeats, playBackgroundTracks } = options;
+    this.mainTrackIndex = selectedTrackIndex;
 
-    this.midi.tracks.forEach((_track, trackIndex) => {
-      this.playTrack(trackIndex, playingTracksIndex, cb);
+    this.midi.tracks.forEach((_track, currentTrackIndex) => {
+      if (playBackgroundTracks || selectedTrackIndex === currentTrackIndex) {
+        this.playTrack(currentTrackIndex, cb);
+      }
     });
 
-    this.midi.beats.forEach((_beat, beatIndex) => {
-      this.playBeat(beatIndex, playingBeatsIndex);
-    });
+    this.midi.beats.forEach((_beat, currentBeatIndex) =>
+      this.playBeat(currentBeatIndex)
+    );
+
+    if (!playBeats && this.drumSampler) {
+      this.drumSampler._volume.mute = true;
+    }
 
     Tone.Transport.start(`+${getDelay()}`);
-    this.startVisualizer(selectedTrackIndex);
+    this.startVisualizer();
   };
 
   public togglePlay = () => {
@@ -298,6 +292,22 @@ export class MidiPlayer {
 
     this.canvasWorker.postMessage({
       message: VISUALIZER_MESSAGES.TOGGLE
+    });
+  };
+
+  public toggleBeatsVolume = () => {
+    if (!this.drumSampler) return;
+    this.drumSampler._volume.mute = !this.drumSampler._volume.mute;
+  };
+
+  public toggleTracksVolume = () => {
+    this.midi.tracks.forEach((track, i) => {
+      const instrumentIndex = track.instrument.number;
+      if (i !== this.mainTrackIndex) {
+        this.trackSamplers[instrumentIndex]._volume.mute = !this.trackSamplers[
+          instrumentIndex
+        ]._volume.mute;
+      }
     });
   };
 

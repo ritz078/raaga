@@ -4,25 +4,26 @@ import { Button } from "@components/Button";
 import { ModeToggle } from "@components/ModeToggle";
 import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
-import { TrackList, TrackSelectionInfo } from "@components/TrackList";
+import { TrackList, MidiSettings } from "@components/TrackList";
 import { IMidiJSON } from "@typings/midi";
-import { Dropdown } from "@components/Dropdown";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
   onToggleMode: (mode: VISUALIZER_MODE) => void;
-  onMidiAndTrackSelect: (midi: IMidiJSON, args: TrackSelectionInfo) => void;
+  onMidiAndTrackSelect: (midi: IMidiJSON, args: MidiSettings) => void;
+  midiSettings: MidiSettings;
 }
 
 const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   mode,
   onToggleMode,
-  onMidiAndTrackSelect
+  onMidiAndTrackSelect,
+  midiSettings
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState();
 
-  const onSelect = (info: TrackSelectionInfo) =>
+  const onSelect = (info: MidiSettings) =>
     onMidiAndTrackSelect(loadedMidi, info);
 
   return (
@@ -49,6 +50,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
       </div>
 
       <TrackList
+        initialMidiSettings={midiSettings}
         visible={showTrackSelectionModal}
         midi={loadedMidi}
         onPlay={onSelect}

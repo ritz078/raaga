@@ -4,12 +4,7 @@ import React, {
   useLayoutEffect,
   useState
 } from "react";
-import {
-  getMidiRange,
-  IScheduleOptions,
-  isWithinRange,
-  MidiPlayer
-} from "@utils";
+import { getMidiRange, isWithinRange, MidiPlayer } from "@utils";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import { Visualizer } from "@components/Visualizer";
 import { Piano } from "./Piano";
@@ -27,10 +22,11 @@ import Tone from "tone";
 import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
-import { TrackSelectionInfo } from "@components/TrackList";
+import { MidiSettings } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { ReactComponent as Loader } from "@assets/images/three-dots.svg";
+import { TOGGLE_BACKGROUND_TYPE } from "@components/ReadModeControls";
 
 const range = {
   first: DEFAULT_FIRST_KEY,
@@ -47,10 +43,8 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
   const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
-  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
-  const [playingMidiInfo, setPlayingMidiInfo] = useState<IScheduleOptions>(
-    null
-  );
+  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
+  const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
 
@@ -120,55 +114,53 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
     [instrument]
   );
 
-  const onMidiAndTrackSelect = useCallback(
-    (midi: IMidiJSON, trackSelectionInfo: TrackSelectionInfo) => {
-      (async () => {
-        setPlaying(true);
-        setMidi(midi);
-        setPlayingMidiInfo(trackSelectionInfo);
-        setMode(VISUALIZER_MODE.READ);
-        player.clear();
-        setActiveMidis([]);
+  const onMidiAndTrackSelect = async (
+    midi: IMidiJSON,
+    trackSelectionInfo: MidiSettings
+  ) => {
+    setPlaying(true);
+    setMidi(midi);
+    setMidiSettings(trackSelectionInfo);
+    setMode(VISUALIZER_MODE.READ);
+    player.clear();
+    setActiveMidis([]);
 
-        player.setMidi(midi);
+    player.setMidi(midi);
 
-        setLoading(true);
+    setLoading(true);
 
-        const _range = setRange(
-          midi.tracks[trackSelectionInfo.selectedTrackIndex].notes
-        );
-        player.setRange(_range);
+    const _range = setRange(
+      midi.tracks[trackSelectionInfo.selectedTrackIndex].notes
+    );
+    player.setRange(_range);
 
-        await player.loadInstruments();
-        setLoading(false);
+    await player.loadInstruments();
+    setLoading(false);
 
-        player.scheduleAndPlay(
-          trackSelectionInfo,
-          (
-            notes: NoteWithIdAndEvent[],
-            trackIndex: number,
-            isComplete?: boolean
-          ) => {
-            if (trackIndex === trackSelectionInfo.selectedTrackIndex) {
-              if (isComplete) {
-                player.clear();
-                setPlaying(false);
-                setActiveMidis([]);
-                return;
-              }
-
-              setActiveMidis(notes.map(note => note.midi));
-            }
+    player.scheduleAndPlay(
+      trackSelectionInfo,
+      (
+        notes: NoteWithIdAndEvent[],
+        trackIndex: number,
+        isComplete?: boolean
+      ) => {
+        if (trackIndex === trackSelectionInfo.selectedTrackIndex) {
+          if (isComplete) {
+            player.clear();
+            setPlaying(false);
+            setActiveMidis([]);
+            return;
           }
-        );
-      })();
-    },
-    []
-  );
+
+          setActiveMidis(notes.map(note => note.midi));
+        }
+      }
+    );
+  };
 
   const onTogglePlay = useCallback(() => {
     if (Tone.Transport.state === "stopped") {
-      onMidiAndTrackSelect(loadedMidi, playingMidiInfo);
+      onMidiAndTrackSelect(loadedMidi, midiSettings);
     } else {
       player.togglePlay();
     }
@@ -202,6 +194,7 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
     <PlayerContext.Provider value={player}>
       <div className="flex flex-1 relative flex-col overflow-hidden">
         <GlobalHeader
+          midiSettings={midiSettings}
           mode={mode}
           onToggleMode={setMode}
           onMidiAndTrackSelect={onMidiAndTrackSelect}
@@ -221,7 +214,10 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
             player.setRange(range);
             setKeyboardRange(range);
           }}
+          onToggleBackground={setMidiSettings}
+          midiSettings={midiSettings}
           onMidiDeviceChange={setSelectedMidiDevice}
+          isLoading={loading}
         />
 
         <Visualizer

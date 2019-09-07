@@ -31,14 +31,6 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
     return () => document.body.removeChild(node);
   }, []);
 
-  useEffect(() => {
-    if (visible) {
-      document.getElementsByTagName("body")[0].style.overflow = "hidden";
-    } else {
-      document.getElementsByTagName("body")[0].style.overflow = "";
-    }
-  }, [visible]);
-
   const overlayTransition = useTransition(visible, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
