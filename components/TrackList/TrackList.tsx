@@ -1,28 +1,20 @@
-import { Dialog, Text } from "evergreen-ui";
-import * as React from "react";
+import React, { ComponentProps, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import { ReactComponent as ZeroState } from "@assets/images/zero-state.svg";
 import { IMidiJSON } from "@typings/midi";
-import { useState } from "react";
+import { Modal } from "@components/Modal";
 
-export interface TrackSelectionInfo {
+export interface MidiSettings {
   selectedTrackIndex: number;
-  playingTracksIndex: number[];
-  playingBeatsIndex: number[];
+  playBackgroundTracks: boolean;
+  playBeats: boolean;
 }
 
-interface TrackListProps {
-  onPlay: (args: TrackSelectionInfo) => void;
-  midi: IMidiJSON;
+type TrackListProps = ComponentProps<typeof TrackSelection> & {
   visible: boolean;
-  onClose: () => void;
-  setMidi: (midi: IMidiJSON) => void;
-}
-
-const contentContainerProps = {
-  paddingX: 0,
-  paddingY: 0
+  setMidi?: (midi: IMidiJSON) => void;
+  hasFileLoad?: boolean;
 };
 
 const TrackList_: React.FunctionComponent<TrackListProps> = ({
@@ -30,7 +22,9 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
   visible,
   onClose,
   midi,
-  setMidi
+  setMidi,
+  hasFileLoad = true,
+  initialMidiSettings
 }) => {
   /**
    * This part is mainly written so that `onPlay` is called after the modal has
@@ -54,48 +48,46 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
    * Status:
    * Under Investigation/Benchmarking - not yet confirmed.
    */
-  const [trackSelectionInfo, setTrackSelectionInfo] = useState<
-    TrackSelectionInfo
-  >(null);
+  const [midiSettings, setMidiSettings] = useState<MidiSettings>(
+    initialMidiSettings
+  );
+
+  const [closeRequestedForPlay, setCloseRequestedForPlay] = useState(false);
 
   const _onClose = () => {
-    if (trackSelectionInfo) {
-      onPlay(trackSelectionInfo);
+    if (closeRequestedForPlay) {
+      onPlay(midiSettings);
     }
-
-    setTrackSelectionInfo(null);
+    setCloseRequestedForPlay(false);
     onClose();
   };
   /**==================================**/
 
   return (
-    <Dialog
-      preventBodyScrolling
-      isShown={visible}
+    <Modal
+      visible={visible}
+      onCloseRequest={_onClose}
       onCloseComplete={_onClose}
-      hasFooter={false}
-      hasHeader={false}
-      contentContainerProps={contentContainerProps}
-      shouldCloseOnOverlayClickbool={false}
-      width={1265}
     >
-      <div className="flex flex-row flex-1">
-        <Sidebar onMidiLoad={setMidi} />
+      <div className="flex flex-row flex-1" style={{ width: 1265 }}>
+        {hasFileLoad && <Sidebar onMidiLoad={setMidi} />}
         <div className="flex flex-1 flex-col overflow-hidden">
           {!midi ? (
             <div className="tl-zero-state-illus-wrapper">
               <div>
                 <ZeroState width={300} height={250} />
-                <Text color="#7b7b7b" marginTop={10}>
+                <div className="text-gray-600 text-sm">
                   Seems you haven't selected any MIDI. You can either upload a
                   local file or select from the given samples.
-                </Text>
+                </div>
               </div>
             </div>
           ) : (
             <TrackSelection
+              initialMidiSettings={midiSettings}
               onPlay={trackSelectionInfo => {
-                setTrackSelectionInfo(trackSelectionInfo);
+                setMidiSettings(trackSelectionInfo);
+                setCloseRequestedForPlay(true);
                 onClose();
               }}
               onClose={onClose}
@@ -104,7 +96,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
           )}
         </div>
       </div>
-    </Dialog>
+    </Modal>
   );
 };
 

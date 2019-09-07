@@ -1,5 +1,5 @@
 .prs-content {
-  @apply flex flex-row text-white text-xs px-4 py-4 pb-6;
+  @apply text-white text-xs px-4 py-4 pb-8;
   width: 300px;
 }
 
@@ -12,5 +12,5 @@
   height: 20px;
   width: 20px;
   border-radius: 10px;
-  background-color: #42c9ff;
+  background-color: #fff;
 }

@@ -14,12 +14,12 @@
 }
 
 .header-midi-name {
-  @apply truncate capitalize;
+  @apply truncate capitalize text-xs text-gray-200 mr-3;
   max-width: 130px;
 }
 
 .instrument-list {
-  @apply text-xs px-3 py-1 cursor-pointer;
+  @apply text-xs px-3 py-1 cursor-pointer flex flex-row items-center;
 }
 
 .instrument-list:hover {

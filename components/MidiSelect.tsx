@@ -51,7 +51,7 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
           name="piano"
           color={"#fff"}
           size={16}
-          className="ml-4 mb-3 cursor-pointer"
+          className="mx-4 cursor-pointer"
         />
       )}
     >

@@ -1,0 +1,16 @@
+.settings-content {
+  min-width: 300px;
+  background-color: #202020;
+}
+
+.settings-section-title {
+  @apply text-sm text-white mb-3;
+}
+
+.settings-row {
+  @apply flex-space-between-center mb-3;
+}
+
+.settings-row-label {
+  @apply text-sm text-gray-500;
+}

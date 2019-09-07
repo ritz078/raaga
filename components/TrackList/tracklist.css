@@ -27,8 +27,8 @@
 .tl-sidebar {
   @apply p-5 w-64;
   background-color: #272727;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .tl-sidebar-sample-midi:hover {
@@ -50,7 +50,7 @@
 }
 
 .ts-footer {
-  @apply flex-space-between-center border-t p-5;
+  @apply flex-space-between-center border-t py-2 px-5;
   height: 50px;
   border-color: #2a2a2a;
 }

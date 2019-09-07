@@ -37,7 +37,11 @@ export function Error() {
       {transitions.map(
         ({ item, key, props }) =>
           item && (
-            <animated.div key={key} style={props} className="error-toast">
+            <animated.div
+              key={key}
+              style={props as any}
+              className="error-toast"
+            >
               {text}
             </animated.div>
           )

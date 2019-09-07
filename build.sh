@@ -1,3 +1,4 @@
 yarn
-node ./scripts/generateMidiMeta.js
+yarn build:icons
+yarn build:midi
 ./node_modules/.bin/next build;

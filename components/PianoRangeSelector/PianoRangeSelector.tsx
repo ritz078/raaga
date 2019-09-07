@@ -48,44 +48,48 @@ const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
       >
         {() => (
           <div className="prs-content">
-            <RangeSlider
-              step={1}
-              min={0}
-              max={naturalKeys.length - 1}
-              values={_range}
-              onChange={setRange}
-              renderTrack={({ props, children }) => (
-                <div
-                  onMouseDown={props.onMouseDown as any}
-                  onTouchStart={props.onTouchStart}
-                  className="h-10 flex w-full"
-                  style={props.style}
-                >
+            <div className="text-sm text-white mb-2">Piano Range Selector</div>
+
+            <div>
+              <RangeSlider
+                step={1}
+                min={0}
+                max={naturalKeys.length - 1}
+                values={_range}
+                onChange={setRange}
+                renderTrack={({ props, children }) => (
                   <div
-                    ref={props.ref}
-                    className="h-1 w-full self-center rounded"
-                    style={{
-                      background: getTrackBackground({
-                        values: _range,
-                        colors: ["#ccc", "#2196f3", "#ccc"],
-                        min: 0,
-                        max: naturalKeys.length - 1
-                      })
-                    }}
+                    onMouseDown={props.onMouseDown as any}
+                    onTouchStart={props.onTouchStart}
+                    className="h-10 flex w-full"
+                    style={props.style}
                   >
-                    {children}
+                    <div
+                      ref={props.ref}
+                      className="h-1 w-full self-center rounded"
+                      style={{
+                        background: getTrackBackground({
+                          values: _range,
+                          colors: ["#ccc", "#2196f3", "#ccc"],
+                          min: 0,
+                          max: naturalKeys.length - 1
+                        })
+                      }}
+                    >
+                      {children}
+                    </div>
                   </div>
-                </div>
-              )}
-              renderThumb={({ index, props }) => (
-                <div {...props} style={props.style}>
-                  <div className="prs-thumb" />
-                  <span className="prs-label">
-                    {naturalKeys[_range[index]].label}
-                  </span>
-                </div>
-              )}
-            />
+                )}
+                renderThumb={({ index, props }) => (
+                  <div {...props} style={props.style}>
+                    <div className="prs-thumb" />
+                    <span className="prs-label">
+                      {naturalKeys[_range[index]].label}
+                    </span>
+                  </div>
+                )}
+              />
+            </div>
           </div>
         )}
       </Dropdown>

@@ -1,5 +1,5 @@
 .playback-speed-wrapper {
-  @apply header-range-wrapper text-white;
+  @apply header-range-wrapper text-white mr-3;
 }
 
 .playback-speed-btn {

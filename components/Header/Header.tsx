@@ -1,41 +1,23 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import { getInstrumentByValue, instruments } from "midi-instruments";
 import MidiSelect from "@components/MidiSelect";
-import { ProgressBar } from "@components/ProgressBar";
 import { IMidiJSON, INote } from "@typings/midi";
-import { PlaybackSpeed } from "@components/PlaybackSpeed";
-import { Button } from "@components/Button";
-import { Range } from "@utils/typings/Visualizer";
 import { Icon } from "@components/Icon";
-import { Dropdown } from "@components/Dropdown";
-import FuzzySearch from "fuzzy-search";
 import cn from "@sindresorhus/class-names";
-import { PianoRangeSelector } from "@components/PianoRangeSelector";
+import Settings from "@components/Settings/Settings";
+import { ReadModeControls } from "@components/ReadModeControls";
+import { WriteModeControls } from "@components/WriteModeControls";
 
-export interface HeaderProps {
-  mode: VISUALIZER_MODE;
-  instrument: string;
-  onTogglePlay: () => void;
-  onInstrumentChange: (instrument: React.ReactText) => void;
-  notes?: INote[];
-  onTrackSelect?: (midi: IMidiJSON, i) => void;
-  midiDeviceId: string;
-  isPlaying: boolean;
-  midi: IMidiJSON;
-  range: Range;
-  onRangeChange: (range: number[]) => void;
-  onMidiDeviceChange: (midiDevice: string) => void;
-}
-
-const instrumentOptions = Object.keys(instruments).map(id => {
-  const { name, value } = instruments[id];
-  return {
-    label: name,
-    value
+type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
+  React.ComponentProps<typeof WriteModeControls> & {
+    mode: VISUALIZER_MODE;
+    notes?: INote[];
+    onTrackSelect?: (midi: IMidiJSON, i) => void;
+    midiDeviceId: string;
+    onMidiDeviceChange: (midiDevice: string) => void;
+    isLoading: boolean;
   };
-});
 
 const _Header: React.FunctionComponent<HeaderProps> = ({
   mode,
@@ -44,14 +26,15 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   midiDeviceId,
   onTogglePlay,
   isPlaying,
+  onToggleBackground,
   midi,
   range,
   onRangeChange,
-  onMidiDeviceChange
+  onMidiDeviceChange,
+  midiSettings,
+  isLoading
 }) => {
   const [mute, toggleMute] = useState(false);
-  const fuzzySearch = useRef(new FuzzySearch(instrumentOptions, ["label"]));
-  const [instrumentList, setInstrumentList] = useState(instrumentOptions);
 
   const _toggleMute = () => {
     Tone.Master.mute = !mute;
@@ -59,83 +42,35 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   };
 
   const volumeName = mute ? "volume-off" : "volume";
-  const playName = isPlaying ? "pause" : "play";
-
-  const onSearchChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setInstrumentList(fuzzySearch.current.search(e.currentTarget.value));
-  };
 
   return (
     <div className="header">
-      <div className="flex flex-row items-center pl-4">
+      <div
+        className={cn("flex flex-row items-center pl-4", {
+          "opacity-25": isLoading
+        })}
+      >
         {midi && mode === VISUALIZER_MODE.READ && (
-          <>
-            <Button className="h-8 mr-2">
-              <div className="header-midi-name" title={midi.header.name[0]}>
-                {midi.header.label}
-              </div>
-            </Button>
-            <div className="player-wrapper">
-              <Icon
-                name={playName}
-                color="#fff"
-                size={13}
-                className="cursor-pointer"
-                onClick={onTogglePlay}
-              />
-
-              <ProgressBar duration={midi && midi.duration} />
-            </div>
-
-            <PlaybackSpeed />
-          </>
+          <ReadModeControls
+            midiSettings={midiSettings}
+            midi={midi}
+            isPlaying={isPlaying}
+            onTogglePlay={onTogglePlay}
+            onToggleBackground={onToggleBackground}
+          />
         )}
 
         {mode === VISUALIZER_MODE.WRITE && (
-          <PianoRangeSelector range={range} onRangeChange={onRangeChange} />
+          <WriteModeControls
+            onRangeChange={onRangeChange}
+            range={range}
+            instrument={instrument}
+            onInstrumentChange={onInstrumentChange}
+          />
         )}
       </div>
 
       <div className="flex flex-row justify-between items-center">
-        {mode === VISUALIZER_MODE.WRITE && (
-          <Dropdown
-            contentClassName={"instrument-selector"}
-            label={() => (
-              <Button className="h-8">
-                {getInstrumentByValue(instrument).name}
-              </Button>
-            )}
-          >
-            {close => {
-              return (
-                <div className="py-2" style={{ width: 180 }}>
-                  <input
-                    onChange={onSearchChange}
-                    type="text"
-                    placeholder="Search"
-                    className="instrument-searchbox"
-                  />
-
-                  {instrumentList.map(({ label, value }) => (
-                    <div
-                      className={cn("instrument-list", {
-                        selected: value === instrument
-                      })}
-                      key={value}
-                      onClick={() => {
-                        onInstrumentChange(value);
-                        close();
-                      }}
-                    >
-                      {label}
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          </Dropdown>
-        )}
-
         <Icon
           name={volumeName}
           color={"#fff"}
@@ -148,6 +83,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           onMidiDeviceChange={onMidiDeviceChange}
           midiDeviceId={midiDeviceId}
         />
+
+        {false && <Settings />}
       </div>
     </div>
   );

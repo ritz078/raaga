@@ -1,0 +1,10 @@
+.modal {
+  @apply absolute rounded-lg;
+  background-color: #202020;
+  top: 150px;
+}
+
+.modal-overlay {
+  @apply z-50 fixed inset-0 flex justify-center;
+  background-color: rgba(0, 0, 0, 0.8);
+}
