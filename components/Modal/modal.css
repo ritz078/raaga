@@ -1,7 +1,9 @@
 .modal {
-  @apply absolute rounded-lg;
+  @apply absolute rounded-lg flex;
   background-color: #202020;
-  top: 150px;
+  top: 20vh;
+  max-height: 60vh;
+  max-width: 90vw;
 }
 
 .modal-overlay {

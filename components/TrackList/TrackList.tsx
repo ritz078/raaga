@@ -69,7 +69,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
       onCloseRequest={_onClose}
       onCloseComplete={_onClose}
     >
-      <div className="flex flex-row flex-1" style={{ width: 1265 }}>
+      <div className="flex flex-row flex-1" style={{ width: 1018 }}>
         {hasFileLoad && <Sidebar onMidiLoad={setMidi} />}
         <div className="flex flex-1 flex-col overflow-hidden">
           {!midi ? (

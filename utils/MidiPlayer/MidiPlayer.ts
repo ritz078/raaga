@@ -137,9 +137,9 @@ export class MidiPlayer {
     const trackInstrumentIds = Object.keys(data.tracks);
     const samplers = await Promise.all(
       trackInstrumentIds.map(
-        key =>
-          this.trackSamplers[key] ||
-          MidiPlayer.getTrackSampler(data.tracks[key])
+        instrumentId =>
+          this.trackSamplers[instrumentId] ||
+          MidiPlayer.getTrackSampler(data.tracks[instrumentId])
       )
     );
 
