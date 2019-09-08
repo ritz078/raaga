@@ -1,12 +1,13 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { Error } from "@components/Error";
+import { Loader } from "@components/Loader";
 
 const SoundPlayer = dynamic((() => import("@components/SoundPlayer")) as any, {
   ssr: false,
   loading: () => (
     <div className="h-screen w-screen flex flex-1 items-center justify-center">
-      Loading
+      <Loader />
     </div>
   )
 });

@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@components/Button";
 import { ModeToggle } from "@components/ModeToggle";
 import { Icon } from "@components/Icon";

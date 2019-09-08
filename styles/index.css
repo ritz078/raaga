@@ -20,6 +20,7 @@
 @import "../components/Modal/modal.css";
 @import "../components/Settings/settings.css";
 @import "../components/ReadModeControls/read-mode-controls.css";
+@import "../components/Loader/loader.css";
 
 .piano-wrapper {
   @apply flex justify-center relative items-center border-t border-black;

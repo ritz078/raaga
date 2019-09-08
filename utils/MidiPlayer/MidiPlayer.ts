@@ -63,14 +63,13 @@ export class MidiPlayer {
   private range;
   private mainTrackIndex = 0;
 
-  static getTrackSampler = audio => {
-    return new Promise(resolve => {
+  static getTrackSampler = audio =>
+    new Promise(resolve => {
       const sampler = new Tone.Sampler(audio, () => {
         sampler.connect(Tone.Master);
         resolve(sampler);
       });
     });
-  };
 
   /**
    * Takes a midi number and returns the corresponding note name.
@@ -319,15 +318,12 @@ export class MidiPlayer {
    * This needs to be called every time we want to reset everything.
    */
   public clear = () => {
-    this.canvasWorker.postMessage({
-      type: VISUALIZER_MESSAGES.STOP_TRACK
-    });
-    Tone.Transport.stop();
-
     [...this.trackPart, ...this.drumPart].filter(Boolean).forEach(part => {
       part.stop(0);
       part.dispose();
     });
+
+    Tone.Transport.stop();
 
     this.trackPart = [];
     this.drumPart = [];

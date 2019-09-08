@@ -18,7 +18,6 @@ export default class MyDocument extends Document<{}> {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Voces"
           />
-          <link rel="stylesheet" href={"/static/fonts/synth.css"} />
           <link
             rel="shortcut icon"
             type="image/png"

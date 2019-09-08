@@ -15,7 +15,7 @@ interface PianoProps {
   onPlay: (midi: number) => void;
   onStop: (midi: number) => void;
   activeMidis: number[];
-  className?: string;
+  className: string;
 }
 
 const _Piano: FunctionComponent<PianoProps> = ({

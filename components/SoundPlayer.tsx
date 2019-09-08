@@ -25,8 +25,7 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
-import { ReactComponent as Loader } from "@assets/images/three-dots.svg";
-import { TOGGLE_BACKGROUND_TYPE } from "@components/ReadModeControls";
+import { Loader } from "@components/Loader";
 
 const range = {
   first: DEFAULT_FIRST_KEY,

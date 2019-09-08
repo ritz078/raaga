@@ -28,7 +28,6 @@ function Sidebar({ onMidiLoad }) {
       Error.show(e);
     }
     if (inputRef.current) {
-      // @ts-ignore
       inputRef.current.value = "";
     }
     Nprogress.done();
