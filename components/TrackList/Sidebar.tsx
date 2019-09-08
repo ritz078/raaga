@@ -1,16 +1,13 @@
-import React, { useRef, memo } from "react";
-import { promisifyWorker } from "@utils/promisifyWorker";
+import React, { useRef, memo, useEffect } from "react";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import { IMidiJSON } from "@typings/midi";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
+import * as Comlink from "comlink";
+import MidiParseWorker from "@workers/midiParse.worker";
 
-let midiParseWorker;
-if (IN_BROWSER) {
-  const MidiParse = require("@workers/midiParse.worker");
-  midiParseWorker = new MidiParse();
-}
+const midiParseWorker: any = Comlink.wrap(new MidiParseWorker());
 
 function Sidebar({ onMidiLoad }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -19,13 +16,10 @@ function Sidebar({ onMidiLoad }) {
     const file = e.target.files[0];
     Nprogress.start();
     try {
-      const midi: IMidiJSON = await promisifyWorker(midiParseWorker, {
-        filePath: file,
-        name: file.name
-      });
+      const midi: IMidiJSON = await midiParseWorker(file, file.name);
       onMidiLoad(midi);
     } catch (e) {
-      Error.show(e);
+      Error.show(e.message);
     }
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -35,11 +29,12 @@ function Sidebar({ onMidiLoad }) {
 
   const selectSample = async ({ label, url }) => {
     Nprogress.start();
-    const midi = await promisifyWorker(midiParseWorker, {
-      filePath: url,
-      name: label
-    });
-    onMidiLoad(midi);
+    try {
+      const midi = await midiParseWorker(url, label);
+      onMidiLoad(midi);
+    } catch (e) {
+      Error.show(e.message);
+    }
     Nprogress.done();
   };
 

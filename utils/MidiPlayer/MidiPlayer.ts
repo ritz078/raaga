@@ -1,12 +1,10 @@
 import Tone from "tone";
 import LoadInstrumentWorker from "@workers/loadInstrument.worker";
-import { promisifyWorker } from "@utils/promisifyWorker";
 import { EVENT_TYPE } from "@enums/piano";
 import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
-import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import {
   getDelay,
   getNotesWithNoteEndEvent,
@@ -17,8 +15,9 @@ import { getInstrumentIdByValue } from "midi-instruments";
 import { IMidiJSON } from "@typings/midi";
 import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 import { MidiSettings } from "@components/TrackList";
+import { wrap } from "comlink";
 
-const loadInstrumentWorker = new LoadInstrumentWorker();
+const loadInstrumentWorker: any = wrap(new LoadInstrumentWorker());
 
 const defaultRange = {
   first: DEFAULT_FIRST_KEY,
@@ -77,15 +76,11 @@ export class MidiPlayer {
    */
   static getNoteName = (midi: number) => Tone.Frequency(midi, "midi").toNote();
 
-  private canvasWorker: CanvasWorkerFallback;
+  readonly canvasProxy: any;
 
-  constructor(
-    canvasWorker: CanvasWorkerFallback,
-    range: Range,
-    midi?: IMidiJSON
-  ) {
+  constructor(canvasWorker, range: Range, midi?: IMidiJSON) {
     this.range = range;
-    this.canvasWorker = canvasWorker;
+    this.canvasProxy = canvasWorker;
     this.midi = midi;
   }
 
@@ -95,7 +90,7 @@ export class MidiPlayer {
 
   public setRange(range: Range) {
     this.range = range;
-    this.canvasWorker.postMessage({
+    this.canvasProxy({
       message: VISUALIZER_MESSAGES.UPDATE_RANGE,
       range
     });
@@ -119,10 +114,7 @@ export class MidiPlayer {
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
 
-    const data = await promisifyWorker(loadInstrumentWorker, {
-      instrumentIds,
-      drums
-    });
+    const data = await loadInstrumentWorker(instrumentIds, drums);
 
     if (data.drums && !this.drumSampler) {
       this.drumSampler = await new Promise(resolve => {
@@ -149,7 +141,7 @@ export class MidiPlayer {
     });
   };
 
-  public playNote = (midi: number, instrument, velocity = 1) => {
+  public playNote = async (midi: number, instrument, velocity = 1) => {
     const instrumentId = getInstrumentIdByValue(instrument);
     this.trackSamplers[instrumentId].triggerAttack(
       MidiPlayer.getNoteName(midi),
@@ -157,7 +149,7 @@ export class MidiPlayer {
       velocity
     );
 
-    this.canvasWorker.postMessage({
+    await this.canvasProxy({
       message: VISUALIZER_MESSAGES.PLAY_NOTE,
       midi
     });
@@ -168,13 +160,13 @@ export class MidiPlayer {
    * @param midi
    * @param instrument
    */
-  public stopNote = (midi: number, instrument) => {
+  public stopNote = async (midi: number, instrument) => {
     const instrumentId = getInstrumentIdByValue(instrument);
     this.trackSamplers[instrumentId].triggerRelease(
       MidiPlayer.getNoteName(midi)
     );
 
-    this.canvasWorker.postMessage({
+    await this.canvasProxy({
       message: VISUALIZER_MESSAGES.STOP_NOTE,
       midi
     });
@@ -243,10 +235,10 @@ export class MidiPlayer {
   /**
    * Starts the visualizer with the main selected track.
    */
-  private startVisualizer = () => {
+  private startVisualizer = async () => {
     const mainTrack = this.midi.tracks[this.mainTrackIndex];
 
-    this.canvasWorker.postMessage({
+    await this.canvasProxy({
       track: mainTrack,
       range: this.range,
       message: VISUALIZER_MESSAGES.PLAY_TRACK,
@@ -260,7 +252,10 @@ export class MidiPlayer {
    * @param options
    * @param cb
    */
-  public scheduleAndPlay = (options: IScheduleOptions, cb: IEventCallback) => {
+  public scheduleAndPlay = async (
+    options: IScheduleOptions,
+    cb: IEventCallback
+  ) => {
     const { selectedTrackIndex = 0, playBeats, playBackgroundTracks } = options;
     this.mainTrackIndex = selectedTrackIndex;
 
@@ -279,17 +274,17 @@ export class MidiPlayer {
     }
 
     Tone.Transport.start(`+${getDelay()}`);
-    this.startVisualizer();
+    await this.startVisualizer();
   };
 
-  public togglePlay = () => {
+  public togglePlay = async () => {
     if (Tone.Transport.state === "started") {
       Tone.Transport.pause();
     } else {
       Tone.Transport.start();
     }
 
-    this.canvasWorker.postMessage({
+    this.canvasProxy({
       message: VISUALIZER_MESSAGES.TOGGLE
     });
   };
@@ -317,32 +312,35 @@ export class MidiPlayer {
    *
    * This needs to be called every time we want to reset everything.
    */
-  public clear = () => {
+  public clear = async () => {
+    await this.canvasProxy({
+      message: VISUALIZER_MESSAGES.STOP_TRACK
+    });
+
     [...this.trackPart, ...this.drumPart].filter(Boolean).forEach(part => {
-      part.stop(0);
       part.dispose();
     });
 
     Tone.Transport.stop();
+    Tone.Transport.cancel();
 
     this.trackPart = [];
     this.drumPart = [];
-    this.setRange(defaultRange);
 
     this.setSpeed(1);
   };
 
-  public setSpeed = (speed: number) => {
+  public setSpeed = async (speed: number) => {
     Tone.Transport.bpm.value = speed * 120;
 
-    this.canvasWorker.postMessage({
+    await this.canvasProxy({
       message: VISUALIZER_MESSAGES.SET_SPEED,
       speed
     });
   };
 
-  public setMode = (mode: VISUALIZER_MODE) => {
-    this.canvasWorker.postMessage({
+  public setMode = async (mode: VISUALIZER_MODE) => {
+    await this.canvasProxy({
       message: VISUALIZER_MESSAGES.SET_MODE,
       mode
     });

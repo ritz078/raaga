@@ -5,21 +5,21 @@ import {
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
-import { CanvasWorkerFallback } from "@controllers/visualizer.controller";
 import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 import { useWindowResize } from "@hooks/useWindowResize";
 import cn from "@sindresorhus/class-names";
+import { transfer } from "comlink";
 
 interface VisualizerProps {
   range: Range;
   mode: VISUALIZER_MODE;
-  canvasWorker: CanvasWorkerFallback;
+  canvasProxy: any;
 }
 
 const _Visualizer: FunctionComponent<VisualizerProps> = ({
   mode,
   range,
-  canvasWorker
+  canvasProxy
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const visualizerRef = useRef<HTMLDivElement>(null);
@@ -30,33 +30,39 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   });
 
   useEffect(() => {
-    const canvas = offScreenCanvasIsSupported
-      ? canvasRef.current.transferControlToOffscreen()
-      : canvasRef.current;
+    (async function() {
+      const canvas: any = offScreenCanvasIsSupported
+        ? canvasRef.current.transferControlToOffscreen()
+        : canvasRef.current;
 
-    // This has been done because it wasn't getting correctly transferred
-    // in firefox.
-    const dimensions = JSON.parse(
-      JSON.stringify(visualizerRef.current.getBoundingClientRect())
-    );
+      // This has been done because it wasn't getting correctly transferred
+      // in firefox.
+      const dimensions = JSON.parse(
+        JSON.stringify(visualizerRef.current.getBoundingClientRect())
+      );
 
-    canvasWorker.postMessage(
-      {
-        canvas,
-        message: VISUALIZER_MESSAGES.INIT,
-        dimensions,
-        range,
-        mode
-      },
-      [canvas]
-    );
+      await canvasProxy(
+        transfer(
+          {
+            canvas,
+            message: VISUALIZER_MESSAGES.INIT,
+            dimensions,
+            range,
+            mode
+          },
+          [canvas]
+        )
+      );
+    })();
   }, []);
 
   useEffect(() => {
-    canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
-      dimensions
-    });
+    (async function() {
+      await canvasProxy({
+        message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
+        dimensions
+      });
+    })();
   }, [dimensions]);
 
   const { width, height } = dimensions;

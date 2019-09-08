@@ -4,8 +4,7 @@ import {
   getInstrumentIdByValue,
   instruments
 } from "midi-instruments";
-
-const _self = self as any;
+import * as Comlink from "comlink";
 
 const DRUMS_NAME = "drumsBeats";
 
@@ -85,7 +84,7 @@ const loadSoundFont = async (
   }
 };
 
-function loadInstruments(instrumentIds: number[], drums?: boolean) {
+async function loadInstruments(instrumentIds: number[], drums?: boolean) {
   const promises = instrumentIds.map(instrumentId => {
     const { value } = getInstrumentById(instrumentId.toString(10));
 
@@ -94,14 +93,8 @@ function loadInstruments(instrumentIds: number[], drums?: boolean) {
 
   const drumPromise = drums ? loadSoundFont(null, true) : undefined;
 
-  return Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
+  await Promise.all([...promises, ...(drumPromise ? [drumPromise] : [])]);
+  return midiFontData;
 }
 
-_self.onmessage = async ({ data: { id, instrumentIds, drums } }) => {
-  await loadInstruments(instrumentIds, drums);
-
-  _self.postMessage({
-    id,
-    payload: midiFontData
-  });
-};
+Comlink.expose(loadInstruments);

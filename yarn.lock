@@ -7318,6 +7318,11 @@ stable@^0.1.8:
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
   integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
 
+startaudiocontext@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/startaudiocontext/-/startaudiocontext-1.2.1.tgz#46d2cab5462c791180acc7223e3bbbc3272c8595"
+  integrity sha1-RtLKtUYseRGArMciPju7wycshZU=
+
 static-extend@^0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/static-extend/-/static-extend-0.1.2.tgz#60809c39cbff55337226fd5e0b520f341f1fb5c6"

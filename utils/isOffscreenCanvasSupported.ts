@@ -2,7 +2,7 @@ import CanvasWorker from "@workers/canvas.worker";
 
 const worker = new CanvasWorker();
 
-let isTranferableSupported = true;
+let isTransferableSupported = true;
 
 const isOSSupported = !!HTMLCanvasElement.prototype.transferControlToOffscreen;
 
@@ -14,8 +14,10 @@ try {
     worker.postMessage({ canvas }, [canvas]);
   }
 } catch (e) {
-  isTranferableSupported = false;
+  isTransferableSupported = false;
 }
 
+worker.terminate();
+
 export const offScreenCanvasIsSupported =
-  isOSSupported && isTranferableSupported;
+  isOSSupported && isTransferableSupported;
