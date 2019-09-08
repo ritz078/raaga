@@ -182,10 +182,10 @@ export class Visualizer {
   };
 
   private cleanup = () => {
-    this.writeIntervalId && clearInterval(this.writeIntervalId);
     this.clock.stop();
     this.clearCanvas();
     this.setSpeed(1);
+    this.writeIntervalId && clearInterval(this.writeIntervalId);
   };
 
   private startWriteMode = () => {

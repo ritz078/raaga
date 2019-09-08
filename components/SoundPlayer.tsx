@@ -117,11 +117,11 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
     midi: IMidiJSON,
     trackSelectionInfo: MidiSettings
   ) => {
+    player.clear();
     setPlaying(true);
     setMidi(midi);
     setMidiSettings(trackSelectionInfo);
     setMode(VISUALIZER_MODE.READ);
-    player.clear();
     setActiveMidis([]);
 
     player.setMidi(midi);
