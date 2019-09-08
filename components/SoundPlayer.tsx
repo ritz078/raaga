@@ -21,6 +21,7 @@ import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { Loader } from "@components/Loader";
 import canvasProxy from "@controllers/visualizer.controller";
+import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 
 const range = {
   first: DEFAULT_FIRST_KEY,
@@ -36,7 +37,7 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
   const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
-  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
+  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
@@ -208,11 +209,13 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
           isLoading={loading}
         />
 
-        <Visualizer
-          range={keyboardRange}
-          mode={mode}
-          canvasProxy={canvasProxy}
-        />
+        {offScreenCanvasIsSupported && (
+          <Visualizer
+            range={keyboardRange}
+            mode={mode}
+            canvasProxy={canvasProxy}
+          />
+        )}
       </div>
       <div className="piano-wrapper">
         {loading && <Loader className="absolute z-10 h-4" />}
