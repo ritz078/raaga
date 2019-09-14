@@ -13,16 +13,11 @@ import {
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
 import { IMidiJSON } from "@typings/midi";
-import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
 import { MidiSettings } from "@components/TrackList";
 import { wrap } from "comlink";
+import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
 const loadInstrumentWorker: any = wrap(new LoadInstrumentWorker());
-
-const defaultRange = {
-  first: DEFAULT_FIRST_KEY,
-  last: DEFAULT_LAST_KEY
-};
 
 export type IScheduleOptions = MidiSettings;
 
@@ -61,6 +56,8 @@ export class MidiPlayer {
   private drumPart = [];
   private range;
   private mainTrackIndex = 0;
+  private is2dOffscreenCanvasSupported =
+    OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING;
 
   static getTrackSampler = audio =>
     new Promise(resolve => {
@@ -76,13 +73,16 @@ export class MidiPlayer {
    */
   static getNoteName = (midi: number) => Tone.Frequency(midi, "midi").toNote();
 
-  readonly canvasProxy: any;
+  private canvasProxy: any;
 
-  constructor(canvasWorker, range: Range, midi?: IMidiJSON) {
+  constructor(range: Range, midi?: IMidiJSON) {
     this.range = range;
-    this.canvasProxy = canvasWorker;
     this.midi = midi;
   }
+
+  public setCanvasProxy = (canvasProxy: any) => {
+    this.canvasProxy = canvasProxy;
+  };
 
   public setMidi(midi: IMidiJSON) {
     this.midi = midi;
@@ -274,7 +274,10 @@ export class MidiPlayer {
     }
 
     Tone.Transport.start(`+${getDelay()}`);
-    await this.startVisualizer();
+
+    if (this.is2dOffscreenCanvasSupported) {
+      await this.startVisualizer();
+    }
   };
 
   public togglePlay = async () => {
@@ -344,5 +347,11 @@ export class MidiPlayer {
       message: VISUALIZER_MESSAGES.SET_MODE,
       mode
     });
+  };
+
+  public set2dOffscreenCanvasSupport = (
+    support: OFFSCREEN_2D_CANVAS_SUPPORT
+  ) => {
+    this.is2dOffscreenCanvasSupported = support;
   };
 }

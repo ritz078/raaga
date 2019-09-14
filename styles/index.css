@@ -22,6 +22,10 @@
 @import "../components/ReadModeControls/read-mode-controls.css";
 @import "../components/Loader/loader.css";
 
+* {
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .piano-wrapper {
   @apply flex justify-center relative items-center border-t border-black;
   height: var(--piano-height);

@@ -1,4 +1,4 @@
-import React, { useRef, memo, useEffect } from "react";
+import React, { useRef, memo } from "react";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import { IMidiJSON } from "@typings/midi";

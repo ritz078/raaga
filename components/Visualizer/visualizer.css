@@ -15,3 +15,8 @@
   border-top-width: 0;
   border-bottom-width: 0;
 }
+
+.vis-not-supported {
+  @apply absolute text-gray-400 block self-center text-center w-full p-10 text-sm;
+  transform: rotate(180deg) scaleX(-1);
+}

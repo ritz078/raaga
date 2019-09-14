@@ -1,25 +1,27 @@
-import React, { useEffect, useRef, FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useRef } from "react";
 import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
 } from "@enums/visualizerMessages";
 import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
-import { offScreenCanvasIsSupported } from "@utils/isOffscreenCanvasSupported";
 import { useWindowResize } from "@hooks/useWindowResize";
 import cn from "@sindresorhus/class-names";
 import { transfer } from "comlink";
+import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
 interface VisualizerProps {
   range: Range;
   mode: VISUALIZER_MODE;
   canvasProxy: any;
+  offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
 }
 
 const _Visualizer: FunctionComponent<VisualizerProps> = ({
   mode,
   range,
-  canvasProxy
+  canvasProxy,
+  offScreenCanvasSupport
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const visualizerRef = useRef<HTMLDivElement>(null);
@@ -31,9 +33,10 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
 
   useEffect(() => {
     (async function() {
-      const canvas: any = offScreenCanvasIsSupported
-        ? canvasRef.current.transferControlToOffscreen()
-        : canvasRef.current;
+      const canvas: any =
+        offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
+          ? canvasRef.current.transferControlToOffscreen()
+          : canvasRef.current;
 
       // This has been done because it wasn't getting correctly transferred
       // in firefox.
@@ -72,20 +75,32 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   });
 
   return (
-    <div className={className} ref={visualizerRef}>
-      <canvas
-        width={width}
-        height={height}
-        style={dimensions}
-        ref={canvasRef}
-      />
+    <>
+      <div className={className} ref={visualizerRef}>
+        <canvas
+          width={width}
+          height={height}
+          style={dimensions}
+          ref={canvasRef}
+        />
 
-      <div className="text-white flex flex-1 absolute flex-row inset-0">
-        {getNaturalKeysInRange(range).map(x => (
-          <div className="vis-note-section" key={x} />
-        ))}
+        <div className="text-white flex flex-1 absolute flex-row inset-0">
+          {getNaturalKeysInRange(range).map(x => (
+            <div className="vis-note-section" key={x} />
+          ))}
+        </div>
+
+        {mode === VISUALIZER_MODE.READ &&
+          offScreenCanvasSupport ===
+            OFFSCREEN_2D_CANVAS_SUPPORT.NOT_SUPPORTED && (
+            <div className="vis-not-supported">
+              Your browser doesn't support the Visualizer required by Raaga in
+              Read mode. <br />
+              You can listen to the music and see the notes on the piano.
+            </div>
+          )}
       </div>
-    </div>
+    </>
   );
 };
 
