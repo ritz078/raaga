@@ -184,7 +184,6 @@ const SoundPlayer: React.FunctionComponent<{
 
   useLayoutEffect(() => {
     setActiveMidis([]);
-    setPlaying(false);
   }, [mode]);
 
   useEffect(() => {
@@ -200,6 +199,15 @@ const SoundPlayer: React.FunctionComponent<{
   useEffect(() => player.setRange(keyboardRange), [keyboardRange]);
 
   useEffect(setMidiDevice, [midiDevice]);
+
+  const handleRangeChange = useCallback(
+    _range => {
+      const { range } = getPianoRangeAndShortcuts(_range, false);
+      player.setRange(range);
+      setKeyboardRange(range);
+    },
+    [player]
+  );
 
   return (
     <PlayerContext.Provider value={player}>
@@ -220,11 +228,7 @@ const SoundPlayer: React.FunctionComponent<{
           isPlaying={isPlaying}
           midi={loadedMidi}
           range={keyboardRange}
-          onRangeChange={_range => {
-            const { range } = getPianoRangeAndShortcuts(_range, false);
-            player.setRange(range);
-            setKeyboardRange(range);
-          }}
+          onRangeChange={handleRangeChange}
           onToggleBackground={setMidiSettings}
           midiSettings={midiSettings}
           onMidiDeviceChange={setSelectedMidiDevice}
