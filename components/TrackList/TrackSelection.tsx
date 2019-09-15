@@ -1,12 +1,14 @@
 import InstrumentCard from "@components/TrackList/InstrumentCard";
 import * as React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { IBeat, IMidiJSON, ITrack } from "@typings/midi";
 import { Icon } from "@components/Icon";
 import { Button } from "@components/Button";
 import Switch from "react-switch";
 import { MidiSettings } from "@components/TrackList/TrackList";
+import StartAudioContext from "startaudiocontext";
+import Tone from "tone";
 
 const switchProps = {
   onColor: "#86d3ff",
@@ -34,6 +36,8 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
   onPlay,
   initialMidiSettings
 }) => {
+  const startAudiContextRef = useRef();
+
   const { header, tracks, beats, duration } = midi;
 
   const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
@@ -141,7 +145,13 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
         )}
       </div>
 
-      <div className="ts-footer">
+      <div
+        ref={startAudiContextRef}
+        className="ts-footer"
+        onClick={() => {
+          StartAudioContext(Tone.context, startAudiContextRef.current);
+        }}
+      >
         <span />
         <Button onClick={_onPlayClick} className="h-8">
           Play Track

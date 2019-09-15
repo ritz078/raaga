@@ -1,28 +1,19 @@
 import { MidiParser } from "@utils/MidiParser";
+import * as Comlink from "comlink";
 
 const _self = self as any;
 
-_self.onmessage = async ({ data: { id, filePath, name } }) => {
-  try {
-    const url =
-      typeof filePath === "string"
-        ? _self.location.origin + filePath
-        : URL.createObjectURL(filePath);
+export const parseMidi = async (filePath, name) => {
+  const url =
+    typeof filePath === "string"
+      ? _self.location.origin + filePath
+      : URL.createObjectURL(filePath);
 
-    const res = await fetch(url);
+  const res = await fetch(url);
 
-    const arrayBuffer = await res.arrayBuffer();
-    const midi = new MidiParser(arrayBuffer, name);
-    const payload = midi.parse();
-
-    _self.postMessage({
-      payload,
-      id
-    });
-  } catch (e) {
-    _self.postMessage({
-      id,
-      error: e.message
-    });
-  }
+  const arrayBuffer = await res.arrayBuffer();
+  const midi = new MidiParser(arrayBuffer, name);
+  return midi.parse();
 };
+
+Comlink.expose(parseMidi);

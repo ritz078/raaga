@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PlayerContext } from "@components/SoundPlayer";
 import { Button } from "@components/Button";
 import { Icon } from "@components/Icon";
+import { PlayerContext } from "@utils/PlayerContext";
 
 const _PlaybackSpeed = function() {
   const [speed, setSpeed] = useState(1);

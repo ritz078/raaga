@@ -27,7 +27,7 @@ const InstrumentCard: React.FunctionComponent<InstrumentCardProps> = ({
       }}
     >
       <div className="instrument-illustration">
-        {drums ? <DrumSet height={35} /> : <AcousticGuitar height={35} />}
+        {drums ? <DrumSet height={20} /> : <AcousticGuitar height={20} />}
       </div>
 
       <div className="flex flex-col justify-between ml-2">

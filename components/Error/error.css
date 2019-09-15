@@ -1,5 +1,6 @@
 .error-toast {
-  @apply px-3 py-1 absolute text-sm bg-red-700 rounded-sm z-50 mt-16 text-red-200 flex flex-row items-center;
+  @apply px-3 py-1 absolute text-sm bg-red-700 rounded-sm mt-16 text-red-200 flex flex-row items-center;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 51;
 }

@@ -1,21 +1,15 @@
-import CanvasWorker from "@workers/canvas.worker";
+import TestCanvasSupport from "@workers/testCanvasSupport.worker";
+import { transfer, wrap } from "comlink";
+import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
-const worker = new CanvasWorker();
+const testProxy: any = wrap(new TestCanvasSupport());
 
-let isTranferableSupported = true;
-
-const isOSSupported = !!HTMLCanvasElement.prototype.transferControlToOffscreen;
-
-try {
-  const _canvas = document.createElement("canvas");
-  if (isOSSupported) {
-    const canvas = _canvas.transferControlToOffscreen();
-    // @ts-ignore
-    worker.postMessage({ canvas }, [canvas]);
+export async function checkSupportFor2dOffscreenCanvas() {
+  const canvas = document.createElement("canvas");
+  try {
+    const _canvas: any = canvas.transferControlToOffscreen();
+    return await testProxy(transfer(_canvas, [_canvas]));
+  } catch (e) {
+    return OFFSCREEN_2D_CANVAS_SUPPORT.NOT_SUPPORTED;
   }
-} catch (e) {
-  isTranferableSupported = false;
 }
-
-export const offScreenCanvasIsSupported =
-  isOSSupported && isTranferableSupported;

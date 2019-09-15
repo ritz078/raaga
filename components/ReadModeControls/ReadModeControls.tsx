@@ -6,7 +6,7 @@ import { IMidiJSON } from "@typings/midi";
 import { Button } from "@components/Button";
 import { Dropdown } from "@components/Dropdown";
 import { MidiSettings } from "@components/TrackList";
-import { PlayerContext } from "@components/SoundPlayer";
+import { PlayerContext } from "@utils/PlayerContext";
 
 export enum TOGGLE_BACKGROUND_TYPE {
   TRACKS = 1,

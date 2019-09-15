@@ -1,22 +1,18 @@
 import React, {
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState
 } from "react";
-import { getMidiRange, isWithinRange, MidiPlayer } from "@utils";
+import { getMidiRange, isWithinRange } from "@utils";
 import { getPianoRangeAndShortcuts } from "@utils/keyboard";
 import { Visualizer } from "@components/Visualizer";
 import { Piano } from "./Piano";
 import { Header } from "@components/Header";
-import CanvasWorker, {
-  CanvasWorkerFallback
-} from "@controllers/visualizer.controller";
 import { getInstrumentIdByValue, instruments } from "midi-instruments";
-import {
-  VISUALIZER_MESSAGES,
-  VISUALIZER_MODE
-} from "@enums/visualizerMessages";
+import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
 import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
@@ -25,59 +21,71 @@ import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
-import { ReactComponent as Loader } from "@assets/images/three-dots.svg";
-import { TOGGLE_BACKGROUND_TYPE } from "@components/ReadModeControls";
+import { Loader } from "@components/Loader";
+import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import { player, PlayerContext } from "@utils/PlayerContext";
+import { wrap } from "comlink";
+import CanvasWorker from "@workers/canvas.worker";
+import { controlVisualizer } from "@utils/visualizerControl";
 
 const range = {
   first: DEFAULT_FIRST_KEY,
   last: DEFAULT_LAST_KEY
 };
 
-const canvasWorker: CanvasWorkerFallback = new CanvasWorker();
-const player = new MidiPlayer(canvasWorker, range);
-export const PlayerContext = React.createContext(player);
-
-const SoundPlayer: React.FunctionComponent<{}> = () => {
+const SoundPlayer: React.FunctionComponent<{
+  offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
+}> = ({ offScreenCanvasSupport }) => {
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
   const [keyboardRange, setKeyboardRange] = useState<Range>(range);
   const [isPlaying, setPlaying] = useState(false);
-  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.READ);
+  const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
+  const canvasProxyRef = useRef<any>(
+    offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
+      ? wrap(new CanvasWorker())
+      : controlVisualizer
+  );
 
-  const resetPlayer = () => {
-    player.clear();
-    setActiveMidis([]);
-    setKeyboardRange(range);
-  };
+  useEffect(() => {
+    player.set2dOffscreenCanvasSupport(offScreenCanvasSupport);
+    player.setCanvasProxy(canvasProxyRef.current);
+  }, [offScreenCanvasSupport]);
 
-  const changeInstrument = useCallback((_instrument = instrument) => {
-    (async () => {
-      setLoading(true);
-      await player.loadInstruments({
-        instrumentIds: [getInstrumentIdByValue(_instrument)]
-      });
-      setInstrument(_instrument);
-      setLoading(false);
-    })();
-  }, []);
+  const changeInstrument = useCallback(
+    (_instrument = instrument) => {
+      (async () => {
+        setLoading(true);
+        await player.loadInstruments({
+          instrumentIds: [getInstrumentIdByValue(_instrument)]
+        });
+        setInstrument(_instrument);
+        setLoading(false);
+      })();
+    },
+    [player]
+  );
 
-  const setRange = notes => {
-    // change piano range.
-    const requiredRange = getMidiRange(notes);
+  const setRange = useCallback(
+    notes => {
+      // change piano range.
+      const requiredRange = getMidiRange(notes);
 
-    if (!isWithinRange(requiredRange, [range.first, range.last])) {
-      const _range = getPianoRangeAndShortcuts(requiredRange).range;
-      setKeyboardRange(_range);
-      setPlaying(true);
-      return _range;
-    }
+      if (!isWithinRange(requiredRange, [range.first, range.last])) {
+        const _range = getPianoRangeAndShortcuts(requiredRange).range;
+        setKeyboardRange(_range);
+        setPlaying(true);
+        return _range;
+      }
 
-    return keyboardRange;
-  };
+      return keyboardRange;
+    },
+    [range]
+  );
 
   const setMidiDevice = useCallback(() => {
     if (midiDevice) {
@@ -114,49 +122,55 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
     [instrument]
   );
 
-  const onMidiAndTrackSelect = async (
-    midi: IMidiJSON,
-    trackSelectionInfo: MidiSettings
-  ) => {
-    setPlaying(true);
-    setMidi(midi);
-    setMidiSettings(trackSelectionInfo);
-    setMode(VISUALIZER_MODE.READ);
-    player.clear();
-    setActiveMidis([]);
+  useEffect(() => {
+    if (loadedMidi && midiSettings) {
+      const _range = setRange(
+        loadedMidi.tracks[midiSettings.selectedTrackIndex].notes
+      );
+      player.setRange(_range);
+      setKeyboardRange(_range);
+    }
+  }, [loadedMidi, midiSettings]);
 
-    player.setMidi(midi);
+  const onMidiAndTrackSelect = useCallback(
+    (midi: IMidiJSON, _midiSettings: MidiSettings) => {
+      (async () => {
+        setLoading(true);
+        await player.clear();
+        setActiveMidis([]);
+        setPlaying(true);
+        setMidi(midi);
+        setMidiSettings(_midiSettings);
+        setMode(VISUALIZER_MODE.READ);
 
-    setLoading(true);
+        player.setMidi(midi);
 
-    const _range = setRange(
-      midi.tracks[trackSelectionInfo.selectedTrackIndex].notes
-    );
-    player.setRange(_range);
+        await player.loadInstruments();
+        setLoading(false);
 
-    await player.loadInstruments();
-    setLoading(false);
+        await player.scheduleAndPlay(
+          _midiSettings,
+          (
+            notes: NoteWithIdAndEvent[],
+            trackIndex: number,
+            isComplete?: boolean
+          ) => {
+            if (trackIndex === _midiSettings.selectedTrackIndex) {
+              if (isComplete) {
+                player.clear();
+                setPlaying(false);
+                setActiveMidis([]);
+                return;
+              }
 
-    player.scheduleAndPlay(
-      trackSelectionInfo,
-      (
-        notes: NoteWithIdAndEvent[],
-        trackIndex: number,
-        isComplete?: boolean
-      ) => {
-        if (trackIndex === trackSelectionInfo.selectedTrackIndex) {
-          if (isComplete) {
-            player.clear();
-            setPlaying(false);
-            setActiveMidis([]);
-            return;
+              setActiveMidis(notes.map(note => note.midi));
+            }
           }
-
-          setActiveMidis(notes.map(note => note.midi));
-        }
-      }
-    );
-  };
+        );
+      })();
+    },
+    [player]
+  );
 
   const onTogglePlay = useCallback(() => {
     if (Tone.Transport.state === "stopped") {
@@ -169,15 +183,12 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
   }, [isPlaying]);
 
   useLayoutEffect(() => {
-    canvasWorker.postMessage({
-      message: VISUALIZER_MESSAGES.STOP_TRACK
-    });
     setActiveMidis([]);
     setPlaying(false);
   }, [mode]);
 
   useEffect(() => {
-    resetPlayer();
+    player.clear();
     player.setMode(mode);
   }, [mode]);
 
@@ -223,7 +234,8 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
         <Visualizer
           range={keyboardRange}
           mode={mode}
-          canvasWorker={canvasWorker}
+          canvasProxy={canvasProxyRef.current}
+          offScreenCanvasSupport={offScreenCanvasSupport}
         />
       </div>
       <div className="piano-wrapper">
@@ -241,4 +253,4 @@ const SoundPlayer: React.FunctionComponent<{}> = () => {
   );
 };
 
-export default SoundPlayer;
+export default memo(SoundPlayer);
