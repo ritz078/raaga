@@ -46,7 +46,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   return (
     <div className="header">
       <div
-        className={cn("flex flex-row items-center pl-4", {
+        className={cn("flex flex-row items-center", {
           "opacity-25": isLoading
         })}
       >

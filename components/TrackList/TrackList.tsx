@@ -76,7 +76,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
             <div className="tl-zero-state-illus-wrapper">
               <div>
                 <ZeroState width={300} height={250} />
-                <div className="text-gray-600 text-sm">
+                <div className="text-gray-200 text-sm">
                   Seems you haven't selected any MIDI. You can either upload a
                   local file or select from the given samples.
                 </div>

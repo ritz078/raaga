@@ -1,5 +1,5 @@
 .header {
-  @apply h-12 w-full z-10 px-3 flex flex-row justify-between;
+  @apply h-12 w-full z-10 px-2 flex flex-row justify-between;
   background-color: rgba(255, 255, 255, 0.06);
 }
 
@@ -23,7 +23,8 @@
 }
 
 .instrument-list:hover {
-  @apply bg-gray-800 text-white;
+  color: #ffffff;
+  background-color: #1b1b1b;
 }
 
 .instrument-list.selected {

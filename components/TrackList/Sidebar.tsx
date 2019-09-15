@@ -48,7 +48,7 @@ function Sidebar({ onMidiLoad }) {
             size: 15
           }}
         >
-          Browse in Computer
+          Local MIDI File
         </Button>
       </label>
       <input

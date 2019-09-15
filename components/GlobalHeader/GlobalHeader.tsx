@@ -5,6 +5,7 @@ import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, MidiSettings } from "@components/TrackList";
 import { IMidiJSON } from "@typings/midi";
+import { ReactComponent as Logo } from "@assets/logo.svg";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
@@ -27,7 +28,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
 
   return (
     <header className="global-header">
-      <span>🎹</span>
+      <Logo className="logo" />
 
       <div className="flex items-center">
         <Button

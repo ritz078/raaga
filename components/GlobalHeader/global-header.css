@@ -1,11 +1,22 @@
 .global-header {
-  @apply px-6 py-4 text-white flex flex-row items-center justify-between border-b;
+  @apply px-3 py-4 text-white flex flex-row items-center justify-between border-b;
   background-color: #232323;
   border-color: #131313;
   height: var(--global-header-height);
 }
 
 .instrument-selector {
-  background-color: rgba(64, 64, 64, 0.63) !important;
+  background-color: #282828 !important;
   color: #d0d0d0;
+}
+
+.logo {
+  width: 65px;
+  opacity: 0.7;
+  margin-top: 2px;
+  transition: opacity 200ms;
+}
+
+.logo:hover {
+  opacity: 1;
 }

@@ -66,8 +66,7 @@
 }
 
 .tl-zero-state-illus-wrapper {
-  @apply flex items-center justify-center;
-  min-height: 500px;
+  @apply flex items-center justify-center py-16;
 }
 
 .tl-zero-state-illus-wrapper > div {
