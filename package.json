@@ -13,7 +13,7 @@
     "postinstall": "patch-package"
   },
   "lint-staged": {
-    "./assets/*/*.svg": [
+    "./assets/**/*.svg": [
       "imagemin-lint-staged",
       "yarn build:icons",
       "git add"
