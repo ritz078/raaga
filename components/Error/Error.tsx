@@ -25,6 +25,11 @@ export function Error() {
 
     emitter.on("showToast", showToast);
     emitter.on("hideToast", hideToast);
+
+    return () => {
+      emitter.off("showToast", showToast);
+      emitter.off("hideToast", hideToast);
+    };
   }, []);
 
   const transitions = useTransition(show, null, {
