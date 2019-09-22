@@ -263,6 +263,7 @@ const SoundPlayer: React.FunctionComponent<{
           min={keyboardRange.first}
           max={keyboardRange.last}
           className={loading ? "opacity-25" : undefined}
+          activeInstrumentMidis={activeInstrumentMidis}
         />
       </div>
     </PlayerContext.Provider>
