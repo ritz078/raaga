@@ -29,7 +29,7 @@
     "midievents": "^2.0.0",
     "midifile": "^2.0.0",
     "mitt": "^1.1.3",
-    "next": "9.0.5",
+    "next": "9.0.6",
     "nprogress": "^0.2.0",
     "piano-utils": "^0.1.0",
     "pretty-ms": "^5.0.0",
