@@ -16,6 +16,7 @@ interface PianoProps {
   onStop: (midi: number) => void;
   activeMidis: number[];
   className: string;
+  activeInstrumentMidis: number[];
 }
 
 const _Piano: FunctionComponent<PianoProps> = ({
@@ -24,7 +25,8 @@ const _Piano: FunctionComponent<PianoProps> = ({
   onStop,
   max,
   min,
-  className
+  className,
+  activeInstrumentMidis
 }) => {
   const [isMousePressed, setMousePressed] = useState(false);
 
@@ -75,7 +77,8 @@ const _Piano: FunctionComponent<PianoProps> = ({
         const className = cn({
           "accidental-keys": isAccidental,
           "natural-keys": !isAccidental,
-          __active__: activeMidis.indexOf(midi) >= 0
+          __active__: activeMidis.indexOf(midi) >= 0,
+          bingo: activeInstrumentMidis.includes(midi)
         });
         return (
           <div

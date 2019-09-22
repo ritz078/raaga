@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "format": "prettier --write '**/*.ts' '**/*.tsx'",
+    "format": "prettier --write '**/*.ts' '**/*.tsx' '**/*.css'",
     "build:icons": "node ./scripts/generate-svg-icons.js",
     "build:midi": "node ./scripts/generateMidiMeta.js",
     "now-build": "./build.sh",

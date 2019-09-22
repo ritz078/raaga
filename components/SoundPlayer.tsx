@@ -50,6 +50,7 @@ const SoundPlayer: React.FunctionComponent<{
       ? wrap(new CanvasWorker())
       : controlVisualizer
   );
+  const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
 
   useEffect(() => {
     player.set2dOffscreenCanvasSupport(offScreenCanvasSupport);
@@ -106,8 +107,11 @@ const SoundPlayer: React.FunctionComponent<{
   const onNoteStart = useCallback(
     (midi, velocity = 1) => {
       player.playNote(midi, instrument, velocity);
-
-      setActiveMidis(_activeMidis => _activeMidis.concat(midi));
+      if (mode === VISUALIZER_MODE.WRITE) {
+        setActiveMidis(_activeMidis => _activeMidis.concat(midi));
+      } else {
+        setActiveInstrumentMidis(_activeMidis => _activeMidis.concat(midi));
+      }
     },
     [instrument]
   );
@@ -115,9 +119,15 @@ const SoundPlayer: React.FunctionComponent<{
   const onNoteStop = useCallback(
     midi => {
       player.stopNote(midi, instrument);
-      setActiveMidis(_activeMidis =>
-        _activeMidis.filter(activeMidi => activeMidi !== midi)
-      );
+      if (mode === VISUALIZER_MODE.WRITE) {
+        setActiveMidis(_activeMidis =>
+          _activeMidis.filter(activeMidi => activeMidi !== midi)
+        );
+      } else {
+        setActiveInstrumentMidis(_activeMidis =>
+          _activeMidis.filter(x => x !== midi)
+        );
+      }
     },
     [instrument]
   );
@@ -138,6 +148,7 @@ const SoundPlayer: React.FunctionComponent<{
         setLoading(true);
         await player.clear();
         setActiveMidis([]);
+        setActiveInstrumentMidis([]);
         setPlaying(true);
         setMidi(midi);
         setMidiSettings(_midiSettings);
@@ -184,6 +195,7 @@ const SoundPlayer: React.FunctionComponent<{
 
   useLayoutEffect(() => {
     setActiveMidis([]);
+    setActiveInstrumentMidis([]);
   }, [mode]);
 
   useEffect(() => {
