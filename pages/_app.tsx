@@ -18,7 +18,12 @@ export default class MyApp extends App {
     return (
       <>
         <Head>
-          <title>Raaga</title>
+          <title>Raaga | See &middot; Play &middot; Learn</title>
+          <meta
+            name="description"
+            content="A platform to play and learn piano with your own pace."
+          />
+          <meta name="viewport" content="width=1024" />
         </Head>
         <Component {...pageProps} />
       </>
