@@ -6,6 +6,12 @@ import NProgress from "nprogress";
 
 NProgress.configure({ showSpinner: false });
 
+let reactGa;
+if (IN_BROWSER && !IS_DEV) {
+  reactGa = require("react-ga");
+  reactGa.initialize("UA-60624235-9");
+}
+
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
