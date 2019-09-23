@@ -25,14 +25,23 @@ function Main() {
     setIs2dOffscreenCanvasSupported
   ] = useState(OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING);
 
+  const [webMidiEnabled, setWebMidiEnabled] = useState(null);
+
   useEffect(() => {
     (async function() {
-      const { checkSupportFor2dOffscreenCanvas } = await import(
-        "@utils/isOffscreenCanvasSupported"
-      );
+      const {
+        checkSupportFor2dOffscreenCanvas
+      } = require("@utils/isOffscreenCanvasSupported");
       const support = await checkSupportFor2dOffscreenCanvas();
       setIs2dOffscreenCanvasSupported(support);
     })();
+  }, []);
+
+  useEffect(() => {
+    const webMidi = require("webmidi");
+    webMidi.enable(err => {
+      setWebMidiEnabled(!err);
+    });
   }, []);
 
   return (
@@ -40,8 +49,11 @@ function Main() {
       <Error />
       <div className="flex flex-1 flex-col overflow-hidden">
         {is2dOffscreenCanvasSupported !==
-        OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING ? (
-          <SoundPlayer offScreenCanvasSupport={is2dOffscreenCanvasSupported} />
+          OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING && webMidiEnabled !== null ? (
+          <SoundPlayer
+            webMidiEnabled={webMidiEnabled}
+            offScreenCanvasSupport={is2dOffscreenCanvasSupported}
+          />
         ) : (
           <Loading />
         )}

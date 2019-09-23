@@ -1,0 +1,5 @@
+.midi-select-inputs-available {
+  @apply bg-green-400 h-2 w-2 rounded absolute;
+  right: 12px;
+  top: -5px;
+}
