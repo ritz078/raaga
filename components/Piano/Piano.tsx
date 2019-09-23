@@ -77,8 +77,11 @@ const _Piano: FunctionComponent<PianoProps> = ({
         const className = cn({
           "accidental-keys": isAccidental,
           "natural-keys": !isAccidental,
-          __active__: activeMidis.indexOf(midi) >= 0,
-          bingo: activeInstrumentMidis.includes(midi)
+          __active__: activeMidis.includes(midi),
+          bingo:
+            activeInstrumentMidis.includes(midi) && activeMidis.includes(midi),
+          "not-this":
+            activeInstrumentMidis.includes(midi) && !activeMidis.includes(midi)
         });
         return (
           <div

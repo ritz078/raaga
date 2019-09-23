@@ -30,6 +30,14 @@
     0 -5px 2px 3px rgba(0, 0, 0, 0.2) inset, 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.keys.bingo {
-  background-color: greenyellow;
+.bingo {
+  @apply keys;
+  background-image: unset !important;
+  background-color: #80f780 !important;
+}
+
+.not-this {
+  @apply keys;
+  background-image: unset !important;
+  background-color: #ffbdbd !important;
 }

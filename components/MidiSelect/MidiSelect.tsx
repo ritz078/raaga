@@ -4,7 +4,7 @@ import { Icon } from "@components/Icon";
 import { Dropdown } from "@components/Dropdown";
 import cn from "@sindresorhus/class-names";
 
-const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
+const _MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   const [inputMidis, setInputMidis] = useState([]);
   const [error, setError] = useState("");
 
@@ -17,48 +17,42 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   }, [webMidi]);
 
   useEffect(() => {
-    let enabled = false;
-
     if (!webMidi.supported) {
       setError("Your Device doesn't support the WebMIDI API.");
     }
 
-    webMidi.enable(err => {
-      if (err) {
-        setError(err.message);
-      } else {
-        enabled = true;
-        setInputMidis(webMidi.inputs);
+    setInputMidis(webMidi.inputs);
 
-        webMidi.addListener("connected", handleMidiDeviceChange);
-        webMidi.addListener("disconnected", handleMidiDeviceChange);
-      }
-    });
-
+    webMidi.addListener("connected", handleMidiDeviceChange);
+    webMidi.addListener("disconnected", handleMidiDeviceChange);
     return () => {
-      if (enabled) {
-        webMidi.removeListener("connected", handleMidiDeviceChange);
-        webMidi.removeListener("disconnected", handleMidiDeviceChange);
-      }
+      webMidi.removeListener("connected", handleMidiDeviceChange);
+      webMidi.removeListener("disconnected", handleMidiDeviceChange);
     };
   }, []);
 
   return (
     <Dropdown
       position="right"
+      contentClassName="instrument-selector"
       label={() => (
-        <Icon
-          name="piano"
-          color={"#fff"}
-          size={16}
-          className="mx-4 cursor-pointer"
-        />
+        <>
+          <Icon
+            name="piano"
+            color={"#fff"}
+            size={16}
+            className="mx-4 cursor-pointer"
+          />
+          {!!inputMidis.length && (
+            <div className="midi-select-inputs-available" />
+          )}
+        </>
       )}
     >
       {close => (
         <div style={{ width: 180 }}>
           {inputMidis.length ? (
-            inputMidis.map(({ label, id }) => {
+            inputMidis.map(({ name, id }) => {
               return (
                 <div
                   className={cn("instrument-list", {
@@ -70,7 +64,7 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
                     close();
                   }}
                 >
-                  {label}
+                  {name}
                 </div>
               );
             })
@@ -89,4 +83,4 @@ const MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   );
 };
 
-export default memo(MidiSelect);
+export const MidiSelect = memo(_MidiSelect);

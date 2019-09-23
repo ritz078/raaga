@@ -12,7 +12,7 @@
 
 .logo {
   width: 65px;
-  opacity: 0.7;
+  opacity: 0.85;
   margin-top: 2px;
   transition: opacity 200ms;
 }

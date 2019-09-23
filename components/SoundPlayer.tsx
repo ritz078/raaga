@@ -45,12 +45,13 @@ const SoundPlayer: React.FunctionComponent<{
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
+  const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
+
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
       ? wrap(new CanvasWorker())
       : controlVisualizer
   );
-  const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
 
   useEffect(() => {
     player.set2dOffscreenCanvasSupport(offScreenCanvasSupport);
@@ -88,38 +89,22 @@ const SoundPlayer: React.FunctionComponent<{
     [range]
   );
 
-  const setMidiDevice = useCallback(() => {
-    if (midiDevice) {
-      const input = webMidi.getInputById(midiDevice);
-
-      if (input) {
-        input.addListener("noteon", "all", e => {
-          onNoteStart(e.note.number, e.velocity);
-        });
-
-        input.addListener("noteoff", "all", e => {
-          onNoteStop(e.note.number);
-        });
-      }
-    }
-  }, [midiDevice]);
-
   const onNoteStart = useCallback(
-    (midi, velocity = 1) => {
+    (midi, velocity = 1, isFromMidiDevice = false) => {
       player.playNote(midi, instrument, velocity);
-      if (mode === VISUALIZER_MODE.WRITE) {
+      if (mode === VISUALIZER_MODE.WRITE || !isFromMidiDevice) {
         setActiveMidis(_activeMidis => _activeMidis.concat(midi));
       } else {
         setActiveInstrumentMidis(_activeMidis => _activeMidis.concat(midi));
       }
     },
-    [instrument]
+    [instrument, mode, player]
   );
 
   const onNoteStop = useCallback(
-    midi => {
+    (midi, isFromMidiDevice = false) => {
       player.stopNote(midi, instrument);
-      if (mode === VISUALIZER_MODE.WRITE) {
+      if (mode === VISUALIZER_MODE.WRITE || !isFromMidiDevice) {
         setActiveMidis(_activeMidis =>
           _activeMidis.filter(activeMidi => activeMidi !== midi)
         );
@@ -129,7 +114,7 @@ const SoundPlayer: React.FunctionComponent<{
         );
       }
     },
-    [instrument]
+    [player, mode, instrument]
   );
 
   useEffect(() => {
@@ -140,7 +125,7 @@ const SoundPlayer: React.FunctionComponent<{
       player.setRange(_range);
       setKeyboardRange(_range);
     }
-  }, [loadedMidi, midiSettings]);
+  }, [loadedMidi, midiSettings, setRange]);
 
   const onMidiAndTrackSelect = useCallback(
     (midi: IMidiJSON, _midiSettings: MidiSettings) => {
@@ -203,14 +188,32 @@ const SoundPlayer: React.FunctionComponent<{
     player.setMode(mode);
   }, [mode]);
 
-  useEffect(() => {
-    changeInstrument();
-    setMidiDevice();
-  }, []);
+  useEffect(changeInstrument, []);
 
   useEffect(() => player.setRange(keyboardRange), [keyboardRange]);
 
-  useEffect(setMidiDevice, [midiDevice]);
+  useEffect(() => {
+    const _onNoteStart = e => {
+      onNoteStart(e.note.number, e.velocity, true);
+    };
+
+    const _onNoteStop = e => {
+      onNoteStop(e.note.number, true);
+    };
+
+    const input = webMidi.getInputById(midiDevice);
+
+    if (input) {
+      input.addListener("noteon", "all", _onNoteStart);
+      input.addListener("noteoff", "all", _onNoteStop);
+    }
+    return () => {
+      if (input) {
+        input.removeListener("noteon", "all", _onNoteStart);
+        input.removeListener("noteoff", "all", _onNoteStop);
+      }
+    };
+  }, [midiDevice, onNoteStart, onNoteStop]);
 
   const handleRangeChange = useCallback(
     _range => {

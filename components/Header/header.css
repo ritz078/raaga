@@ -18,19 +18,6 @@
   max-width: 130px;
 }
 
-.instrument-list {
-  @apply text-xs px-3 py-1 cursor-pointer flex flex-row items-center;
-}
-
-.instrument-list:hover {
-  color: #ffffff;
-  background-color: #1b1b1b;
-}
-
-.instrument-list.selected {
-  background-color: #3f51b5;
-}
-
 .instrument-searchbox {
   @apply mb-3 border-0 px-3 text-xs w-full py-1 outline-none;
   background-color: #3c3c3c;

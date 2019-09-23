@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
-import MidiSelect from "@components/MidiSelect";
+import { MidiSelect } from "@components/MidiSelect";
 import { IMidiJSON, INote } from "@typings/midi";
 import { Icon } from "@components/Icon";
 import cn from "@sindresorhus/class-names";
