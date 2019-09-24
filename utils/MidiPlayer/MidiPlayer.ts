@@ -298,9 +298,18 @@ export class MidiPlayer {
   };
 
   public toggleTracksVolume = () => {
-    this.midi.tracks.forEach((track, i) => {
+    const { tracks } = this.midi;
+
+    const mainTrackInstrumentIndex =
+      tracks[this.mainTrackIndex] &&
+      tracks[this.mainTrackIndex].instrument.number;
+    tracks.forEach((track, i) => {
       const instrumentIndex = track.instrument.number;
-      if (i !== this.mainTrackIndex) {
+      if (
+        i !== this.mainTrackIndex &&
+        instrumentIndex !== mainTrackInstrumentIndex
+      ) {
+        // TODO: Don't mute a sampler. Mute a track. In case of multiple tracks this causes issue.
         this.trackSamplers[instrumentIndex]._volume.mute = !this.trackSamplers[
           instrumentIndex
         ]._volume.mute;
