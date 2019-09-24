@@ -119,6 +119,21 @@ export class MidiParser {
     return track;
   };
 
+  private setTrackInfo = (channel: number, param1: string) => {
+    const track = this.takeTrack(channel);
+    track.program = param1;
+    track.channel = channel;
+    const { name, value, group } = getInstrumentById(param1);
+    track.instrument = {
+      name,
+      value,
+      family: group,
+      number: param1
+    };
+
+    return track;
+  };
+
   parse = () => {
     const midi = new MidiFile(this.arrayBuffer);
 
@@ -165,22 +180,13 @@ export class MidiParser {
         } else {
           if (subtype === MidiEvents.EVENT_MIDI_PROGRAM_CHANGE) {
             if (channel !== 9) {
-              const track = this.takeTrack(channel);
-              track.program = param1;
-              track.channel = channel;
-              const { name, value, group } = getInstrumentById(param1);
-              track.instrument = {
-                name,
-                value,
-                family: group,
-                number: param1
-              };
+              this.setTrackInfo(channel, param1);
             }
           } else {
             if (subtype == MidiEvents.EVENT_MIDI_CONTROLLER) {
               if (param1 === 7) {
                 if (channel !== 9) {
-                  const track = this.takeTrack(channel);
+                  const track = this.setTrackInfo(channel, param1);
                   track.volume = param2 / 127 || 0.000001;
                 }
               }
