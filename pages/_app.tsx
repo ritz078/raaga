@@ -23,7 +23,6 @@ export default class MyApp extends App {
             name="description"
             content="A platform to play and learn piano with your own pace."
           />
-          <meta name="viewport" content="width=1024" />
         </Head>
         <Component {...pageProps} />
       </>
