@@ -40,7 +40,8 @@ function Main() {
   useEffect(() => {
     const webMidi = require("webmidi");
     webMidi.enable(err => {
-      setWebMidiEnabled(!err);
+      console.log(err, webMidi.enabled);
+      setWebMidiEnabled(!err && webMidi.enabled);
     });
   }, []);
 

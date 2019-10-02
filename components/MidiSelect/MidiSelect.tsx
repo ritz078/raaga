@@ -19,6 +19,7 @@ const _MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
   useEffect(() => {
     if (!webMidi.supported) {
       setError("Your Device doesn't support the WebMIDI API.");
+      return;
     }
 
     setInputMidis(webMidi.inputs);
