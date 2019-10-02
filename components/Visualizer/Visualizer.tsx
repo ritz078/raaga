@@ -67,6 +67,12 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
       } else {
         // else use hidden canvas
         function paintToMainCanvas() {
+          mainCanvasContext.clearRect(
+            0,
+            0,
+            hiddenCanvasElement.width,
+            hiddenCanvasElement.height
+          );
           mainCanvasContext.drawImage(
             hiddenCanvasElement,
             0,
@@ -74,7 +80,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
             hiddenCanvasElement.width,
             hiddenCanvasElement.height
           );
-          // I think this is too agressive, for later
+          // I think this is too agressive, for later, what's Clock?
           requestAnimationFrame(paintToMainCanvas);
         }
         canvasProxy({
@@ -114,7 +120,6 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
           style={dimensions}
           ref={canvasRef}
         />
-
         <div className="text-white flex flex-1 absolute flex-row inset-0">
           {getNaturalKeysInRange(range).map(x => (
             <div className="vis-note-section" key={x} />
