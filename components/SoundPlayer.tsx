@@ -47,11 +47,12 @@ const SoundPlayer: React.FunctionComponent<{
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
 
-  const canvasProxyRef = useRef<any>(
-    offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
-      ? wrap(new CanvasWorker())
-      : controlVisualizer
-  );
+  // TODO: undo the ternary; not wrapping via Comlink to test offcanvas perf
+  // on latest chrome, too lazy to install anything else
+  const canvasProxyRef = useRef<any>(controlVisualizer);
+  // offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
+  //   ? controlVisualizer || wrap(new CanvasWorker())
+  //   : controlVisualizer
 
   useEffect(() => {
     player.set2dOffscreenCanvasSupport(offScreenCanvasSupport);

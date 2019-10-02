@@ -7,9 +7,7 @@ import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { ITrack } from "@typings/midi";
 
 export interface IData {
-  canvas: {
-    getContext: (x: string) => CanvasRenderingContext2D;
-  };
+  canvas: HTMLCanvasElement;
   track: ITrack;
   message: VISUALIZER_MESSAGES;
   range: Range;
