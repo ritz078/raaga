@@ -74,6 +74,8 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
     "read-mode": mode === VISUALIZER_MODE.READ
   });
 
+  console.log(dimensions);
+
   return (
     <>
       <div className={className} ref={visualizerRef}>
