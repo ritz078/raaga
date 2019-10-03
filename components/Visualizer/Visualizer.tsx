@@ -24,6 +24,10 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   offScreenCanvasSupport
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hiddenCanvasElement = useRef<HTMLCanvasElement>(
+    document.createElement("canvas")
+  ).current;
+
   const visualizerRef = useRef<HTMLDivElement>(null);
 
   const dimensions = useWindowResize(visualizerRef, {
@@ -31,31 +35,64 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
     height: 400
   });
 
+  const isOffscreenSupported =
+    offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED;
   useEffect(() => {
     (async function() {
-      const canvas: any =
-        offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
-          ? canvasRef.current.transferControlToOffscreen()
-          : canvasRef.current;
+      const canvas: any = false //isOffscreenSupported
+        ? canvasRef.current.transferControlToOffscreen()
+        : canvasRef.current;
+
+      const mainCanvasContext = (canvas as HTMLCanvasElement).getContext("2d");
 
       // This has been done because it wasn't getting correctly transferred
       // in firefox.
       const dimensions = JSON.parse(
         JSON.stringify(visualizerRef.current.getBoundingClientRect())
       );
-
-      await canvasProxy(
-        transfer(
-          {
-            canvas,
-            message: VISUALIZER_MESSAGES.INIT,
-            dimensions,
-            range,
-            mode
-          },
-          [canvas]
-        )
-      );
+      // TODO: mimicking no offscreencanvas support, remove later
+      if (false && isOffscreenSupported) {
+        await canvasProxy(
+          transfer(
+            {
+              canvas,
+              message: VISUALIZER_MESSAGES.INIT,
+              dimensions,
+              range,
+              mode
+            },
+            [canvas]
+          )
+        );
+      } else {
+        // else use hidden canvas
+        function paintToMainCanvas() {
+          mainCanvasContext.clearRect(
+            0,
+            0,
+            hiddenCanvasElement.width,
+            hiddenCanvasElement.height
+          );
+          mainCanvasContext.drawImage(
+            hiddenCanvasElement,
+            0,
+            0,
+            hiddenCanvasElement.width,
+            hiddenCanvasElement.height
+          );
+          // I think this is too agressive, for later, what's Clock?
+          requestAnimationFrame(paintToMainCanvas);
+        }
+        canvasProxy({
+          canvas: hiddenCanvasElement,
+          message: VISUALIZER_MESSAGES.INIT,
+          dimensions,
+          range,
+          mode
+        });
+        // set up the cycle to repaint the main canvas
+        paintToMainCanvas();
+      }
     })();
   }, []);
 
@@ -83,22 +120,11 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
           style={dimensions}
           ref={canvasRef}
         />
-
         <div className="text-white flex flex-1 absolute flex-row inset-0">
           {getNaturalKeysInRange(range).map(x => (
             <div className="vis-note-section" key={x} />
           ))}
         </div>
-
-        {mode === VISUALIZER_MODE.READ &&
-          offScreenCanvasSupport ===
-            OFFSCREEN_2D_CANVAS_SUPPORT.NOT_SUPPORTED && (
-            <div className="vis-not-supported">
-              Your browser doesn't support the Visualizer required by Raaga in
-              Read mode. <br />
-              You can listen to the music and see the notes on the piano.
-            </div>
-          )}
       </div>
     </>
   );
