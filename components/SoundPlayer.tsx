@@ -201,6 +201,8 @@ const SoundPlayer: React.FunctionComponent<{
       onNoteStop(e.note.number, true);
     };
 
+    if (!webMidi.supported) return;
+
     const input = webMidi.getInputById(midiDevice);
 
     if (input) {
