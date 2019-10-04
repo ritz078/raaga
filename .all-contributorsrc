@@ -1,0 +1,36 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+   {
+        "login": "ritz078",
+        "name": "Ritesh Kumar",
+        "avatar_url": "https://avatars3.githubusercontent.com/u/5389035?v=4",
+        "profile": "https://riteshkr.com",
+        "contributions": [
+          "code",
+          "design",
+          "ideas",
+          "review"
+        ]
+      },
+    {
+      "login": "mhadaily",
+      "name": "Majid Hajian",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1325451?v=4",
+      "profile": "http://www.majidhajian.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "raaga",
+  "projectOwner": "ritz078",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "commitConvention": "none"
+}
