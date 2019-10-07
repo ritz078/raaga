@@ -1,6 +1,6 @@
 .keys {
   @apply flex select-none;
-  transition: all 200ms;
+  /* transition: all 200ms; */
 }
 
 .natural-keys {

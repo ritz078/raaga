@@ -24,6 +24,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   offScreenCanvasSupport
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  let timeout = useRef<NodeJS.Timer>(undefined as any).current;
   const hiddenCanvasElement = useRef<HTMLCanvasElement>(
     document.createElement("canvas")
   ).current;
@@ -81,7 +82,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
             hiddenCanvasElement.height
           );
           // I think this is too agressive, for later, what's Clock?
-          requestAnimationFrame(paintToMainCanvas);
+          timeout = setTimeout(paintToMainCanvas, 10);
         }
         canvasProxy({
           canvas: hiddenCanvasElement,
@@ -94,6 +95,9 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
         paintToMainCanvas();
       }
     })();
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { range, findLast, find } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
 import { INote } from "@typings/midi";
 import { MINIMUM_KEYS_IN_READ_MODE } from "@config/piano";
-
+import memoize from "@utils/memoize";
 const pitchPositions = {
   C: 0,
   Db: 0.55,
@@ -28,19 +28,19 @@ export function isWithinRange(toCheck: number[], range: number[]) {
   return range[0] <= toCheck[0] && range[1] >= toCheck[1];
 }
 
-export function getAllMidiNumbersInRange(_range: Range): number[] {
+export const getAllMidiNumbersInRange = memoize((_range: Range): number[] => {
   return range(_range.first, _range.last + 1);
-}
+});
 
-export function getNaturalKeysInRange(range: Range) {
+export const getNaturalKeysInRange = memoize((range: Range) => {
   return getAllMidiNumbersInRange(range).filter(
     midi => !MidiNumbers.getAttributes(midi).isAccidental
   );
-}
+});
 
-export function getNaturalKeyWidthRatio(range: Range): number {
+export const getNaturalKeyWidthRatio = memoize((range: Range): number => {
   return 1 / getNaturalKeysInRange(range).length;
-}
+});
 
 function getAbsoluteKeyPosition(midiNumber: number): number {
   const OCTAVE_WIDTH = 7;
