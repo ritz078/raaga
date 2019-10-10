@@ -10,7 +10,8 @@
     "build:midi": "node ./scripts/generateMidiMeta.js",
     "test:e2e": "yarn run cypress open",
     "now-build": "./build.sh",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "test:e2e:ci": "cypress run --record"
   },
   "lint-staged": {
     "./assets/**/*.svg": [
