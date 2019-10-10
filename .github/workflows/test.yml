@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Running tests on cypress.
       - if: github.event.deployment_status.state == "success"
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
