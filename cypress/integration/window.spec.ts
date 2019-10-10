@@ -2,7 +2,7 @@
 
 context("Window", () => {
   beforeEach(() => {
-    cy.visit("https://raaga.io");
+    cy.visit("/");
   });
 
   it("cy.window() - get the global window object", () => {
