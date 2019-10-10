@@ -7,7 +7,7 @@ jobs:
     name: Run e2e tests
     runs-on: ubuntu-latest
     env:
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      CYPRESS_RECORD_KEY: ${{ CYPRESS_RECORD_KEY }}
 
     steps:
       - uses: actions/checkout@v1
