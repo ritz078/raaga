@@ -2,7 +2,7 @@
 
 context("Window", () => {
   beforeEach(() => {
-    cy.visit("https://raaga.io");
+    cy.visit(process.env.DEPLOYMENT_URL || "https://raaga.io");
   });
 
   it("cy.window() - get the global window object", () => {
