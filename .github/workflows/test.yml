@@ -9,7 +9,6 @@ jobs:
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
     steps:
-      - name: Run e2e tests
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
