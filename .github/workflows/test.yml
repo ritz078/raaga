@@ -4,15 +4,16 @@ on: [deployment_status]
 
 jobs:
   test:
-    env:
-      CYPRESS_RECORD_KEY: ${{ CYPRESS_RECORD_KEY }}
-      DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
-    runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == "success"
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - run: npm i -g yarn
-      - run: yarn && yarn test:e2e:ci
+    - name: Hello
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
+      runs-on: ubuntu-latest
+      if: github.event.deployment_status.state == "success"
+      steps:
+        - uses: actions/checkout@v1
+        - uses: actions/setup-node@v1
+          with:
+            node-version: "10.x"
+        - run: npm i -g yarn
+        - run: yarn && yarn test:e2e:ci
