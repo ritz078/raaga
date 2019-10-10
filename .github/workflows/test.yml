@@ -1,15 +1,15 @@
-name: CI
+name: e2e Tests Cypress
 
 on: [deployment_status]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - run: npm install
-    - run: npm test:e2e:ci
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - run: npm install
+      - run: npm test:e2e:ci
