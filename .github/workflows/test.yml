@@ -4,12 +4,11 @@ on: [deployment_status]
 
 jobs:
   test:
-    if: github.event.deployment_status.state == "success"
     env:
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
     runs-on: ubuntu-latest
-
+    if: github.event.deployment_status.state == "success"
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
