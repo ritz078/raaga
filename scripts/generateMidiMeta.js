@@ -2,15 +2,15 @@ const { Midi } = require("@tonejs/midi");
 const fs = require("fs");
 const path = require("path");
 
-fs.readdir(path.resolve(__dirname, "../static/midi"), (err, files) => {
+fs.readdir(path.resolve(__dirname, "../public/static/midi"), (err, files) => {
   const meta = [];
   files.forEach(file => {
     const data = fs.readFileSync(
-      path.resolve(__dirname, "../static/midi", file)
+      path.resolve(__dirname, "../public/static/midi", file)
     );
     const { header, duration, tracks } = new Midi(data);
     meta.push({
-      url: `/static/midi/${file}`,
+      url: `/public/static/midi/${file}`,
       label: header.name || file.replace(".mid", ""),
       duration,
       tracks: tracks.length

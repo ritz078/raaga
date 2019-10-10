@@ -38,6 +38,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "exclude": ["scripts", "static", "public", ".next", "./node_modules"],
+  "exclude": ["scripts", "public/static", "public", ".next", "./node_modules"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

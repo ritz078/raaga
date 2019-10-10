@@ -3,12 +3,12 @@ name: Unit and e2e Tests
 on: [deployment_status]
 
 jobs:
-  build:
-    name: Run e2e tests
-    runs-on: ubuntu-latest
+  test:
     env:
-      CYPRESS_RECORD_KEY: ${{ CYPRESS_RECORD_KEY }}
-
+      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      CYPRESS_baseUrl: ${{ github.event.deployment_status.target_url }}
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
