@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Running tests on cypress.
-      - env:
-          DEPLOYMENT_URL: ${{ github.event.deployment_state.target_url }}
       - if: github.event.deployment_status.state == "success"
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Cloning Repository
+        uses: actions/checkout@v1
+      - name: Running tests on cypress.
+        env:
+          DEPLOYMENT_URL: ${{ github.event.deployment_state.target_url }}
+        uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - run: npm i -g yarn
-      - run: yarn && yarn test:e2e:ci
+        run: npm i -g yarn && yarn && yarn test:e2e:ci
