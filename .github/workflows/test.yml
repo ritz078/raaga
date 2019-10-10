@@ -5,6 +5,8 @@ on: [deployment_status]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
     steps:
       - name: Run e2e tests
@@ -14,5 +16,3 @@ jobs:
           node-version: "10.x"
       - run: npm i -g yarn
       - run: yarn && yarn test:e2e:ci
-        with:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
