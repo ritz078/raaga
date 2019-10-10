@@ -11,7 +11,7 @@
     "test:e2e": "yarn run cypress open",
     "now-build": "./build.sh",
     "postinstall": "patch-package && yarn build:icons && yarn build:midi",
-    "test:e2e:ci": "node ./scripts/run-tests-ci.js"
+    "test:e2e:ci": "cypress run --record"
   },
   "lint-staged": {
     "./assets/**/*.svg": [
