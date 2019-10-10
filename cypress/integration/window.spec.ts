@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 
 context("Window", () => {
+  console.log(process.env);
   beforeEach(() => {
     cy.visit(process.env.DEPLOYMENT_URL || "https://raaga.io");
   });
