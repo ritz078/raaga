@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Running tests on cypress.
-        env:
+      - env:
           DEPLOYMENT_URL: ${{ github.event.deployment_state.target_url }}
       - if: github.event.deployment_status.state == "success"
       - uses: actions/checkout@v1
