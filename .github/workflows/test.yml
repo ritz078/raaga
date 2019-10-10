@@ -11,5 +11,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - run: npm install
-      - run: npm test:e2e:ci
+      - run: npm i -g yarn
+      - run: yarn && yarn test:e2e:ci
