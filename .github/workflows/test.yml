@@ -8,11 +8,11 @@ jobs:
 
     steps:
       - name: Run e2e tests
-        with:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
       - run: npm i -g yarn
       - run: yarn && yarn test:e2e:ci
+        with:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
