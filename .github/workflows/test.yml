@@ -5,7 +5,7 @@ on: [deployment_status]
 jobs:
   test:
     env:
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      CYPRESS_RECORD_KEY: ${{ CYPRESS_RECORD_KEY }}
       DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == "success"
