@@ -7,6 +7,7 @@ jobs:
     env:
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
+      X: ${{ toJson(github.event.development_status) }}
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
     steps:
@@ -16,3 +17,4 @@ jobs:
           node-version: "10.x"
       - run: npm i -g yarn
       - run: yarn && yarn test:e2e:ci
+      - run: echo $DEPLOYMENT_URL $X
