@@ -6,7 +6,7 @@ jobs:
   test:
     env:
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      DEPLOYMENT_URL: ${{ github.event.deployment_state.target_url }}
+      DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
     runs-on: ubuntu-latest
 
     steps:
