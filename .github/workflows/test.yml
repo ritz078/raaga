@@ -1,4 +1,4 @@
-name: e2e Tests Cypress
+name: Unit and e2e Tests
 
 on: [deployment_status]
 
@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Run e2e tests
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
