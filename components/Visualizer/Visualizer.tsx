@@ -9,6 +9,7 @@ import { useWindowResize } from "@hooks/useWindowResize";
 import cn from "@sindresorhus/class-names";
 import { transfer } from "comlink";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import updateLoop from "@utils/updateLoop";
 
 interface VisualizerProps {
   range: Range;
@@ -24,7 +25,6 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   offScreenCanvasSupport
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  let timeout = useRef<NodeJS.Timer>(undefined as any).current;
   const hiddenCanvasElement = useRef<HTMLCanvasElement>(
     document.createElement("canvas")
   ).current;
@@ -38,16 +38,17 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
 
   const isOffscreenSupported =
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED;
+
+  // @ts-ignore
+
   useEffect(() => {
+    let loop;
     (async function() {
+      // This has been done because it wasn't getting correctly transferred
+      // in firefox.
       const canvas: any = false //isOffscreenSupported
         ? canvasRef.current.transferControlToOffscreen()
         : canvasRef.current;
-
-      const mainCanvasContext = (canvas as HTMLCanvasElement).getContext("2d");
-
-      // This has been done because it wasn't getting correctly transferred
-      // in firefox.
       const dimensions = JSON.parse(
         JSON.stringify(visualizerRef.current.getBoundingClientRect())
       );
@@ -66,8 +67,11 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
           )
         );
       } else {
-        // else use hidden canvas
         function paintToMainCanvas() {
+          if (!canvas) return;
+          const mainCanvasContext = (canvas as HTMLCanvasElement).getContext(
+            "2d"
+          );
           mainCanvasContext.clearRect(
             0,
             0,
@@ -81,9 +85,10 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
             hiddenCanvasElement.width,
             hiddenCanvasElement.height
           );
-          // I think this is too agressive, for later, what's Clock?
-          timeout = setTimeout(paintToMainCanvas, 10);
         }
+        loop = updateLoop(paintToMainCanvas);
+        loop.start();
+        // else use hidden canvas
         canvasProxy({
           canvas: hiddenCanvasElement,
           message: VISUALIZER_MESSAGES.INIT,
@@ -92,11 +97,10 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
           mode
         });
         // set up the cycle to repaint the main canvas
-        // paintToMainCanvas();
       }
     })();
     return () => {
-      clearTimeout(timeout);
+      loop.stop();
     };
   }, []);
 
