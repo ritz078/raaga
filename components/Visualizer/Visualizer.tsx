@@ -92,7 +92,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
           mode
         });
         // set up the cycle to repaint the main canvas
-        paintToMainCanvas();
+        // paintToMainCanvas();
       }
     })();
     return () => {
