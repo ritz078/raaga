@@ -22,7 +22,6 @@
 @import "../components/ReadModeControls/read-mode-controls.css";
 @import "../components/Loader/loader.css";
 @import "../components/MidiSelect/midi-select.css";
-@import "../components/SheetMusic/sheet-music.css";
 
 * {
   -moz-osx-font-smoothing: grayscale;
