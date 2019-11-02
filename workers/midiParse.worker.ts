@@ -1,5 +1,8 @@
 import { MidiParser } from "@utils/MidiParser";
 import * as Comlink from "comlink";
+
+// This file is too big to be bundled in the application. Every time, we try
+// to bundle this, node collapses. So we are loading this file as a static file.
 importScripts(`${location.origin}/vendor/verovio.js`);
 
 const _self = self as any;
