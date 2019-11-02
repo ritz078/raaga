@@ -114,7 +114,9 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
                   onClick={() => setSelectedTrackIndex(i)}
                   isSelected={isSelectedTrack}
                   key={i}
-                  instrumentName={track.instrument.name}
+                  instrumentName={
+                    (track.instrument && track.instrument.name) || "Unknown"
+                  }
                 />
               );
             })}
