@@ -208,7 +208,9 @@ export class MidiParser {
     });
 
     // remove tracks with zero notes.
-    this.song.tracks = this.song.tracks.filter(track => track.duration);
+    this.song.tracks = this.song.tracks.filter(
+      track => track.duration && track.instrument
+    );
     this.song.beats = this.song.beats.filter(beat => beat.notes.length);
 
     this.song.duration = Math.max(
@@ -218,6 +220,10 @@ export class MidiParser {
     this.song.header.label = (
       this.song.header.name[1] || this.song.header.name[0]
     ).replace(/_/g, " ");
+
+    if (!this.song.tracks.length) {
+      throw new Error("This file has no tracks.");
+    }
 
     return this.song;
   };
