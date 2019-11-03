@@ -1,11 +1,12 @@
 export interface IHeader {
-  name?: string;
+  name?: string[];
   ppq: number;
   label: string;
   tempo: {
     bpm: number;
     time: number;
   }[];
+  format: number;
 }
 
 export interface INote {
