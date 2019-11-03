@@ -103,7 +103,7 @@ export class Visualizer {
    */
   private getTrackInfo = (track?: ITrack) => {
     const notes =
-      this.mode === VISUALIZER_MODE.WRITE ? this.notes : track && track.notes;
+      this.mode === VISUALIZER_MODE.WRITE ? this.notes : track?.notes;
     const midiNumbers = getAllMidiNumbersInRange(this.range);
     const groupedNotes = groupBy(notes, "midi");
 

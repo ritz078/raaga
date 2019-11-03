@@ -9,7 +9,7 @@
     "build:icons": "node ./scripts/generate-svg-icons.js",
     "build:midi": "node ./scripts/generateMidiMeta.js",
     "test:e2e": "yarn run cypress open",
-    "now-build": "chmod +x build.sh && ./build.sh",
+    "now-build": "chmod +x ./build.sh && ./build.sh",
     "postinstall": "patch-package && yarn build:icons && yarn build:midi",
     "test:e2e:ci": "cypress run --record"
   },
@@ -39,7 +39,7 @@
     "react-dom": "^16.10.2",
     "react-ga": "^2.7.0",
     "react-range": "^1.4.1",
-    "react-spring": "^9.0.0-beta.34",
+    "react-spring": "9.0.0-beta.34",
     "react-switch": "^5.0.1",
     "startaudiocontext": "^1.2.1",
     "tone": "^13.8.25",
@@ -47,6 +47,7 @@
     "webmidi": "^2.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@fullhuman/postcss-purgecss": "^1.3.0",
     "@svgr/webpack": "^4.3.3",
     "@tonejs/midi": "^2.0.7",
@@ -70,14 +71,14 @@
     "pretty-quick": "^1.11.1",
     "svgstore": "^3.0.0-2",
     "tailwindcss": "^1.1.2",
-    "typescript": "^3.7.0-beta",
+    "typescript": "^3.7.0-dev.20191021",
     "url-loader": "^2.2.0",
     "webpack": "^4.41.0",
     "worker-loader": "^2.0.0"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && lint-staged"
+      "pre-commit": "lint-staged"
     }
   }
 }

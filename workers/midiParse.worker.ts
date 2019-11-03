@@ -1,5 +1,6 @@
 import { MidiParser } from "@utils/MidiParser";
 import * as Comlink from "comlink";
+import { isString } from "lodash";
 
 // This file is too big to be bundled in the application. Every time, we try
 // to bundle this, node collapses. So we are loading this file as a static file.
@@ -28,10 +29,9 @@ function isNotMidi(fileName: string) {
 }
 
 export const parseMidi = async (filePath, name) => {
-  const url =
-    typeof filePath === "string"
-      ? _self.location.origin + filePath
-      : URL.createObjectURL(filePath);
+  const url = isString(filePath)
+    ? _self.location.origin + filePath
+    : URL.createObjectURL(filePath);
 
   const res = await fetch(url);
 
