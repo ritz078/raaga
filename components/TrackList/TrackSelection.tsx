@@ -81,7 +81,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
             <span className="tl-song-info">
               {tracks.length} Tracks &middot; {"  "}
               {beats.length} Beats &middot; {"  "}
-              {duration && duration.toFixed(2)} seconds &middot; {"  "}
+              {duration?.toFixed(2)} seconds &middot; {"  "}
               {header.ppq} ticks/beat
             </span>
           </div>
@@ -105,8 +105,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
 
         <div className="flex flex-row flex-wrap">
           {midi &&
-            tracks &&
-            tracks.map((track: ITrack, i) => {
+            tracks?.map((track: ITrack, i) => {
               const isSelectedTrack = selectedTrackIndex === i;
               return (
                 <InstrumentCard
@@ -120,7 +119,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
             })}
         </div>
 
-        {midi && beats && !!beats.length && (
+        {midi && !!beats?.length && (
           <>
             <div className="ts-section-title">
               <span className="text-base text-white">Beats</span>

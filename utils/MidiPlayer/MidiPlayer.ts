@@ -107,7 +107,7 @@ export class MidiPlayer {
   }) => {
     const { instrumentIds, drums } = {
       instrumentIds:
-        (options && options.instrumentIds) ||
+        (options?.instrumentIds) ||
         this.midi.tracks
           .map(track => track.instrument && track.instrument.number)
           .filter(Boolean),
@@ -301,8 +301,7 @@ export class MidiPlayer {
     const { tracks } = this.midi;
 
     const mainTrackInstrumentIndex =
-      tracks[this.mainTrackIndex] &&
-      tracks[this.mainTrackIndex].instrument.number;
+      tracks[this.mainTrackIndex]?.instrument.number;
     tracks.forEach((track, i) => {
       const instrumentIndex = track.instrument.number;
       if (

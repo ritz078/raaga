@@ -1,13 +1,13 @@
 import { MidiParser } from "@utils/MidiParser";
 import * as Comlink from "comlink";
+import { isString } from "lodash";
 
 const _self = self as any;
 
 export const parseMidi = async (filePath, name) => {
-  const url =
-    typeof filePath === "string"
-      ? _self.location.origin + filePath
-      : URL.createObjectURL(filePath);
+  const url = isString(filePath)
+    ? _self.location.origin + filePath
+    : URL.createObjectURL(filePath);
 
   const res = await fetch(url);
 

@@ -66,7 +66,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
           onClick={onTogglePlay}
         />
 
-        <ProgressBar duration={midi && midi.duration} />
+        <ProgressBar duration={midi?.duration} />
       </div>
 
       <PlaybackSpeed />
