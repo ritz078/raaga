@@ -36,7 +36,8 @@ export const parseMidi = async (filePath, name) => {
   const res = await fetch(url);
 
   let arrayBuffer;
-  if (isNotMidi(filePath === "string" ? filePath : name)) {
+
+  if (isNotMidi(isString(filePath) ? filePath : name)) {
     const text = await res.text();
     vrv.loadData(text);
     const base64Midi = vrv.renderToMIDI();

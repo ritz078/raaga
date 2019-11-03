@@ -10,7 +10,7 @@ fs.readdir(path.resolve(__dirname, "../public/static/midi"), (err, files) => {
     );
     const { header, duration, tracks } = new Midi(data);
     meta.push({
-      url: `/public/static/midi/${file}`,
+      url: `/static/midi/${file}`,
       label: header.name || file.replace(".mid", ""),
       duration,
       tracks: tracks.length
