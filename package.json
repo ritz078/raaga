@@ -21,6 +21,9 @@
       "git add"
     ]
   },
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "@sindresorhus/class-names": "^1.1.0",
     "comlink": "^4.2.0",
