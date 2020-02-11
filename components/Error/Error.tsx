@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Mitt from "mitt";
+import mitt from "mitt";
 import { useTransition, animated } from "react-spring";
 
-const emitter = new Mitt();
+const emitter = mitt();
 
 export function Error() {
   const [text, setText] = useState(null);
