@@ -4,7 +4,7 @@ import Head from "next/head";
 import "@styles/index.css";
 import NProgress from "nprogress";
 
-if (process.browser) {
+if (IN_BROWSER) {
   require("intersection-observer");
   require("audio-context-polyfill");
   // client-side-only code
