@@ -23,7 +23,6 @@ export default class MyDocument extends Document<{}> {
             type="image/png"
             href="/static/images/favicon.png"
           />
-          <script src="https://cdn.polyfill.io/v2/polyfill.js?features=AudioContext,Map,Set,Array.prototype.includes,fetch,IntersectionObserver" />
         </Head>
         <body>
           <Main />

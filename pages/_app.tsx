@@ -4,6 +4,12 @@ import Head from "next/head";
 import "@styles/index.css";
 import NProgress from "nprogress";
 
+if (IN_BROWSER) {
+  require("intersection-observer");
+  require("audio-context-polyfill");
+  // client-side-only code
+}
+
 NProgress.configure({ showSpinner: false });
 
 let reactGa;
