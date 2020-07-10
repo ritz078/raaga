@@ -53,7 +53,7 @@
     "@svgr/webpack": "^4.3.3",
     "@tonejs/midi": "^2.0.7",
     "@types/lodash": "^4.14.144",
-    "@types/react": "^16.9.5",
+    "@types/react": "^16.9.42",
     "@zeit/next-css": "^1.0.1",
     "audio-context-polyfill": "^1.0.0",
     "autoprefixer": "^9.6.4",
