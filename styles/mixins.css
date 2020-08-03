@@ -6,16 +6,19 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.instrument-list {
+.instrument-list,
+.keyboard-layout-list {
   @apply text-xs px-3 py-1 cursor-pointer flex flex-row items-center;
 }
 
-.instrument-list:hover {
+.instrument-list:hover,
+.keyboard-layout-list:hover {
   color: #ffffff;
   background-color: #1b1b1b;
 }
 
-.instrument-list.selected {
+.instrument-list.selected,
+.keyboard-layout-list.selected {
   background-color: #3f51b5;
 }
 

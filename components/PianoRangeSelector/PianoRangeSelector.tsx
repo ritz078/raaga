@@ -1,7 +1,9 @@
 import React, { FunctionComponent, memo, useState } from "react";
+import cn from "@sindresorhus/class-names";
 import { Button } from "@components/Button";
 import { MidiNumbers } from "piano-utils";
 import { Icon } from "@components/Icon";
+import { RANGE_PRESETS } from "@config/piano";
 import { Range } from "@utils/typings/Visualizer";
 import { Dropdown } from "@components/Dropdown";
 import { getTrackBackground, Range as RangeSlider } from "react-range";
@@ -19,13 +21,17 @@ const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map(midi => {
   };
 });
 
+const indexOfMidiNumber = (midiNumber: number): number =>
+  naturalKeys.findIndex(({ value }) => value === midiNumber);
+
 const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
   range,
   onRangeChange
 }) => {
-  const min = naturalKeys.findIndex(key => key.value === range.first);
-  const max = naturalKeys.findIndex(key => key.value === range.last);
-  const [_range, _setRange] = useState([min, max]);
+  const [_range, _setRange] = useState([
+    indexOfMidiNumber(range.first),
+    indexOfMidiNumber(range.last)
+  ]);
 
   const setRange = (range_: number[]) => {
     onRangeChange([naturalKeys[range_[0]].value, naturalKeys[range_[1]].value]);
@@ -46,9 +52,36 @@ const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
           </Button>
         )}
       >
-        {() => (
+        {close => (
           <div className="prs-content">
             <div className="text-sm text-white mb-2">Piano Range Selector</div>
+            {RANGE_PRESETS.map(({ first, last }) => {
+              const [presetMin, presetMax] = [
+                indexOfMidiNumber(first),
+                indexOfMidiNumber(last)
+              ];
+              return (
+                <div
+                  className={cn("keyboard-layout-list", {
+                    selected: presetMin === _range[0] && presetMax === _range[1]
+                  })}
+                  key={`${first}-${last}`}
+                  onClick={() => {
+                    setRange([presetMin, presetMax]);
+                    close();
+                  }}
+                >
+                  <div className="px-2" style={{ width: 60 }}>
+                    {last - first + 1} keys
+                  </div>
+                  <div className="px-2 flex items-center">
+                    {MidiNumbers.getAttributes(first).note}
+                    <Icon name="minus" color="#fff" size={8} className="mx-2" />
+                    {MidiNumbers.getAttributes(last).note}
+                  </div>
+                </div>
+              );
+            })}
 
             <div>
               <RangeSlider
