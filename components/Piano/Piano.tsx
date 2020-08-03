@@ -59,7 +59,7 @@ const _Piano: FunctionComponent<PianoProps> = ({
   return (
     <div
       className={cn(
-        "flex justify-center w-full relative overflow-x-hidden",
+        "flex justify-center w-full h-full relative overflow-x-hidden",
         className
       )}
     >
