@@ -3,16 +3,22 @@ name: Unit and e2e Tests
 on: [deployment_status]
 
 jobs:
-  test:
-    env:
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      CYPRESS_baseUrl: ${{ github.event.deployment_status.target_url }}
+  cypress-run:
     runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == 'success'
+    if: ${{ github.event.deployment_status.state == 'success' }}
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+        # Install NPM dependencies, cache them correctly
+        # and run all Cypress tests
+      - name: debug
+        uses: hmarr/debug-action@master
+        env:
+          TEST_URL: ${{ github.event.deployment_status.target_url }}
+      - name: Cypress Run
+        uses: cypress-io/github-action@v2
         with:
-          node-version: "10.x"
-      - run: npm i -g yarn
-      - run: yarn && yarn test:e2e:ci
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_baseUrl: ${{ github.event.deployment_status.target_url }}
