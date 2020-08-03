@@ -1,4 +1,4 @@
-name: Unit and e2e Tests
+name: E2E Tests
 
 on: [deployment_status]
 
