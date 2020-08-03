@@ -65,7 +65,7 @@
     "husky": "^3.0.8",
     "imagemin-lint-staged": "^0.4.0",
     "intersection-observer": "^0.11.0",
-    "lint-staged": "^9.4.2",
+    "lint-staged": "^10.2.11",
     "patch-package": "^6.2.0",
     "postcss-custom-properties": "^9.0.2",
     "postcss-easy-import": "^3.0.0",
