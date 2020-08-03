@@ -26,7 +26,7 @@
     "comlink": "^4.0.4",
     "fuzzy-search": "^3.0.1",
     "idb-keyval": "^3.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "midi-instruments": "^1.1.4",
     "midievents": "^2.0.0",
     "midifile": "^2.0.0",
