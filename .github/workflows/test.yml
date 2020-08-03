@@ -23,4 +23,3 @@ jobs:
           wait-on: 'http://localhost:3000'
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_baseUrl: ${{ github.event.deployment_status.target_url }}
