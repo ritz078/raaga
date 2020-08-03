@@ -107,7 +107,7 @@ export class MidiPlayer {
   }) => {
     const { instrumentIds, drums } = {
       instrumentIds:
-        (options?.instrumentIds) ||
+        options?.instrumentIds ||
         this.midi.tracks
           .map(track => track.instrument && track.instrument.number)
           .filter(Boolean),
