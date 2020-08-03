@@ -15,7 +15,11 @@ import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import { DEFAULT_FIRST_KEY, DEFAULT_LAST_KEY } from "@config/piano";
+import {
+  PIANO_HEIGHT,
+  DEFAULT_FIRST_KEY,
+  DEFAULT_LAST_KEY
+} from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
@@ -259,7 +263,7 @@ const SoundPlayer: React.FunctionComponent<{
           offScreenCanvasSupport={offScreenCanvasSupport}
         />
       </div>
-      <div className="piano-wrapper">
+      <div className="piano-wrapper" style={{ height: PIANO_HEIGHT }}>
         {loading && <Loader className="absolute z-10 h-4" />}
         <Piano
           activeMidis={activeMidis}

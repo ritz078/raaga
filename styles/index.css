@@ -29,5 +29,4 @@
 
 .piano-wrapper {
   @apply flex justify-center relative items-center border-t border-black;
-  height: var(--piano-height);
 }
