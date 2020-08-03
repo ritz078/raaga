@@ -1,11 +1,10 @@
 name: E2E Tests
 
-on: [deployment_status]
+on: [push]
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-    if: ${{ github.event.deployment_status.state == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -13,12 +12,15 @@ jobs:
         # and run all Cypress tests
       - name: debug
         uses: hmarr/debug-action@master
-        env:
-          TEST_URL: ${{ github.event.deployment_status.target_url }}
       - name: Cypress Run
         uses: cypress-io/github-action@v2
         with:
           record: true
+          browser: chrome
+          headless: true
+          build: npm build
+          start: npm start
+          wait-on: 'http://localhost:3000'
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_baseUrl: ${{ github.event.deployment_status.target_url }}
