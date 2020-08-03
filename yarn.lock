@@ -2315,7 +2315,7 @@ babel-plugin-module-resolver@^3.2.0:
 
 babel-plugin-syntax-jsx@6.18.0:
   version "6.18.0"
-  resolved "http://registry.npmjs.org/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
+  resolved "https://registry.npmjs.org/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
 
 babel-plugin-transform-define@2.0.0:
   version "2.0.0"
@@ -2446,7 +2446,7 @@ bindings@^1.5.0:
 
 bl@^1.0.0:
   version "1.2.2"
-  resolved "http://registry.npmjs.org/bl/-/bl-1.2.2.tgz#a160911717103c07410cef63ef51b397c025af9c"
+  resolved "https://registry.npmjs.org/bl/-/bl-1.2.2.tgz#a160911717103c07410cef63ef51b397c025af9c"
   dependencies:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
@@ -2784,7 +2784,7 @@ camelcase-css@^2.0.1:
 
 camelcase-keys@^2.0.0:
   version "2.1.0"
-  resolved "http://registry.npmjs.org/camelcase-keys/-/camelcase-keys-2.1.0.tgz#308beeaffdf28119051efa1d932213c91b8f92e7"
+  resolved "https://registry.npmjs.org/camelcase-keys/-/camelcase-keys-2.1.0.tgz#308beeaffdf28119051efa1d932213c91b8f92e7"
   dependencies:
     camelcase "^2.0.0"
     map-obj "^1.0.0"
@@ -3104,10 +3104,10 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-comlink@^4.0.4:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/comlink/-/comlink-4.2.0.tgz#be9e968a19d797a44a042cf1eac03775d2ed39fe"
-  integrity sha512-33hF3yYzZicIWLREuvluTGSZkbAXYwRmrA9IYQo0/P+0O45qgvzR0FHX4tRZztObFMTs/RhnN0G0UBNDAZSiCg==
+comlink@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/comlink/-/comlink-4.3.0.tgz#80b3366baccd87897dab3638ebfcfae28b2f87c7"
+  integrity sha512-mu4KKKNuW8TvkfpW/H88HBPeILubBS6T94BdD1VWBXNXfiyqVtwUCVNO1GeNOBTsIswzsMjWlycYr+77F5b84g==
 
 commander@2.15.1:
   version "2.15.1"
@@ -3127,7 +3127,7 @@ commander@^2.20.0:
 
 commander@~2.8.1:
   version "2.8.1"
-  resolved "http://registry.npmjs.org/commander/-/commander-2.8.1.tgz#06be367febfda0c330aa1e2a072d3dc9762425d4"
+  resolved "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz#06be367febfda0c330aa1e2a072d3dc9762425d4"
   dependencies:
     graceful-readlink ">= 1.0.0"
 
@@ -3890,7 +3890,7 @@ domelementtype@^1.3.0, domelementtype@^1.3.1:
 
 domelementtype@~1.1.1:
   version "1.1.3"
-  resolved "http://registry.npmjs.org/domelementtype/-/domelementtype-1.1.3.tgz#bd28773e2642881aec51544924299c5cd822185b"
+  resolved "https://registry.npmjs.org/domelementtype/-/domelementtype-1.1.3.tgz#bd28773e2642881aec51544924299c5cd822185b"
 
 domhandler@^2.3.0:
   version "2.4.2"
@@ -5567,7 +5567,7 @@ is-number@^7.0.0:
 
 is-obj@^1.0.0, is-obj@^1.0.1:
   version "1.0.1"
-  resolved "http://registry.npmjs.org/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
+  resolved "https://registry.npmjs.org/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
 
 is-obj@^2.0.0:
   version "2.0.0"
@@ -6056,7 +6056,7 @@ listr@^0.14.3:
 
 load-json-file@^1.0.0:
   version "1.1.0"
-  resolved "http://registry.npmjs.org/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
+  resolved "https://registry.npmjs.org/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
   dependencies:
     graceful-fs "^4.1.2"
     parse-json "^2.2.0"
@@ -6384,7 +6384,7 @@ memory-fs@^0.5.0:
 
 meow@^3.3.0:
   version "3.7.0"
-  resolved "http://registry.npmjs.org/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
+  resolved "https://registry.npmjs.org/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
   dependencies:
     camelcase-keys "^2.0.0"
     decamelize "^1.1.2"
