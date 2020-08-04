@@ -52,76 +52,85 @@ const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
           </Button>
         )}
       >
-        {close => (
+        {() => (
           <div className="prs-content">
-            <div className="text-sm text-white mb-2">Piano Range Selector</div>
-            {RANGE_PRESETS.map(({ first, last }) => {
-              const [presetMin, presetMax] = [
-                indexOfMidiNumber(first),
-                indexOfMidiNumber(last)
-              ];
-              return (
-                <div
-                  className={cn("keyboard-layout-list", {
-                    selected: presetMin === _range[0] && presetMax === _range[1]
-                  })}
-                  key={`${first}-${last}`}
-                  onClick={() => {
-                    setRange([presetMin, presetMax]);
-                    close();
-                  }}
-                >
-                  <div className="px-2" style={{ width: 60 }}>
-                    {last - first + 1} keys
-                  </div>
-                  <div className="px-2 flex items-center">
-                    {MidiNumbers.getAttributes(first).note}
-                    <Icon name="minus" color="#fff" size={8} className="mx-2" />
-                    {MidiNumbers.getAttributes(last).note}
-                  </div>
-                </div>
-              );
-            })}
-
-            <div>
-              <RangeSlider
-                step={1}
-                min={0}
-                max={naturalKeys.length - 1}
-                values={_range}
-                onChange={setRange}
-                renderTrack={({ props, children }) => (
-                  <div
-                    onMouseDown={props.onMouseDown as any}
-                    onTouchStart={props.onTouchStart}
-                    className="h-10 flex w-full"
-                    style={props.style}
-                  >
+            <div className="py-1">
+              <div className="text-sm text-white mb-1">Presets</div>
+              <div className="flex">
+                {RANGE_PRESETS.map(({ first, last }) => {
+                  const [presetMin, presetMax] = [
+                    indexOfMidiNumber(first),
+                    indexOfMidiNumber(last)
+                  ];
+                  return (
                     <div
-                      ref={props.ref}
-                      className="h-1 w-full self-center rounded"
-                      style={{
-                        background: getTrackBackground({
-                          values: _range,
-                          colors: ["#ccc", "#2196f3", "#ccc"],
-                          min: 0,
-                          max: naturalKeys.length - 1
-                        })
+                      className={cn("keyboard-layout-list mx-1", {
+                        selected:
+                          presetMin === _range[0] && presetMax === _range[1]
+                      })}
+                      key={`${first}-${last}`}
+                      onClick={() => {
+                        setRange([presetMin, presetMax]);
                       }}
                     >
-                      {children}
+                      <div className="flex items-center">
+                        {MidiNumbers.getAttributes(first).note}
+                        <Icon
+                          name="minus"
+                          color="#fff"
+                          size={8}
+                          className="mx-1"
+                        />
+                        {MidiNumbers.getAttributes(last).note}
+                      </div>
+                      <div className="text-center">{last - first + 1} keys</div>
                     </div>
-                  </div>
-                )}
-                renderThumb={({ index, props }) => (
-                  <div {...props} style={props.style}>
-                    <div className="prs-thumb" />
-                    <span className="prs-label">
-                      {naturalKeys[_range[index]].label}
-                    </span>
-                  </div>
-                )}
-              />
+                  );
+                })}
+              </div>
+            </div>
+            <div className="py-2">
+              <div className="text-sm text-white mb-1">Custom</div>
+              <div>
+                <RangeSlider
+                  step={1}
+                  min={0}
+                  max={naturalKeys.length - 1}
+                  values={_range}
+                  onChange={setRange}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      onMouseDown={props.onMouseDown as any}
+                      onTouchStart={props.onTouchStart}
+                      className="h-10 flex w-full"
+                      style={props.style}
+                    >
+                      <div
+                        ref={props.ref}
+                        className="h-1 w-full self-center rounded"
+                        style={{
+                          background: getTrackBackground({
+                            values: _range,
+                            colors: ["#ccc", "#2196f3", "#ccc"],
+                            min: 0,
+                            max: naturalKeys.length - 1
+                          })
+                        }}
+                      >
+                        {children}
+                      </div>
+                    </div>
+                  )}
+                  renderThumb={({ index, props }) => (
+                    <div {...props} style={props.style}>
+                      <div className="prs-thumb" />
+                      <span className="prs-label">
+                        {naturalKeys[_range[index]].label}
+                      </span>
+                    </div>
+                  )}
+                />
+              </div>
             </div>
           </div>
         )}

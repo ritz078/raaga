@@ -11,6 +11,11 @@
   @apply text-xs px-3 py-1 cursor-pointer flex flex-row items-center;
 }
 
+.keyboard-layout-list {
+  @apply flex-col px-2 rounded-sm;
+  width: 60px;
+}
+
 .instrument-list:hover,
 .keyboard-layout-list:hover {
   color: #ffffff;
