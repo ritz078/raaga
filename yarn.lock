@@ -10667,11 +10667,6 @@ web-vitals@0.2.1:
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-0.2.1.tgz#60782fa690243fe35613759a0c26431f57ba7b2d"
   integrity sha512-2pdRlp6gJpOCg0oMMqwFF0axjk5D9WInc09RSYtqFgPXQ15+YKNQ7YnBBEqAL5jvmfH9WvoXDMb8DHwux7pIew==
 
-web-vitals@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-0.2.3.tgz#950adea6da9e3cfd3ee2ffe868c7126a6d87b2d1"
-  integrity sha512-6idlbUoL38El+QS320Qz6h4QSZLaWw3CHiJWBtQDmFGs72ro+fnukfavTxTdQSlsaoaBuNL/0bqlIhfdtlrx4A==
-
 webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
