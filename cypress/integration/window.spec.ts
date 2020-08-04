@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 
+// @ts-ignore
 context("Window", () => {
   beforeEach(() => {
     cy.visit("/");

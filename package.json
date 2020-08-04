@@ -10,7 +10,7 @@
     "build:icons": "node ./scripts/generate-svg-icons.js",
     "build:midi": "node ./scripts/generateMidiMeta.js",
     "test:e2e": "yarn run cypress open",
-    "now-build": "chmod +x ./build.sh && ./build.sh",
+    "build": "chmod +x ./build.sh && ./build.sh",
     "postinstall": "patch-package && yarn build:icons && yarn build:midi",
     "test:e2e:ci": "cypress run --record"
   },
