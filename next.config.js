@@ -2,6 +2,9 @@ const withCSS = require("@zeit/next-css");
 const webpack = require("webpack");
 
 const config = {
+  experimental: {
+    optimizeFonts: true,
+  },
   webpack(config, options) {
     config.plugins.push(
       new webpack.DefinePlugin({
