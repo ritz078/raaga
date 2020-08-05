@@ -15,11 +15,7 @@ import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import {
-  PIANO_HEIGHT,
-  DEFAULT_FIRST_KEY,
-  DEFAULT_LAST_KEY
-} from "@config/piano";
+import { PIANO_HEIGHT, getDefaultRange, setDefaultRange } from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
@@ -32,18 +28,13 @@ import { wrap } from "comlink";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
 
-const range = {
-  first: DEFAULT_FIRST_KEY,
-  last: DEFAULT_LAST_KEY
-};
-
 const SoundPlayer: React.FunctionComponent<{
   offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
 }> = ({ offScreenCanvasSupport }) => {
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
-  const [keyboardRange, setKeyboardRange] = useState<Range>(range);
+  const [keyboardRange, setKeyboardRange] = useState<Range>(getDefaultRange());
   const [isPlaying, setPlaying] = useState(false);
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
@@ -81,7 +72,9 @@ const SoundPlayer: React.FunctionComponent<{
       // change piano range.
       const requiredRange = getMidiRange(notes);
 
-      if (!isWithinRange(requiredRange, [range.first, range.last])) {
+      if (
+        !isWithinRange(requiredRange, [keyboardRange.first, keyboardRange.last])
+      ) {
         const _range = getPianoRangeAndShortcuts(requiredRange).range;
         setKeyboardRange(_range);
         setPlaying(true);
@@ -90,7 +83,7 @@ const SoundPlayer: React.FunctionComponent<{
 
       return keyboardRange;
     },
-    [range]
+    [keyboardRange]
   );
 
   const onNoteStart = useCallback(
@@ -224,6 +217,7 @@ const SoundPlayer: React.FunctionComponent<{
   const handleRangeChange = useCallback(
     _range => {
       const { range } = getPianoRangeAndShortcuts(_range, false);
+      setDefaultRange(range);
       player.setRange(range);
       setKeyboardRange(range);
     },
