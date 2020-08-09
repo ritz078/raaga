@@ -29,19 +29,19 @@ export const useKeyboardShortcuts = (
   onPlay: (midi: number) => void,
   onStop: (midi: number) => void
 ) => {
-  const activeMidiMapRef = useRef(new Set());
+  const activeMidisRef = useRef(new Set());
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const midi = keyboardEventToMidi(event);
-      if (midi && !activeMidiMapRef.current.has(midi)) {
-        activeMidiMapRef.current.add(midi);
+      if (midi && !activeMidisRef.current.has(midi)) {
+        activeMidisRef.current.add(midi);
         onPlay(midi);
       }
     };
     const handleKeyUp = (event: KeyboardEvent) => {
       const midi = keyboardEventToMidi(event);
-      if (midi && activeMidiMapRef.current.has(midi)) {
-        activeMidiMapRef.current.delete(midi);
+      if (midi && activeMidisRef.current.has(midi)) {
+        activeMidisRef.current.delete(midi);
         onStop(midi);
       }
     };
