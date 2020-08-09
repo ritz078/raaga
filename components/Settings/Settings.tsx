@@ -3,7 +3,8 @@ import { Icon } from "@components/Icon";
 import { Modal } from "@components/Modal";
 import { TwitterPicker } from "react-color";
 import { Dropdown } from "@components/Dropdown";
-import { Theme, ThemeContext } from "@utils/ThemeContext";
+import { Theme } from "@utils/typings/Theme";
+import { ThemeContext } from "@utils/ThemeContext";
 
 interface SettingsProps {
   onThemeChange: (theme: Theme) => void;
