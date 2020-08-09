@@ -5,6 +5,7 @@ import {
 import { Visualizer } from "@utils/Visualizer";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { ITrack } from "@typings/midi";
+import { Theme } from "@utils/typings/Theme";
 
 export interface IData {
   canvas: {
@@ -18,6 +19,7 @@ export interface IData {
   mode: VISUALIZER_MODE;
   delay: number;
   speed: number;
+  theme: Theme;
 }
 
 let visualizer;
@@ -32,11 +34,12 @@ export function controlVisualizer(data: Partial<IData>) {
     midi,
     mode,
     delay,
-    speed
+    speed,
+    theme
   } = data;
   try {
     if (message === VISUALIZER_MESSAGES.INIT) {
-      visualizer = new Visualizer(canvas, dimensions, range, mode);
+      visualizer = new Visualizer({ canvas, dimensions, range, mode, theme });
     }
 
     if (!visualizer) return;
@@ -60,6 +63,8 @@ export function controlVisualizer(data: Partial<IData>) {
       visualizer.toggle();
     } else if (message === VISUALIZER_MESSAGES.SET_SPEED) {
       visualizer.setSpeed(speed);
+    } else if (message === VISUALIZER_MESSAGES.SET_THEME) {
+      visualizer.setTheme(theme);
     }
   } catch (e) {
     console.log(e);

@@ -6,7 +6,8 @@ import {
 } from "@utils";
 import { MidiNumbers } from "piano-utils";
 import Tone from "tone";
-import { FunctionComponent, useState } from "react";
+import { ThemeContext } from "@utils/ThemeContext";
+import { FunctionComponent, useState, useContext } from "react";
 import cn from "@sindresorhus/class-names";
 
 interface PianoProps {
@@ -29,6 +30,7 @@ const _Piano: FunctionComponent<PianoProps> = ({
   activeInstrumentMidis
 }) => {
   const [isMousePressed, setMousePressed] = useState(false);
+  const { naturalColor, accidentalColor } = useContext(ThemeContext);
 
   const play = (midi: number) => {
     if (activeMidis.includes(midi)) return;
@@ -69,9 +71,13 @@ const _Piano: FunctionComponent<PianoProps> = ({
         const left = getRelativeKeyPosition(midi, range) * naturalKeyWidth;
 
         const width = isAccidental ? 0.65 * naturalKeyWidth : naturalKeyWidth;
+        const isActive = activeMidis.includes(midi);
         const style = {
           left: `${left}%`,
-          width: `${width}%`
+          width: `${width}%`,
+          ...(isActive
+            ? { background: isAccidental ? accidentalColor : naturalColor }
+            : {})
         };
 
         const className = cn({

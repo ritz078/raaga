@@ -3,7 +3,7 @@ const webpack = require("webpack");
 
 const config = {
   experimental: {
-    optimizeFonts: true,
+    optimizeFonts: true
   },
   webpack(config, options) {
     config.plugins.push(

@@ -1,12 +1,18 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext, FunctionComponent } from "react";
 import { Icon } from "@components/Icon";
 import { Modal } from "@components/Modal";
-import { TwitterPicker } from "react-color";
+import { ChromePicker } from "react-color";
 import { Dropdown } from "@components/Dropdown";
+import { Theme } from "@utils/typings/Theme";
+import { ThemeContext } from "@utils/ThemeContext";
 
-const _Settings = () => {
+interface SettingsProps {
+  onThemeChange: (theme: Theme) => void;
+}
+
+const _Settings: FunctionComponent<SettingsProps> = ({ onThemeChange }) => {
   const [visible, setVisibility] = useState(false);
-
+  const theme = useContext(ThemeContext);
   return (
     <div>
       <Icon
@@ -17,23 +23,42 @@ const _Settings = () => {
         onClick={() => setVisibility(!visible)}
       />
 
-      <Modal onCloseRequest={() => setVisibility(false)} visible={true}>
+      <Modal onCloseRequest={() => setVisibility(false)} visible={visible}>
         <div className="settings-content p-4">
-          <div className="settings-section-title">COLORS</div>
-
-          <div className="settings-row">
-            <span className="settings-row-label">Accidental Keys</span>
-            <Dropdown
-              label={() => (
-                <div
-                  className="rounded-sm cursor-pointer"
-                  style={{ height: 20, width: 20, backgroundColor: "green" }}
-                ></div>
-              )}
-            >
-              {() => <TwitterPicker />}
-            </Dropdown>
-          </div>
+          <div className="settings-section-title">Colors</div>
+          {[
+            { colorName: "naturalColor", label: "White Keys" },
+            { colorName: "accidentalColor", label: "Black Keys" }
+          ].map(({ label, colorName }) => (
+            <div key={colorName} className="settings-row">
+              <span className="settings-row-label">{label}</span>
+              <Dropdown
+                label={() => (
+                  <div
+                    className="rounded-sm cursor-pointer"
+                    style={{
+                      height: 20,
+                      width: 20,
+                      backgroundColor: theme[colorName]
+                    }}
+                  ></div>
+                )}
+              >
+                {() => (
+                  <ChromePicker
+                    color={theme[colorName]}
+                    disableAlpha
+                    onChange={color =>
+                      onThemeChange({
+                        ...theme,
+                        [colorName]: color.hex
+                      })
+                    }
+                  />
+                )}
+              </Dropdown>
+            </div>
+          ))}
         </div>
       </Modal>
     </div>
