@@ -1,7 +1,7 @@
 import React, { memo, useState, useContext, FunctionComponent } from "react";
 import { Icon } from "@components/Icon";
 import { Modal } from "@components/Modal";
-import { TwitterPicker } from "react-color";
+import { ChromePicker } from "react-color";
 import { Dropdown } from "@components/Dropdown";
 import { Theme } from "@utils/typings/Theme";
 import { ThemeContext } from "@utils/ThemeContext";
@@ -45,8 +45,9 @@ const _Settings: FunctionComponent<SettingsProps> = ({ onThemeChange }) => {
                 )}
               >
                 {() => (
-                  <TwitterPicker
+                  <ChromePicker
                     color={theme[colorName]}
+                    disableAlpha
                     onChange={color =>
                       onThemeChange({
                         ...theme,
