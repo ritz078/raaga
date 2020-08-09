@@ -15,7 +15,12 @@ import { getInstrumentIdByValue, instruments } from "midi-instruments";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import webMidi from "webmidi";
 import Tone from "tone";
-import { PIANO_HEIGHT, getDefaultRange, setDefaultRange } from "@config/piano";
+import {
+  PIANO_HEIGHT,
+  DEFAULT_THEME,
+  getDefaultRange,
+  setDefaultRange
+} from "@config/piano";
 import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
@@ -42,10 +47,7 @@ const SoundPlayer: React.FunctionComponent<{
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
-  const [theme, setTheme] = useState({
-    naturalColor: "#8ED1FC",
-    accidentalColor: "#FCB900"
-  });
+  const [theme, setTheme] = useState(DEFAULT_THEME);
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED

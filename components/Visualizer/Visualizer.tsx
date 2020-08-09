@@ -72,12 +72,10 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   }, [dimensions]);
 
   useEffect(() => {
-    (async function() {
-      await canvasProxy({
-        message: VISUALIZER_MESSAGES.SET_THEME,
-        theme
-      });
-    })();
+    canvasProxy({
+      message: VISUALIZER_MESSAGES.SET_THEME,
+      theme
+    });
   }, [theme]);
 
   const { width, height } = dimensions;

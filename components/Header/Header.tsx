@@ -8,7 +8,7 @@ import cn from "@sindresorhus/class-names";
 import Settings from "@components/Settings/Settings";
 import { ReadModeControls } from "@components/ReadModeControls";
 import { WriteModeControls } from "@components/WriteModeControls";
-import { Theme } from "@utils/ThemeContext";
+import { Theme } from "@utils/typings/Theme";
 
 type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
   React.ComponentProps<typeof WriteModeControls> & {

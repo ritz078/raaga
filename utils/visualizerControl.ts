@@ -5,7 +5,7 @@ import {
 import { Visualizer } from "@utils/Visualizer";
 import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { ITrack } from "@typings/midi";
-import { Theme } from "@utils/ThemeContext";
+import { Theme } from "@utils/typings/Theme";
 
 export interface IData {
   canvas: {

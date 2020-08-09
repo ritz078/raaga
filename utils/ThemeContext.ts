@@ -1,8 +1,4 @@
 import { createContext } from "react";
-
-export interface Theme {
-  naturalColor: string;
-  accidentalColor: string;
-}
+import { Theme } from "@utils/typings/Theme";
 
 export const ThemeContext = createContext<Theme>(null);

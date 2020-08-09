@@ -14,7 +14,7 @@ import {
   TRACK_PLAYING_SPEED,
   RADIUS
 } from "@config/piano";
-import { Theme } from "@utils/ThemeContext";
+import { Theme } from "@utils/typings/Theme";
 import { INote, ITrack } from "@typings/midi";
 
 function nowInSeconds() {
