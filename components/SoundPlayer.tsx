@@ -24,6 +24,7 @@ import { Range } from "@utils/typings/Visualizer";
 import { Loader } from "@components/Loader";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 import { player, PlayerContext } from "@utils/PlayerContext";
+import { ThemeContext } from "@utils/ThemeContext";
 import { wrap } from "comlink";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
@@ -41,6 +42,10 @@ const SoundPlayer: React.FunctionComponent<{
   const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
+  const [theme, setTheme] = useState({
+    naturalColor: "#8ED1FC",
+    accidentalColor: "#FCB900"
+  });
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
@@ -226,49 +231,52 @@ const SoundPlayer: React.FunctionComponent<{
 
   return (
     <PlayerContext.Provider value={player}>
-      <div className="flex flex-1 relative flex-col overflow-hidden">
-        <GlobalHeader
-          midiSettings={midiSettings}
-          mode={mode}
-          onToggleMode={setMode}
-          onMidiAndTrackSelect={onMidiAndTrackSelect}
-        />
+      <ThemeContext.Provider value={theme}>
+        <div className="flex flex-1 relative flex-col overflow-hidden">
+          <GlobalHeader
+            midiSettings={midiSettings}
+            mode={mode}
+            onToggleMode={setMode}
+            onMidiAndTrackSelect={onMidiAndTrackSelect}
+          />
 
-        <Header
-          onTogglePlay={onTogglePlay}
-          instrument={instrument}
-          mode={mode}
-          onInstrumentChange={changeInstrument}
-          midiDeviceId={midiDevice}
-          isPlaying={isPlaying}
-          midi={loadedMidi}
-          range={keyboardRange}
-          onRangeChange={handleRangeChange}
-          onToggleBackground={setMidiSettings}
-          midiSettings={midiSettings}
-          onMidiDeviceChange={setSelectedMidiDevice}
-          isLoading={loading}
-        />
+          <Header
+            onTogglePlay={onTogglePlay}
+            instrument={instrument}
+            mode={mode}
+            onInstrumentChange={changeInstrument}
+            midiDeviceId={midiDevice}
+            isPlaying={isPlaying}
+            midi={loadedMidi}
+            range={keyboardRange}
+            onRangeChange={handleRangeChange}
+            onToggleBackground={setMidiSettings}
+            midiSettings={midiSettings}
+            onMidiDeviceChange={setSelectedMidiDevice}
+            onThemeChange={setTheme}
+            isLoading={loading}
+          />
 
-        <Visualizer
-          range={keyboardRange}
-          mode={mode}
-          canvasProxy={canvasProxyRef.current}
-          offScreenCanvasSupport={offScreenCanvasSupport}
-        />
-      </div>
-      <div className="piano-wrapper" style={{ height: PIANO_HEIGHT }}>
-        {loading && <Loader className="absolute z-10 h-4" />}
-        <Piano
-          activeMidis={activeMidis}
-          onPlay={onNoteStart}
-          onStop={onNoteStop}
-          min={keyboardRange.first}
-          max={keyboardRange.last}
-          className={loading ? "opacity-25" : undefined}
-          activeInstrumentMidis={activeInstrumentMidis}
-        />
-      </div>
+          <Visualizer
+            range={keyboardRange}
+            mode={mode}
+            canvasProxy={canvasProxyRef.current}
+            offScreenCanvasSupport={offScreenCanvasSupport}
+          />
+        </div>
+        <div className="piano-wrapper" style={{ height: PIANO_HEIGHT }}>
+          {loading && <Loader className="absolute z-10 h-4" />}
+          <Piano
+            activeMidis={activeMidis}
+            onPlay={onNoteStart}
+            onStop={onNoteStop}
+            min={keyboardRange.first}
+            max={keyboardRange.last}
+            className={loading ? "opacity-25" : undefined}
+            activeInstrumentMidis={activeInstrumentMidis}
+          />
+        </div>
+      </ThemeContext.Provider>
     </PlayerContext.Provider>
   );
 };

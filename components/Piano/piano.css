@@ -7,12 +7,11 @@
   @apply z-0 border border-gray-700 border-t-0 rounded-b-lg bg-white flex flex-1 cursor-pointer keys;
   width: auto !important;
   height: 100%;
-  border-bottom: 4px solid #90caf9;
+  border-bottom: 4px solid #a8a8a8;
 }
 
 .natural-keys.__active__ {
-  background-image: linear-gradient(#42c9ff, #3bb4e5);
-  border-bottom: 2px solid #277899;
+  border-bottom: 2px solid #787878;
 }
 
 .accidental-keys {
@@ -23,8 +22,6 @@
 }
 
 .accidental-keys.__active__ {
-  background-image: linear-gradient(#fbd95c, #fbcf32);
-  border-color: #b49b45;
   box-shadow: -1px -1px 2px rgba(255, 255, 255, 0.2) inset,
     0 0 2px 3px rgba(0, 0, 0, 0.2) inset, 0 2px 4px rgba(0, 0, 0, 0.2);
 }

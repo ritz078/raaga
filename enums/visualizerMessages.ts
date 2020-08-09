@@ -8,7 +8,8 @@ export enum VISUALIZER_MESSAGES {
   STOP_NOTE,
   SET_MODE,
   TOGGLE,
-  SET_SPEED
+  SET_SPEED,
+  SET_THEME
 }
 
 export enum VISUALIZER_MODE {

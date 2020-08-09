@@ -9,13 +9,12 @@ import { Dimensions, Range } from "@utils/typings/Visualizer";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { Clock } from "@utils/Clock";
 import {
-  ACCIDENTAL_KEY_COLOR,
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
-  NATURAL_KEY_COLOR,
   TRACK_PLAYING_SPEED,
   RADIUS
 } from "@config/piano";
+import { Theme } from "@utils/ThemeContext";
 import { INote, ITrack } from "@typings/midi";
 
 function nowInSeconds() {
@@ -29,13 +28,27 @@ export class Visualizer {
   notes: Partial<INote>[];
   writeIntervalId: number;
   clock = new Clock(MS_PER_SECOND);
+  theme: Theme;
 
-  constructor(canvas, dimensions, range, mode = VISUALIZER_MODE.WRITE) {
+  constructor({
+    canvas,
+    dimensions,
+    range,
+    mode = VISUALIZER_MODE.WRITE,
+    theme
+  }: {
+    canvas;
+    dimensions: Dimensions;
+    range: Range;
+    mode: VISUALIZER_MODE;
+    theme: Theme;
+  }) {
     this.ctx = canvas.getContext("2d");
     this.range = range;
     this.notes = [];
     this.setDimensions(dimensions);
     this.setMode(mode);
+    this.theme = theme;
   }
 
   public setSpeed = (speed: number) => {
@@ -53,6 +66,14 @@ export class Visualizer {
     if (this.mode === VISUALIZER_MODE.WRITE) {
       this.startWriteMode();
     }
+  };
+
+  /**
+   * Sets the theme
+   * @param theme
+   */
+  public setTheme = (theme: Theme) => {
+    this.theme = theme;
   };
 
   /**
@@ -80,7 +101,9 @@ export class Visualizer {
       height - RADIUS
     ];
 
-    const color = isAccidental ? ACCIDENTAL_KEY_COLOR : NATURAL_KEY_COLOR;
+    const color = isAccidental
+      ? this.theme.accidentalColor
+      : this.theme.naturalColor;
 
     this.ctx.lineJoin = "round";
     this.ctx.lineWidth = RADIUS;

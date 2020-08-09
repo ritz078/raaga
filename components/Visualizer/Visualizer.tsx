@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef } from "react";
+import React, { FunctionComponent, useContext, useEffect, useRef } from "react";
 import {
   VISUALIZER_MESSAGES,
   VISUALIZER_MODE
@@ -9,6 +9,7 @@ import { useWindowResize } from "@hooks/useWindowResize";
 import cn from "@sindresorhus/class-names";
 import { transfer } from "comlink";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import { ThemeContext } from "@utils/ThemeContext";
 
 interface VisualizerProps {
   range: Range;
@@ -25,6 +26,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const visualizerRef = useRef<HTMLDivElement>(null);
+  const theme = useContext(ThemeContext);
 
   const dimensions = useWindowResize(visualizerRef, {
     width: 1100,
@@ -51,7 +53,8 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
             message: VISUALIZER_MESSAGES.INIT,
             dimensions,
             range,
-            mode
+            mode,
+            theme
           },
           [canvas]
         )
@@ -67,6 +70,15 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
       });
     })();
   }, [dimensions]);
+
+  useEffect(() => {
+    (async function() {
+      await canvasProxy({
+        message: VISUALIZER_MESSAGES.SET_THEME,
+        theme
+      });
+    })();
+  }, [theme]);
 
   const { width, height } = dimensions;
 
