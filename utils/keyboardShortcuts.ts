@@ -16,13 +16,13 @@ const KEY_TO_MIDI = {
   k: 72
 };
 
-const keyboardEventToOctaveOffset = (event: KeyboardEvent): number => {
-  return event.shiftKey ? 12 : event.ctrlKey ? -12 : 0;
-};
+const OCTAVE_SEMITONES = 12;
 
 const keyboardEventToMidi = (event: KeyboardEvent): number | null => {
   const midi = KEY_TO_MIDI[event.key.toLowerCase()];
-  return midi ? midi + keyboardEventToOctaveOffset(event) : null;
+  return midi
+    ? midi + (event.shiftKey ? 1 : event.ctrlKey ? -1 : 0) * OCTAVE_SEMITONES
+    : null;
 };
 
 export const useKeyboardShortcuts = (
