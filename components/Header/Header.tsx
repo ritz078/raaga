@@ -8,6 +8,7 @@ import cn from "@sindresorhus/class-names";
 import Settings from "@components/Settings/Settings";
 import { ReadModeControls } from "@components/ReadModeControls";
 import { WriteModeControls } from "@components/WriteModeControls";
+import { Theme } from "@utils/typings/Theme";
 
 type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
   React.ComponentProps<typeof WriteModeControls> & {
@@ -16,6 +17,7 @@ type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
     onTrackSelect?: (midi: IMidiJSON, i) => void;
     midiDeviceId: string;
     onMidiDeviceChange: (midiDevice: string) => void;
+    onThemeChange: (theme: Theme) => void;
     isLoading: boolean;
   };
 
@@ -31,6 +33,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   range,
   onRangeChange,
   onMidiDeviceChange,
+  onThemeChange,
   midiSettings,
   isLoading
 }) => {
@@ -84,7 +87,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
           midiDeviceId={midiDeviceId}
         />
 
-        {false && <Settings />}
+        <Settings onThemeChange={onThemeChange} />
       </div>
     </div>
   );
