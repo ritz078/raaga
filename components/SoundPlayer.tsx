@@ -33,6 +33,7 @@ import { ThemeContext } from "@utils/ThemeContext";
 import { wrap } from "comlink";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
+import { useKeyboardShortcuts } from "@utils/keyboardShortcuts";
 
 const SoundPlayer: React.FunctionComponent<{
   offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
@@ -120,6 +121,8 @@ const SoundPlayer: React.FunctionComponent<{
     },
     [player, mode, instrument]
   );
+
+  useKeyboardShortcuts(onNoteStart, onNoteStop);
 
   useEffect(() => {
     if (loadedMidi && midiSettings) {
