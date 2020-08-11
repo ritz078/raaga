@@ -1,11 +1,11 @@
 import React, { useRef, memo } from "react";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
-import { IMidiJSON } from "@typings/midi";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
 import * as Comlink from "comlink";
 import MidiParseWorker from "@workers/midiParse.worker";
+import { getFileDetails } from "@utils/url";
 
 const midiParseWorker: any = Comlink.wrap(new MidiParseWorker());
 
@@ -16,7 +16,7 @@ function Sidebar({ onMidiLoad }) {
     const file = e.target.files[0];
     Nprogress.start();
     try {
-      const midi: IMidiJSON = await midiParseWorker(file, file.name);
+      const midi = await getFileDetails(file)
       onMidiLoad(midi);
     } catch (e) {
       Error.show(e.message);

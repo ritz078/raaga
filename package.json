@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@sindresorhus/class-names": "^1.1.0",
+    "axios": "^0.19.2",
     "comlink": "^4.0.4",
+    "formidable": "^1.2.2",
     "fuzzy-search": "^3.0.1",
     "idb-keyval": "^3.2.0",
     "lodash": "^4.17.15",

@@ -1,6 +1,7 @@
 import { MidiParser } from "@utils/MidiParser";
 import * as Comlink from "comlink";
 import { isString } from "lodash";
+import { getFileDetails } from "@utils/url"
 
 // This file is too big to be bundled in the application. Every time, we try
 // to bundle this, node collapses. So we are loading this file as a static file.
