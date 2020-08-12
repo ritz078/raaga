@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/process-file.js": {
-      "includeFiles": "bin/**"
-    }
-  }
-}

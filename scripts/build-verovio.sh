@@ -9,7 +9,7 @@ cmake ../cmake
 make
 sudo make install
 echo
-rm -rf "${ROOT_DIR}bin"
-npx recursive-copy-cli ./verovio "${ROOT_DIR}bin/verovio/verovio" -w
-npx recursive-copy-cli '/usr/local/share/verovio/' "${ROOT_DIR}bin/verovio/svg/" -w
+rm -rf "${ROOT_DIR}public/bin"
+npx recursive-copy-cli ./verovio "${ROOT_DIR}public/bin/verovio/verovio" -w
+npx recursive-copy-cli '/usr/local/share/verovio/' "${ROOT_DIR}public/bin/verovio/svg/" -w
 cd ../../../
