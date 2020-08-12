@@ -75,7 +75,7 @@
     "pretty-quick": "^1.11.1",
     "svgstore": "^3.0.0-2",
     "tailwindcss": "^1.1.2",
-    "typescript": "^3.9.7",
+    "typescript": "^3.7.0-dev.20191021",
     "url-loader": "^2.2.0",
     "webpack": "^4.44.1",
     "worker-loader": "^2.0.0"
