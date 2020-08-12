@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/process-file.ts": {
+    "api/process-file.js": {
       "includeFiles": "bin/**"
     }
   }
