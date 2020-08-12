@@ -19,9 +19,7 @@ export function useOnClickOutside(ref, handler) {
         document.removeEventListener("mousedown", listener);
         document.removeEventListener("touchstart", listener);
       };
-    }, // ... callback/cleanup to run every render. It's not a big deal ... // ... function on every render that will cause this effect ... // It's worth noting that because passed in handler is a new ... // Add ref and handler to effect dependencies
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
+    },
     [ref, handler]
   );
 }

@@ -24,7 +24,7 @@ const _Icon: FunctionComponent<IconProps> = ({
       className={className}
       onClick={onClick}
     >
-      <use href={`${iconUrl}#${name}`} />>
+      <use href={`${iconUrl}#${name}`} />
     </svg>
   );
 };
