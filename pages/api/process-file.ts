@@ -15,6 +15,8 @@ export const config = {
   }
 };
 
+const verovioDir = path.resolve("./public/bin/verovio");
+
 export default (req: NextApiRequest, res: NextApiResponse) => {
   const form = formidable({ multiples: true });
   form.parse(req, (err, _, { file }) => {
@@ -22,7 +24,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500);
       return;
     }
-
 
     if (file.type === "audio/midi") {
       const data = fs.readFileSync(file.path);
@@ -36,7 +37,12 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
       // Ideally the path should be resolved using __dirname but due to bug in next.js,
       // __dirname doesn't give correct result.
-      execSync(`./bin/verovio/verovio -f xml -t midi -o ${name} ${file.path}`);
+      execSync(
+        `${path.join(verovioDir, "verovio")} -r ${path.join(
+          verovioDir,
+          "resources"
+        )} -f xml -t midi -o ${name} ${file.path}`
+      );
       const data = fs.readFileSync(name);
       const arrayBuffer = toArrayBuffer(data);
       const midi = new MidiParser(arrayBuffer, file.name);

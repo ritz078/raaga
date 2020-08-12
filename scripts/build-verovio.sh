@@ -11,5 +11,5 @@ sudo make install
 echo
 rm -rf "${ROOT_DIR}public/bin"
 npx recursive-copy-cli ./verovio "${ROOT_DIR}public/bin/verovio/verovio" -w
-npx recursive-copy-cli '/usr/local/share/verovio/' "${ROOT_DIR}public/bin/verovio/svg/" -w
+npx recursive-copy-cli '/usr/local/share/verovio/' "${ROOT_DIR}public/bin/verovio/resources/" -w
 cd ../../../
