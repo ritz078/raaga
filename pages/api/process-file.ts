@@ -16,9 +16,6 @@ export const config = {
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-  console.log(req)
-
-
   const form = formidable({ multiples: true });
   form.parse(req, (err, _, { file }) => {
     if (err) {
@@ -39,7 +36,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
       // Ideally the path should be resolved using __dirname but due to bug in next.js,
       // __dirname doesn't give correct result.
-      execSync(`./node_modules/verovio/tools/verovio -f xml -t midi -o ${name} ${file.path}`);
+      execSync(`./bin/verovio/verovio -f xml -t midi -o ${name} ${file.path}`);
       const data = fs.readFileSync(name);
       const arrayBuffer = toArrayBuffer(data);
       const midi = new MidiParser(arrayBuffer, file.name);

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "predev": "yarn build:icons && yarn build:midi",
+    "build:verovio": "./scripts/build-verovio.sh",
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx' '**/*.css'",
     "build:icons": "node ./scripts/generate-svg-icons.js",
