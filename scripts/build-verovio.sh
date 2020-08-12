@@ -4,6 +4,7 @@ set -x
 
 ROOT_DIR="$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")"
 cd "${ROOT_DIR}node_modules/verovio/tools"
+yum install apt-get
 apt-get install build-essential cmake
 cmake ../cmake
 make
