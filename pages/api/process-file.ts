@@ -15,6 +15,8 @@ export const config = {
   }
 };
 
+// This terrible magic is due to an issue in Next.js.
+// https://github.com/vercel/next.js/issues/8251#issuecomment-657770901
 const verovioDir = path.resolve("./public/bin/verovio");
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
