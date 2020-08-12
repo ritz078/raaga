@@ -3,11 +3,7 @@ import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
-import * as Comlink from "comlink";
-import MidiParseWorker from "@workers/midiParse.worker";
-import { getFileDetails } from "@utils/url";
-
-const midiParseWorker: any = Comlink.wrap(new MidiParseWorker());
+import { getDetailsFromURL, getFileDetails } from "@utils/url";
 
 function Sidebar({ onMidiLoad }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -16,7 +12,7 @@ function Sidebar({ onMidiLoad }) {
     const file = e.target.files[0];
     Nprogress.start();
     try {
-      const midi = await getFileDetails(file)
+      const midi = await getFileDetails(file);
       onMidiLoad(midi);
     } catch (e) {
       Error.show(e.message);
@@ -30,7 +26,7 @@ function Sidebar({ onMidiLoad }) {
   const selectSample = async ({ label, url }) => {
     Nprogress.start();
     try {
-      const midi = await midiParseWorker(url, label);
+      const midi = await getDetailsFromURL(url, label);
       onMidiLoad(midi);
     } catch (e) {
       Error.show(e.message);
