@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/process-file.ts": {
+      "includeFiles": "bin/**"
+    }
+  }
+}
