@@ -23,9 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const form = formidable({ multiples: true });
   form.parse(req, (err, _, { file }) => {
     if (err) {
-      res.status(500).json({
-        message: err.message
-      });
+      res.status(500).send(err.message);
       return;
     }
 
@@ -46,6 +44,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const name =
           path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
 
+        // Ideally the path should be resolved using __dirname but due to bug in next.js,
+        // __dirname doesn't give correct result.
         execSync(
           `${path.join(
             verovioDir,
@@ -62,14 +62,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         fs.unlinkSync(name);
       } else {
-        res.status(400).send({
-          message: "File not supported"
-        });
+        res.status(400).send("File not supported");
       }
     } catch (e) {
-      res.status(500).json({
-        message: e.message
-      });
+      res.status(500).send(e.message);
     }
   });
 };

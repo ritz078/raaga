@@ -44,7 +44,7 @@ function Sidebar({ onMidiLoad }) {
             size: 15
           }}
         >
-          Local MIDI File
+          Load MIDI/MusicXML/ABC/MEI
         </Button>
       </label>
       <input
