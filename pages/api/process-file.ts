@@ -40,7 +40,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       // Ideally the path should be resolved using __dirname but due to bug in next.js,
       // __dirname doesn't give correct result.
       execSync(
-        `${verovioDir} -r ${verovioDir} -f xml -t midi -o ${name} ${file.path}`
+        `${path.join(verovioDir, "verovio")} -r ${verovioDir} -f xml -t midi -o ${name} ${file.path}`
       );
       const data = fs.readFileSync(name);
       const arrayBuffer = toArrayBuffer(data);
