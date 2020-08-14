@@ -1,9 +1,13 @@
 import axios, { CancelTokenSource } from "axios";
 import { IMidiJSON } from "@typings/midi";
-import { error } from "next/dist/build/output/log";
+
+interface IDetailsResponse {
+  midi: IMidiJSON;
+  musixXml?: string;
+}
 
 let getFileDetailsToken: CancelTokenSource;
-export async function getFileDetails(file: File): Promise<IMidiJSON> {
+export async function getFileDetails(file: File): Promise<IDetailsResponse> {
   if (getFileDetailsToken) {
     getFileDetailsToken.cancel();
   }
@@ -29,7 +33,7 @@ let getDetailsForFileToken: CancelTokenSource;
 export async function getDetailsFromURL(
   url: string,
   name: string
-): Promise<IMidiJSON> {
+): Promise<IDetailsResponse> {
   if (getDetailsForFileToken) {
     getDetailsForFileToken.cancel();
   }

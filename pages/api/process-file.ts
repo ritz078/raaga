@@ -39,8 +39,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const arrayBuffer = toArrayBuffer(data);
 
         const midi = new MidiParser(arrayBuffer, file.name);
-        res.json(midi.parse());
-      } else if (extension === ".abc" || extension === ".xml" || extension === ".mei") {
+        res.json({
+          midi: midi.parse(),
+          musicXml: null
+        });
+      } else if (extension === ".xml") {
         const name =
           path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
 
@@ -58,14 +61,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const data = fs.readFileSync(name);
         const arrayBuffer = toArrayBuffer(data);
         const midi = new MidiParser(arrayBuffer, file.name);
-        res.json(midi.parse());
+        res.json({
+          midi: midi.parse(),
+          musicXml: data.toString()
+        });
 
         fs.unlinkSync(name);
       } else {
         res.status(400).send("File not supported");
       }
     } catch (e) {
-      res.status(500).send(e.message);
+      res.status(400).send(e.message);
     }
   });
 };
