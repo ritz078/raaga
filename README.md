@@ -18,7 +18,7 @@ Go nuts. 🎉
 #### Development
 
 ```shell
-yarn && yarn dev
+yarn && ./script/build-verovio.sh && yarn dev
 ```
 
 ## Contributors ✨

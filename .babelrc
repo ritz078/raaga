@@ -1,25 +1,4 @@
 {
-  "presets": [
-    "next/babel"
-  ],
-  "plugins": [
-    "@babel/plugin-proposal-optional-chaining",
-    "lodash",
-    ["module-resolver", {
-      "root": ["."],
-      "alias": {
-        "@components": "./components",
-        "@styles": "./styles",
-        "@utils": "./utils",
-        "@config": "./config",
-        "@workers": "./workers",
-        "@enums": "./enums",
-        "@reducers": "./reducers",
-        "@typings": "./typings",
-        "@assets":  "./assets",
-        "@controllers": "./controllers",
-        "@hooks": "./hooks"
-      }
-    }]
-  ]
+  "presets": ["next/babel"],
+  "plugins": ["lodash"]
 }

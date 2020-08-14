@@ -39,7 +39,7 @@ const _Dropdown: FunctionComponent<DropdownProps> = ({
         ({ key, item, props }) =>
           item && (
             <animated.div
-              style={props}
+              style={props as any}
               key={key}
               className={cn(
                 "dropdown-content",

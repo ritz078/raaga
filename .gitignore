@@ -6,3 +6,4 @@ out
 now-secrets.json
 midi.json
 song.json
+public/bin

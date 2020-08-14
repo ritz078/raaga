@@ -21,7 +21,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   midiSettings
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
-  const [loadedMidi, setLoadedMidi] = useState();
+  const [loadedMidi, setLoadedMidi] = useState<IMidiJSON>();
 
   const onSelect = (info: MidiSettings) =>
     onMidiAndTrackSelect(loadedMidi, info);

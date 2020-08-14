@@ -55,13 +55,13 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
   return ReactDOM.createPortal(
     overlayTransition.map(({ key, item, props }) =>
       item ? (
-        <animated.div style={props} className="modal-overlay" key={key}>
+        <animated.div style={props as any} className="modal-overlay" key={key}>
           {contentTransitions.map(({ key, item, props }) =>
             item ? (
               <animated.div
                 key={key}
                 ref={ref}
-                style={props}
+                style={props as any}
                 className={cn("modal", contentClassName)}
               >
                 {children}

@@ -1,13 +1,9 @@
 import React, { useRef, memo } from "react";
 import { Button } from "@components/Button";
 import sampleMidis from "../../midi.json";
-import { IMidiJSON } from "@typings/midi";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
-import * as Comlink from "comlink";
-import MidiParseWorker from "@workers/midiParse.worker";
-
-const midiParseWorker: any = Comlink.wrap(new MidiParseWorker());
+import { getDetailsFromURL, getFileDetails } from "@utils/url";
 
 function Sidebar({ onMidiLoad }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -16,7 +12,7 @@ function Sidebar({ onMidiLoad }) {
     const file = e.target.files[0];
     Nprogress.start();
     try {
-      const midi: IMidiJSON = await midiParseWorker(file, file.name);
+      const { midi } = await getFileDetails(file);
       onMidiLoad(midi);
     } catch (e) {
       Error.show(e.message);
@@ -30,7 +26,7 @@ function Sidebar({ onMidiLoad }) {
   const selectSample = async ({ label, url }) => {
     Nprogress.start();
     try {
-      const midi = await midiParseWorker(url, label);
+      const { midi } = await getDetailsFromURL(url, label);
       onMidiLoad(midi);
     } catch (e) {
       Error.show(e.message);
@@ -48,7 +44,7 @@ function Sidebar({ onMidiLoad }) {
             size: 15
           }}
         >
-          Local MIDI File
+          Load MIDI or MusicXML
         </Button>
       </label>
       <input
@@ -58,7 +54,7 @@ function Sidebar({ onMidiLoad }) {
         type="file"
         name="photo"
         id="upload-midi"
-        accept=".mid, .midi, .xml, .mei, .krn"
+        accept=".mid, .midi, .xml"
       />
       <div className="text-sm text-white pt-4 pb-1">Samples</div>
       {sampleMidis.map(sampleMidi => {
