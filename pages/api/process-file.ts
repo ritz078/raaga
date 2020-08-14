@@ -19,35 +19,57 @@ export const config = {
 // https://github.com/vercel/next.js/issues/8251#issuecomment-657770901
 const verovioDir = path.resolve("./public/bin/verovio");
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const form = formidable({ multiples: true });
   form.parse(req, (err, _, { file }) => {
     if (err) {
-      res.status(500);
+      res.status(500).json({
+        message: err.message
+      });
       return;
     }
 
-    if (file.type === "audio/midi") {
-      const data = fs.readFileSync(file.path);
-      const arrayBuffer = toArrayBuffer(data);
+    const extension = path.extname(file.name);
 
-      const midi = new MidiParser(arrayBuffer, file.name);
-      res.json(midi.parse());
-    } else {
-      const name =
-        path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
+    try {
+      if (
+        file.type === "audio/midi" ||
+        extension === ".midi" ||
+        extension === ".mid"
+      ) {
+        const data = fs.readFileSync(file.path);
+        const arrayBuffer = toArrayBuffer(data);
 
-      // Ideally the path should be resolved using __dirname but due to bug in next.js,
-      // __dirname doesn't give correct result.
-      execSync(
-        `${path.join(verovioDir, "verovio")} -r ${verovioDir} -f xml -t midi -o ${name} ${file.path}`
-      );
-      const data = fs.readFileSync(name);
-      const arrayBuffer = toArrayBuffer(data);
-      const midi = new MidiParser(arrayBuffer, file.name);
-      res.json(midi.parse());
+        const midi = new MidiParser(arrayBuffer, file.name);
+        res.json(midi.parse());
+      } else if (extension === ".abc" || extension === ".xml" || extension === ".mei") {
+        const name =
+          path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
 
-      fs.unlinkSync(name);
+        execSync(
+          `${path.join(
+            verovioDir,
+            "verovio"
+          )} -r ${verovioDir} -f ${extension.substr(1)} -t midi -o ${name} ${
+            file.path
+          }`
+        );
+
+        const data = fs.readFileSync(name);
+        const arrayBuffer = toArrayBuffer(data);
+        const midi = new MidiParser(arrayBuffer, file.name);
+        res.json(midi.parse());
+
+        fs.unlinkSync(name);
+      } else {
+        res.status(400).send({
+          message: "File not supported"
+        });
+      }
+    } catch (e) {
+      res.status(500).json({
+        message: e.message
+      });
     }
   });
 };

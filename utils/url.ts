@@ -13,11 +13,12 @@ export async function getDetailsFromURL(
   url: string,
   name: string
 ): Promise<IMidiJSON> {
-  const { data } = await axios.get("/api/process-url", {
-    params: {
-      url,
-      name
-    }
-  });
-  return data;
+  return axios
+    .get("/api/process-url", {
+      params: {
+        url,
+        name
+      }
+    })
+    .then(res => res.data)
 }

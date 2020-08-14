@@ -54,7 +54,7 @@ function Sidebar({ onMidiLoad }) {
         type="file"
         name="photo"
         id="upload-midi"
-        accept=".mid, .midi, .xml, .mei, .krn"
+        accept=".mid, .midi, .xml, .mei, .abc"
       />
       <div className="text-sm text-white pt-4 pb-1">Samples</div>
       {sampleMidis.map(sampleMidi => {
