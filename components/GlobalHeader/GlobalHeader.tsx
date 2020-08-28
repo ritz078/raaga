@@ -4,13 +4,13 @@ import { ModeToggle } from "@components/ModeToggle";
 import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, MidiSettings } from "@components/TrackList";
-import { IMidiJSON } from "@typings/midi";
 import { ReactComponent as Logo } from "@assets/logo.svg";
+import { Midi } from "@utils/Midi/Midi";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
   onToggleMode: (mode: VISUALIZER_MODE) => void;
-  onMidiAndTrackSelect: (midi: IMidiJSON, args: MidiSettings) => void;
+  onMidiAndTrackSelect: (midi: Midi, args: MidiSettings) => void;
   midiSettings: MidiSettings;
 }
 
@@ -21,7 +21,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   midiSettings
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
-  const [loadedMidi, setLoadedMidi] = useState<IMidiJSON>();
+  const [loadedMidi, setLoadedMidi] = useState<Midi>();
 
   const onSelect = (info: MidiSettings) =>
     onMidiAndTrackSelect(loadedMidi, info);

@@ -4,29 +4,29 @@ import {
   PIANO_HEIGHT,
   TRACK_PLAYING_SPEED
 } from "@config/piano";
-import { INote } from "@typings/midi";
+import { INote } from "@utils/Midi/Midi";
 
 export type NoteWithIdAndEvent = INote & {
   event: EVENT_TYPE;
   id: Symbol;
+  time: number;
 };
 
 export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
   let _notes: NoteWithIdAndEvent[] = [];
 
   notes.forEach(note => {
-    const id = Symbol(note.name);
-    const time = note.time + note.duration;
+    const id = Symbol(note.pitch);
     _notes.push(
       {
         ...note,
-        time: note.time,
+        time: note.startTime,
         event: EVENT_TYPE.NOTE_START,
         id
       },
       {
         ...note,
-        time,
+        time: note.endTime,
         event: EVENT_TYPE.NOTE_STOP,
         id
       }

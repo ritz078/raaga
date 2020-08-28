@@ -2,13 +2,13 @@ import InstrumentCard from "@components/TrackList/InstrumentCard";
 import * as React from "react";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
-import { IBeat, IMidiJSON, ITrack } from "@typings/midi";
 import { Icon } from "@components/Icon";
 import { Button } from "@components/Button";
 import Switch from "react-switch";
 import { MidiSettings } from "@components/TrackList/TrackList";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
+import { Midi } from "@utils/Midi/Midi";
 
 const switchProps = {
   onColor: "#86d3ff",
@@ -24,7 +24,7 @@ const switchProps = {
 };
 
 interface TrackSelectionProps {
-  midi: IMidiJSON;
+  midi: Midi;
   onClose: () => void;
   onPlay: (args: MidiSettings) => void;
   initialMidiSettings: MidiSettings;
@@ -38,7 +38,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
 }) => {
   const startAudiContextRef = useRef();
 
-  const { header, tracks, beats, duration } = midi;
+  const { tracks, beats, totalTime, collectionName, ticksPerQuarter } = midi;
 
   const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
   const [playBeats, setPlayBeats] = useState(true);
@@ -74,15 +74,15 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
       <div className="ts-header">
         <div>
           <span className="text-xl capitalize text-white leading-none">
-            {header.label}
+            {collectionName}
           </span>
 
           <div className="ts-header-subtext">
             <span className="tl-song-info">
               {tracks.length} Tracks &middot; {"  "}
               {beats.length} Beats &middot; {"  "}
-              {duration?.toFixed(2)} seconds &middot; {"  "}
-              {header.ppq} ticks/beat
+              {totalTime?.toFixed(2)} seconds &middot; {"  "}
+              {ticksPerQuarter} ticks/quarter
             </span>
           </div>
         </div>
@@ -104,8 +104,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
         </div>
 
         <div className="flex flex-row flex-wrap">
-          {midi &&
-            tracks?.map((track: ITrack, i) => {
+          {midi?.tracks?.map((track, i) => {
               const isSelectedTrack = selectedTrackIndex === i;
               return (
                 <InstrumentCard
@@ -132,7 +131,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
               />
             </div>
             <div className="flex flex-row flex-wrap">
-              {beats.map((beat: IBeat, i) => (
+              {beats.map((beat, i) => (
                 <InstrumentCard
                   disabled={!playBeats}
                   isSelected={false}

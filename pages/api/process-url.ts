@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { MidiParser } from "@utils/MidiParser";
+import * as mm from "@magenta/music/node/core";
 
 export default async function(req: NextApiRequest, res: NextApiResponse) {
   const { url: pathname, name } = req.query;
@@ -11,12 +11,9 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
     const { data } = await axios.get(_url, {
       responseType: "arraybuffer"
     });
+    const ns = await mm.midiToSequenceProto(data);
 
-    const midi = new MidiParser(data, name as string);
-    res.json({
-      midi: midi.parse(),
-      musicXml: null
-    });
+    res.json({...ns.toJSON(), collectionName: name});
   } catch (e) {
     res.status(400).send(e.message);
   }

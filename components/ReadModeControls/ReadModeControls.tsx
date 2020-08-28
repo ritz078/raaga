@@ -2,11 +2,11 @@ import React, { FunctionComponent, memo, useContext } from "react";
 import { Icon } from "@components/Icon";
 import { ProgressBar } from "@components/ProgressBar";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
-import { IMidiJSON } from "@typings/midi";
 import { Button } from "@components/Button";
 import { Dropdown } from "@components/Dropdown";
 import { MidiSettings } from "@components/TrackList";
 import { PlayerContext } from "@utils/PlayerContext";
+import { Midi } from "@utils/Midi/Midi";
 
 export enum TOGGLE_BACKGROUND_TYPE {
   TRACKS = 1,
@@ -14,7 +14,7 @@ export enum TOGGLE_BACKGROUND_TYPE {
 }
 
 interface ReadModeControlsProps {
-  midi: IMidiJSON;
+  midi: Midi;
   isPlaying: boolean;
   onTogglePlay: () => void;
   onToggleBackground: (midiSettings: MidiSettings) => void;
@@ -53,8 +53,8 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
 
   return (
     <>
-      <div className="header-midi-name" title={midi.header.name[0]}>
-        {midi.header.label}
+      <div className="header-midi-name" title={midi.collectionName}>
+        {midi.collectionName}
       </div>
 
       <div className="player-wrapper">
@@ -66,7 +66,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
           onClick={onTogglePlay}
         />
 
-        <ProgressBar duration={midi?.duration} />
+        <ProgressBar duration={midi?.totalTime} />
       </div>
 
       <PlaybackSpeed />

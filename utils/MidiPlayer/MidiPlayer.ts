@@ -12,10 +12,10 @@ import {
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
-import { IMidiJSON } from "@typings/midi";
 import { MidiSettings } from "@components/TrackList";
 import { wrap } from "comlink";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import { Midi } from "@utils/Midi/Midi";
 
 const loadInstrumentWorker: any = wrap(new LoadInstrumentWorker());
 
@@ -49,7 +49,7 @@ export interface Sampler {
 }
 
 export class MidiPlayer {
-  private midi: IMidiJSON;
+  private midi: Midi;
   private trackSamplers: Sampler[] = [];
   private drumSampler: Sampler;
   private trackPart = [];
@@ -75,7 +75,7 @@ export class MidiPlayer {
 
   private canvasProxy: any;
 
-  constructor(range: Range, midi?: IMidiJSON) {
+  constructor(range: Range, midi?: Midi) {
     this.range = range;
     this.midi = midi;
   }
@@ -84,7 +84,7 @@ export class MidiPlayer {
     this.canvasProxy = canvasProxy;
   };
 
-  public setMidi(midi: IMidiJSON) {
+  public setMidi(midi: Midi) {
     this.midi = midi;
   }
 
@@ -187,13 +187,15 @@ export class MidiPlayer {
     // make sure that the instrument is not muted.
     sampler._volume.mute = false;
 
-    // set the volume to the tracks volume.
-    sampler.volume.value = track.volume;
-
     this.trackPart[instrumentNumber] = new Tone.Part(
       (time, note: NoteWithIdAndEvent) => {
         if (note.event === EVENT_TYPE.NOTE_START) {
-          sampler.triggerAttackRelease(note.name, note.duration, time);
+          const duration = note.endTime - note.startTime;
+          sampler.triggerAttackRelease(
+            Tone.Frequency(note.pitch, "midi").toNote(),
+            duration,
+            time
+          );
 
           notesPlaying.push(note);
           cb(notesPlaying, currentTrackIndex);
@@ -213,9 +215,10 @@ export class MidiPlayer {
 
   /**
    * Play a single beat from a MIDI
+   * @param _ beat IBeat
    * @param currentBeatIndex
    */
-  private playBeat = (currentBeatIndex: number) => {
+  private playBeat = (_, currentBeatIndex: number) => {
     const beat = this.midi.beats[currentBeatIndex];
     const beatInstrumentNumber = beat.instrument.number;
     this.drumPart[beatInstrumentNumber] = new Tone.Part(
@@ -226,8 +229,7 @@ export class MidiPlayer {
         );
       },
       beat.notes.map(_beat => ({
-        ..._beat,
-        note: Tone.Frequency(beatInstrumentNumber, "midi").toNote()
+        time: _beat.startTime
       }))
     ).start();
   };
@@ -237,7 +239,6 @@ export class MidiPlayer {
    */
   private startVisualizer = async () => {
     const mainTrack = this.midi.tracks[this.mainTrackIndex];
-
     await this.canvasProxy({
       track: mainTrack,
       range: this.range,
@@ -265,9 +266,7 @@ export class MidiPlayer {
       }
     });
 
-    this.midi.beats.forEach((_beat, currentBeatIndex) =>
-      this.playBeat(currentBeatIndex)
-    );
+    this.midi.beats.forEach(this.playBeat);
 
     if (!playBeats && this.drumSampler) {
       this.drumSampler._volume.mute = true;

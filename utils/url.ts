@@ -1,13 +1,8 @@
 import axios, { CancelTokenSource } from "axios";
-import { IMidiJSON } from "@typings/midi";
-
-interface IDetailsResponse {
-  midi: IMidiJSON;
-  musixXml?: string;
-}
+import { Midi } from "@utils/Midi/Midi";
 
 let getFileDetailsToken: CancelTokenSource;
-export async function getFileDetails(file: File): Promise<IDetailsResponse> {
+export async function getFileDetails(file: File): Promise<Midi> {
   if (getFileDetailsToken) {
     getFileDetailsToken.cancel();
   }
@@ -23,7 +18,7 @@ export async function getFileDetails(file: File): Promise<IDetailsResponse> {
     });
 
     getFileDetailsToken = null;
-    return data;
+    return new Midi(data);
   } catch (e) {
     throw new Error(e.response?.data);
   }
@@ -33,7 +28,7 @@ let getDetailsForFileToken: CancelTokenSource;
 export async function getDetailsFromURL(
   url: string,
   name: string
-): Promise<IDetailsResponse> {
+): Promise<Midi> {
   if (getDetailsForFileToken) {
     getDetailsForFileToken.cancel();
   }
@@ -48,8 +43,9 @@ export async function getDetailsFromURL(
       cancelToken: getDetailsForFileToken.token
     });
     getDetailsForFileToken = null;
-    return data;
+    return new Midi(data);
   } catch (e) {
+    console.log(e)
     throw new Error(e.response?.data);
   }
 }

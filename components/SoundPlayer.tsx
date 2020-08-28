@@ -21,7 +21,6 @@ import {
   getDefaultRange,
   setDefaultRange
 } from "@config/piano";
-import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
@@ -34,6 +33,8 @@ import { wrap } from "comlink";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
 import { useKeyboardShortcuts } from "@utils/keyboardShortcuts";
+import { Midi } from "@utils/Midi/Midi";
+
 
 const SoundPlayer: React.FunctionComponent<{
   offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
@@ -45,7 +46,7 @@ const SoundPlayer: React.FunctionComponent<{
   const [isPlaying, setPlaying] = useState(false);
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
-  const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
+  const [loadedMidi, setMidi] = useState<Midi>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
@@ -91,7 +92,7 @@ const SoundPlayer: React.FunctionComponent<{
 
       return keyboardRange;
     },
-    [keyboardRange]
+    [keyboardRange.first, keyboardRange.last]
   );
 
   const onNoteStart = useCallback(
@@ -135,7 +136,7 @@ const SoundPlayer: React.FunctionComponent<{
   }, [loadedMidi, midiSettings, setRange]);
 
   const onMidiAndTrackSelect = useCallback(
-    (midi: IMidiJSON, _midiSettings: MidiSettings) => {
+    (midi: Midi, _midiSettings: MidiSettings) => {
       (async () => {
         setLoading(true);
         await player.clear();
@@ -166,7 +167,7 @@ const SoundPlayer: React.FunctionComponent<{
                 return;
               }
 
-              setActiveMidis(notes.map(note => note.midi));
+              setActiveMidis(notes.map(note => note.pitch));
             }
           }
         );

@@ -15,7 +15,7 @@ import {
   RADIUS
 } from "@config/piano";
 import { Theme } from "@utils/typings/Theme";
-import { INote, ITrack } from "@typings/midi";
+import { INote, ITrackSequence } from "@utils/Midi/Midi";
 
 function nowInSeconds() {
   return performance.now() / 1000;
@@ -25,7 +25,7 @@ export class Visualizer {
   ctx: CanvasRenderingContext2D;
   range: Range;
   mode: VISUALIZER_MODE;
-  notes: Partial<INote>[];
+  notes: INote[];
   writeIntervalId: number;
   clock = new Clock(MS_PER_SECOND);
   theme: Theme;
@@ -124,11 +124,11 @@ export class Visualizer {
    * by key
    * @param track
    */
-  private getTrackInfo = (track?: ITrack) => {
+  private getTrackInfo = (track?: ITrackSequence) => {
     const notes =
       this.mode === VISUALIZER_MODE.WRITE ? this.notes : track?.notes;
     const midiNumbers = getAllMidiNumbersInRange(this.range);
-    const groupedNotes = groupBy(notes, "midi");
+    const groupedNotes = groupBy(notes, "pitch");
 
     return {
       groupedNotes,
@@ -140,7 +140,7 @@ export class Visualizer {
    * utility that returns info about a midi number.
    * @param midi
    */
-  private getMidiInfo = midi => {
+  private getMidiInfo = (midi: number) => {
     const { isAccidental } = MidiNumbers.getAttributes(midi);
     const _width = this.ctx.canvas.width;
     const naturalKeyWidth = getNaturalKeyWidthRatio(this.range) * _width;
@@ -152,17 +152,18 @@ export class Visualizer {
   };
 
   private getVerticalCoordinatesInWriteMode = (
-    note: Partial<INote>
+    note: INote
   ): {
     top: number;
     height: number;
   } => {
     const canvasHeight = this.ctx.canvas.height;
+    const duration = note.endTime - note.startTime;
 
     const top =
-      (note.time - nowInSeconds()) * TRACK_PLAYING_SPEED + canvasHeight;
+      (note.startTime - nowInSeconds()) * TRACK_PLAYING_SPEED + canvasHeight;
     const height =
-      (note.duration || Number.MAX_SAFE_INTEGER / TRACK_PLAYING_SPEED) *
+      (duration || Number.MAX_SAFE_INTEGER / TRACK_PLAYING_SPEED) *
       TRACK_PLAYING_SPEED;
 
     return {
@@ -226,9 +227,9 @@ export class Visualizer {
     }
   };
 
-  public play = (track: ITrack, delay = 0) => {
+  public play = (track: ITrackSequence, delay = 0) => {
     this.cleanup();
-    this.clock.start(track.duration + delay, progress => {
+    this.clock.start(track.totalTime + delay, progress => {
       this.renderNotesInReadMode(track, progress, delay);
     });
   };
@@ -241,29 +242,32 @@ export class Visualizer {
     this.clock.toggle();
   };
 
-  public addNote = midi => {
+  public addNote = pitch => {
     this.notes.push({
-      midi,
-      time: nowInSeconds()
+      pitch,
+      startTime: nowInSeconds()
     });
   };
 
   public endNote = midi => {
-    const note = this.notes.find(note => note.midi === midi && !note.duration);
-    note.duration = nowInSeconds() - note.time;
+    const note = this.notes.find(note => {
+      const duration = note.endTime - note.startTime;
+      return note.pitch === midi && !duration;
+    });
+    note.endTime = nowInSeconds();
   };
 
   private clearCanvas = () =>
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
   private renderNotesInReadMode = (
-    track: ITrack,
+    track: ITrackSequence,
     progress: number,
     delay = 0
   ) => {
     this.clearCanvas();
 
-    const timeElapsed = (track.duration + delay) * progress;
+    const timeElapsed = (track.totalTime + delay) * progress;
 
     const { midiNumbers, groupedNotes } = this.getTrackInfo(track);
 
@@ -275,8 +279,10 @@ export class Visualizer {
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time + delay - timeElapsed) * TRACK_PLAYING_SPEED;
-        const height = note.duration * TRACK_PLAYING_SPEED;
+        const duration = note.endTime - note.startTime;
+        const top =
+          (note.startTime + delay - timeElapsed) * TRACK_PLAYING_SPEED;
+        const height = duration * TRACK_PLAYING_SPEED;
 
         // These are past notes which have been shown.
         if (top + height < 0) {
