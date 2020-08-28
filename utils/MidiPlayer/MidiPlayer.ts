@@ -199,6 +199,10 @@ export class MidiPlayer {
 
           notesPlaying.push(note);
           cb(notesPlaying, currentTrackIndex);
+
+          Tone.Draw.schedule(() => {
+            this.midi.redrawStaff(note)
+          }, time)
         } else if (
           note.event === EVENT_TYPE.NOTE_STOP &&
           notesPlaying.find(_note => _note.id === note.id)

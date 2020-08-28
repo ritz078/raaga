@@ -30,3 +30,13 @@
 .piano-wrapper {
   @apply flex justify-center relative items-center border-t border-black;
 }
+
+.staff-visualizer {
+  height: 180px;
+  overflow: hidden !important;
+  width: 100%;
+}
+
+.staff-visualizer > div {
+  overflow: hidden !important;
+}

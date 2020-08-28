@@ -12,10 +12,13 @@ const Loading = () => (
 );
 
 const SoundPlayer: any = dynamic(
-  (() => import("@components/SoundPlayer")) as any,
+  (() => import("@components/SoundPlayer")),
   {
     ssr: false,
-    loading: () => <Loading />
+    loading: ({error}) => {
+      console.log(error)
+      return <Loading />
+    }
   }
 );
 
@@ -36,6 +39,7 @@ function Main() {
       setIs2dOffscreenCanvasSupported(support);
     })();
   }, []);
+
 
   useEffect(() => {
     const webMidi = require("webmidi");

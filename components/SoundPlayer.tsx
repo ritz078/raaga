@@ -50,6 +50,7 @@ const SoundPlayer: React.FunctionComponent<{
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
+  const staffVisualiserRef = useRef<HTMLDivElement>(null)
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
@@ -152,6 +153,8 @@ const SoundPlayer: React.FunctionComponent<{
         await player.loadInstruments();
         setLoading(false);
 
+        midi.staffVisualiser(_midiSettings.selectedTrackIndex, staffVisualiserRef.current)
+
         await player.scheduleAndPlay(
           _midiSettings,
           (
@@ -173,7 +176,7 @@ const SoundPlayer: React.FunctionComponent<{
         );
       })();
     },
-    [player]
+    [player, staffVisualiserRef]
   );
 
   const onTogglePlay = useCallback(() => {
@@ -184,7 +187,7 @@ const SoundPlayer: React.FunctionComponent<{
     }
 
     setPlaying(!isPlaying);
-  }, [isPlaying]);
+  }, [isPlaying, loadedMidi, midiSettings]);
 
   useLayoutEffect(() => {
     setActiveMidis([]);
@@ -262,6 +265,8 @@ const SoundPlayer: React.FunctionComponent<{
             onThemeChange={setTheme}
             isLoading={loading}
           />
+
+          <div ref={staffVisualiserRef} className="staff-visualizer"/>
 
           <Visualizer
             range={keyboardRange}

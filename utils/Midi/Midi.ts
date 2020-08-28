@@ -3,7 +3,9 @@ import { groupBy } from "lodash";
 import { getInstrumentById } from "midi-instruments";
 import { drumNames } from "@utils/MidiParser/midiConstants";
 import { tensorflow } from "@magenta/music/es6/protobuf/proto";
-import * as mm from "@magenta/music/es6/core"
+import * as mm from "@magenta/music/es6/core";
+import { ScrollType } from "@magenta/music/es6/core";
+
 export type INote = tensorflow.magenta.NoteSequence.INote;
 
 export interface IInstrument {
@@ -22,6 +24,7 @@ export interface ITrackSequence {
 export class Midi extends NoteSequence {
   public beats: ITrackSequence[];
   public tracks: ITrackSequence[];
+  private sv: mm.StaffSVGVisualizer;
 
   static getGroupedTrackInfo(ns: INoteSequence) {
     const { true: drums, false: instruments } = groupBy(ns.notes, "isDrum");
@@ -68,10 +71,23 @@ export class Midi extends NoteSequence {
     this.tracks = tracks;
   }
 
-  staffVisualiser (trackIndex: number, element: HTMLDivElement) {
-    return new mm.StaffSVGVisualizer({
-      ...this.toJSON() as INoteSequence,
-      notes: this.tracks[trackIndex].notes
-    }, element)
+  staffVisualiser(trackIndex: number, element: HTMLDivElement) {
+    this.sv = new mm.StaffSVGVisualizer(
+      this.toJSON(),
+      element,
+      {
+        scrollType: ScrollType.BAR,
+        instruments: [this.tracks[trackIndex].instrument.number],
+        noteHeight: 10,
+        noteRGB: "255,255,255",
+        activeNoteRGB: "0,0,0"
+      }
+    );
+
+    return this.sv
+  }
+
+  redrawStaff(note: INote) {
+    this.sv?.redraw(note, true)
   }
 }
