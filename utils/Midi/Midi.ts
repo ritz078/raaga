@@ -78,10 +78,10 @@ export class Midi extends NoteSequence {
       {
         scrollType: ScrollType.PAGE,
         instruments: [this.tracks[trackIndex].instrument.number],
-        noteHeight: 8,
+        noteHeight: 9,
         noteRGB: "255,255,255",
-        activeNoteRGB: "255,220,102",
-        noteSpacing: 5
+        activeNoteRGB: "37,243,33",
+        noteSpacing: 15
       }
     );
 

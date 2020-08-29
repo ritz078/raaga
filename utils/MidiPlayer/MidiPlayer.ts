@@ -22,7 +22,7 @@ const loadInstrumentWorker = promisifyWorker(new LoadInstrumentWorker());
 export type IScheduleOptions = MidiSettings;
 
 type IEventCallback = (
-  notes: NoteWithIdAndEvent[],
+  notes: number[],
   trackIndex: number,
   isLastEvent?: boolean
 ) => void;
@@ -172,13 +172,16 @@ export class MidiPlayer {
     });
   };
 
+  private getPitchPlaying = (set: Set<string>) =>
+    Array.from(new Set(Array.from(set).map(id => +id.split("_")[0])));
+
   /**
    * Play a single track of a MIDI.
    * @param currentTrackIndex
    * @param cb
    */
   private playTrack = (currentTrackIndex: number, cb: IEventCallback) => {
-    let notesPlaying = [];
+    let notesPlaying = new Set<string>();
     const track = this.midi.tracks[currentTrackIndex];
 
     const instrumentNumber = track.instrument.number;
@@ -197,20 +200,20 @@ export class MidiPlayer {
             time
           );
 
-          notesPlaying.push(note);
-          cb(notesPlaying, currentTrackIndex);
+          notesPlaying.add(note.id);
+          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex);
 
           Tone.Draw.schedule(() => {
-            this.midi.redrawStaff(note)
-          }, time)
+            this.midi.redrawStaff(note);
+          }, time);
         } else if (
           note.event === EVENT_TYPE.NOTE_STOP &&
-          notesPlaying.find(_note => _note.id === note.id)
+          notesPlaying.has(note.id)
         ) {
-          notesPlaying = notesPlaying.filter(_n => _n.id !== note.id);
-          cb(notesPlaying, currentTrackIndex);
+          notesPlaying.delete(note.id);
+          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex);
         } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
-          cb(notesPlaying, currentTrackIndex, true);
+          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex, true);
         }
       },
       getNotesWithNoteEndEvent(track.notes)

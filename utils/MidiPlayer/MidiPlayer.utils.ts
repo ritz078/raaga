@@ -8,7 +8,7 @@ import { INote } from "@utils/Midi/Midi";
 
 export type NoteWithIdAndEvent = INote & {
   event: EVENT_TYPE;
-  id: Symbol;
+  id: string;
   time: number;
 };
 
@@ -16,7 +16,7 @@ export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
   let _notes: NoteWithIdAndEvent[] = [];
 
   notes.forEach(note => {
-    const id = Symbol(note.pitch);
+    const id = `${note.pitch}_${note.startTime}_${note.endTime}`;
     _notes.push(
       {
         ...note,

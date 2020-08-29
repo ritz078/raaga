@@ -34,7 +34,6 @@ import { controlVisualizer } from "@utils/visualizerControl";
 import { useKeyboardShortcuts } from "@utils/keyboardShortcuts";
 import { Midi } from "@utils/Midi/Midi";
 
-
 const canvasWorker: Worker = new CanvasWorker();
 const canvasProxy = (message, transfers) => {
   canvasWorker.postMessage(message, transfers);
@@ -54,7 +53,7 @@ const SoundPlayer: React.FunctionComponent<{
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
-  const staffVisualiserRef = useRef<HTMLDivElement>(null)
+  const staffVisualiserRef = useRef<HTMLDivElement>(null);
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
@@ -157,12 +156,15 @@ const SoundPlayer: React.FunctionComponent<{
         await player.loadInstruments();
         setLoading(false);
 
-        midi.staffVisualiser(_midiSettings.selectedTrackIndex, staffVisualiserRef.current)
+        midi.staffVisualiser(
+          _midiSettings.selectedTrackIndex,
+          staffVisualiserRef.current
+        );
 
         await player.scheduleAndPlay(
           _midiSettings,
           (
-            notes: NoteWithIdAndEvent[],
+            midis: number[],
             trackIndex: number,
             isComplete?: boolean
           ) => {
@@ -174,7 +176,7 @@ const SoundPlayer: React.FunctionComponent<{
                 return;
               }
 
-              setActiveMidis(notes.map(note => note.pitch));
+              setActiveMidis(midis);
             }
           }
         );
@@ -270,14 +272,19 @@ const SoundPlayer: React.FunctionComponent<{
             isLoading={loading}
           />
 
-          {mode === VISUALIZER_MODE.READ && <div ref={staffVisualiserRef} className="staff-visualizer"/>}
+          <div className="flex flex-row relative flex-1 overflow-hidden">
 
-          <Visualizer
-            range={keyboardRange}
-            mode={mode}
-            canvasProxy={canvasProxyRef.current}
-            offScreenCanvasSupport={offScreenCanvasSupport}
-          />
+
+            <Visualizer
+              range={keyboardRange}
+              mode={mode}
+              canvasProxy={canvasProxyRef.current}
+              offScreenCanvasSupport={offScreenCanvasSupport}
+            />
+            {mode === VISUALIZER_MODE.READ && (
+              <div ref={staffVisualiserRef} className="staff-visualizer" />
+            )}
+          </div>
         </div>
         <div className="piano-wrapper" style={{ height: PIANO_HEIGHT }}>
           {loading && <Loader className="absolute z-10 h-4" />}

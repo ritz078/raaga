@@ -1,5 +1,5 @@
 .vis-wrapper {
-  @apply flex flex-row relative flex-1 overflow-hidden;
+  @apply flex flex-row relative flex-1;
 }
 
 .vis-wrapper.read-mode {
