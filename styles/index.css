@@ -35,8 +35,16 @@
   height: 180px;
   overflow: hidden !important;
   width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff2e;
 }
 
 .staff-visualizer > div {
   overflow: hidden !important;
+  background-color: #1b1b1b;
+}
+
+.staff-visualizer rect {
+  fill:  #1c1c1c;
 }

@@ -76,11 +76,12 @@ export class Midi extends NoteSequence {
       this.toJSON(),
       element,
       {
-        scrollType: ScrollType.BAR,
+        scrollType: ScrollType.PAGE,
         instruments: [this.tracks[trackIndex].instrument.number],
-        noteHeight: 10,
+        noteHeight: 8,
         noteRGB: "255,255,255",
-        activeNoteRGB: "0,0,0"
+        activeNoteRGB: "255,220,102",
+        noteSpacing: 5
       }
     );
 

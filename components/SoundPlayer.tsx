@@ -270,7 +270,7 @@ const SoundPlayer: React.FunctionComponent<{
             isLoading={loading}
           />
 
-          <div ref={staffVisualiserRef} className="staff-visualizer"/>
+          {mode === VISUALIZER_MODE.READ && <div ref={staffVisualiserRef} className="staff-visualizer"/>}
 
           <Visualizer
             range={keyboardRange}

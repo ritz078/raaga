@@ -114,7 +114,7 @@ export class MidiPlayer {
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
 
-    const data: any = await loadInstrumentWorker({instrumentIds, drums});
+    const data: any = await loadInstrumentWorker({ instrumentIds, drums });
 
     if (data.drums && !this.drumSampler) {
       this.drumSampler = await new Promise(resolve => {

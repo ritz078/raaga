@@ -2,7 +2,7 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import { Error } from "@components/Error";
 import { Loader } from "@components/Loader";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
 const Loading = () => (
@@ -66,4 +66,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default memo(Main);
