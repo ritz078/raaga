@@ -172,8 +172,16 @@ export class MidiPlayer {
     });
   };
 
-  private getPitchPlaying = (set: Set<string>) =>
-    Array.from(new Set(Array.from(set).map(id => +id.split("_")[0])));
+  private getPitchPlaying = (set: Set<string>, currentTime: number) =>
+    [...set]
+      // This filtering is just a sanity check. In case a note that should have stopped
+      // earlier than the start time of current time, we filter them out.
+      .filter(id => {
+        const x = id.split("_");
+        const endTime = +x[2];
+        return endTime >= currentTime;
+      })
+      .map(id => +id.split("_")[0]);
 
   /**
    * Play a single track of a MIDI.
@@ -201,19 +209,35 @@ export class MidiPlayer {
           );
 
           notesPlaying.add(note.id);
-          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex);
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex
+          );
 
           Tone.Draw.schedule(() => {
             this.midi.redrawStaff(note);
           }, time);
-        } else if (
-          note.event === EVENT_TYPE.NOTE_STOP &&
-          notesPlaying.has(note.id)
-        ) {
+        }
+
+        if (note.event === EVENT_TYPE.NOTE_STOP && notesPlaying.has(note.id)) {
+          console.log(
+            Tone.Frequency(note.pitch, "midi").toNote(),
+            note,
+            notesPlaying
+          );
           notesPlaying.delete(note.id);
-          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex);
-        } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
-          cb(this.getPitchPlaying(notesPlaying), currentTrackIndex, true);
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex
+          );
+        }
+
+        if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex,
+            true
+          );
         }
       },
       getNotesWithNoteEndEvent(track.notes)

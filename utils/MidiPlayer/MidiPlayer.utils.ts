@@ -16,6 +16,8 @@ export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
   let _notes: NoteWithIdAndEvent[] = [];
 
   notes.forEach(note => {
+    if (note.startTime === note.endTime) return;
+
     const id = `${note.pitch}_${note.startTime}_${note.endTime}`;
     _notes.push(
       {

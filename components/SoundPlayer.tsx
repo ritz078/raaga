@@ -182,7 +182,7 @@ const SoundPlayer: React.FunctionComponent<{
         );
       })();
     },
-    [player, staffVisualiserRef]
+    [player, staffVisualiserRef, setActiveMidis]
   );
 
   const onTogglePlay = useCallback(() => {
