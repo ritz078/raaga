@@ -24,8 +24,7 @@
   "dependencies": {
     "@magenta/music": "^1.20.0",
     "@sindresorhus/class-names": "^1.1.0",
-    "axios": "^0.20.0",
-    "comlink": "^4.3.0",
+    "axios": "^0.19.2",
     "formidable": "^1.2.2",
     "fuzzy-search": "^3.2.1",
     "idb-keyval": "^3.2.0",
@@ -77,7 +76,7 @@
     "typescript": "^3.7.0-dev.20191021",
     "url-loader": "^2.2.0",
     "webpack": "^4.44.1",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "^3.0.2"
   },
   "husky": {
     "hooks": {

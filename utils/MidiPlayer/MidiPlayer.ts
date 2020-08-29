@@ -13,11 +13,11 @@ import {
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
 import { MidiSettings } from "@components/TrackList";
-import { wrap } from "comlink";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import { promisifyWorker } from "@utils/promisifyWorker";
 import { Midi } from "@utils/Midi/Midi";
 
-const loadInstrumentWorker: any = wrap(new LoadInstrumentWorker());
+const loadInstrumentWorker = promisifyWorker(new LoadInstrumentWorker());
 
 export type IScheduleOptions = MidiSettings;
 
@@ -114,7 +114,7 @@ export class MidiPlayer {
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
 
-    const data = await loadInstrumentWorker(instrumentIds, drums);
+    const data: any = await loadInstrumentWorker({instrumentIds, drums});
 
     if (data.drums && !this.drumSampler) {
       this.drumSampler = await new Promise(resolve => {
