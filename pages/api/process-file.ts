@@ -40,7 +40,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const ns = mm.midiToSequenceProto(arrayBuffer)
 
-        res.json(ns.toJSON());
+        res.json({ ...ns.toJSON(), collectionName: file.name });
       } else if (extension === ".xml") {
         const name =
           path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
@@ -61,7 +61,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const ns = mm.midiToSequenceProto(arrayBuffer)
 
-        res.json(ns.toJSON());
+        res.json({ ...ns.toJSON(), collectionName: file.name });
 
         fs.unlinkSync(name);
       } else {
