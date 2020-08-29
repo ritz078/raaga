@@ -2,6 +2,7 @@
   "name": "raaga",
   "version": "1.0.0",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "predev": "yarn build:icons && yarn build:midi",
