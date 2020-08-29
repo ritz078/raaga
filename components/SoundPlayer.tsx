@@ -30,10 +30,14 @@ import { Loader } from "@components/Loader";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 import { player, PlayerContext } from "@utils/PlayerContext";
 import { ThemeContext } from "@utils/ThemeContext";
-import { wrap } from "comlink";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
 import { useKeyboardShortcuts } from "@utils/keyboardShortcuts";
+
+const canvasWorker: Worker = new CanvasWorker();
+const canvasProxy = (message, transfers) => {
+  canvasWorker.postMessage(message, transfers);
+};
 
 const SoundPlayer: React.FunctionComponent<{
   offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
@@ -52,7 +56,7 @@ const SoundPlayer: React.FunctionComponent<{
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
-      ? wrap(new CanvasWorker())
+      ? canvasProxy
       : controlVisualizer
   );
 

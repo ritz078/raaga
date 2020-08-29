@@ -2,7 +2,7 @@ import { EVENT_TYPE } from "@enums/piano";
 import {
   GLOBAL_HEADER_HEIGHT,
   PIANO_HEIGHT,
-  TRACK_PLAYING_SPEED
+  WATERFALL_VISUALIZER_SCALE
 } from "@config/piano";
 import { INote } from "@typings/midi";
 
@@ -44,7 +44,7 @@ export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
 export function getDelay(offset = 0) {
   return (
     (window.innerHeight - PIANO_HEIGHT - GLOBAL_HEADER_HEIGHT) /
-      TRACK_PLAYING_SPEED +
+      WATERFALL_VISUALIZER_SCALE +
     offset
   );
 }

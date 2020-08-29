@@ -7,7 +7,6 @@ import { Range } from "@utils/typings/Visualizer";
 import { getNaturalKeysInRange } from "@utils";
 import { useWindowResize } from "@hooks/useWindowResize";
 import cn from "@sindresorhus/class-names";
-import { transfer } from "comlink";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 import { ThemeContext } from "@utils/ThemeContext";
 
@@ -47,17 +46,15 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
       );
 
       await canvasProxy(
-        transfer(
-          {
-            canvas,
-            message: VISUALIZER_MESSAGES.INIT,
-            dimensions,
-            range,
-            mode,
-            theme
-          },
-          [canvas]
-        )
+        {
+          canvas,
+          message: VISUALIZER_MESSAGES.INIT,
+          dimensions,
+          range,
+          mode,
+          theme
+        },
+        [canvas]
       );
     })();
   }, []);

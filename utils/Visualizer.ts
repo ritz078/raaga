@@ -1,5 +1,5 @@
 import { MidiNumbers } from "piano-utils";
-import { groupBy } from "lodash";
+import { groupBy, memoize } from "lodash";
 import {
   getAllMidiNumbersInRange,
   getNaturalKeyWidthRatio,
@@ -11,8 +11,8 @@ import { Clock } from "@utils/Clock";
 import {
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
-  TRACK_PLAYING_SPEED,
-  RADIUS
+  WATERFALL_VISUALIZER_SCALE,
+  RADIUS, WATERFALL_VISUALIZER_OVERSCAN_BUFFER
 } from "@config/piano";
 import { Theme } from "@utils/typings/Theme";
 import { INote, ITrack } from "@typings/midi";
@@ -105,8 +105,6 @@ export class Visualizer {
       ? this.theme.accidentalColor
       : this.theme.naturalColor;
 
-    this.ctx.lineJoin = "round";
-    this.ctx.lineWidth = RADIUS;
     this.ctx.fillStyle = color;
     this.ctx.strokeStyle = color;
 
@@ -151,6 +149,8 @@ export class Visualizer {
     return { left, width, isAccidental };
   };
 
+  private memoizedGetMidiInfo = memoize(this.getMidiInfo)
+
   private getVerticalCoordinatesInWriteMode = (
     note: Partial<INote>
   ): {
@@ -160,10 +160,10 @@ export class Visualizer {
     const canvasHeight = this.ctx.canvas.height;
 
     const top =
-      (note.time - nowInSeconds()) * TRACK_PLAYING_SPEED + canvasHeight;
+      (note.time - nowInSeconds()) * WATERFALL_VISUALIZER_SCALE + canvasHeight;
     const height =
-      (note.duration || Number.MAX_SAFE_INTEGER / TRACK_PLAYING_SPEED) *
-      TRACK_PLAYING_SPEED;
+      (note.duration || Number.MAX_SAFE_INTEGER / WATERFALL_VISUALIZER_SCALE) *
+      WATERFALL_VISUALIZER_SCALE;
 
     return {
       top,
@@ -183,7 +183,7 @@ export class Visualizer {
 
     midiNumbers.forEach(midi => {
       if (!groupedNotes[midi]) return;
-      const { isAccidental, left, width } = this.getMidiInfo(midi);
+      const { isAccidental, left, width } = this.memoizedGetMidiInfo(midi);
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
@@ -271,22 +271,22 @@ export class Visualizer {
 
     midiNumbers.forEach(midi => {
       if (!groupedNotes[midi]) return;
-      const { isAccidental, left, width } = this.getMidiInfo(midi);
+      const { isAccidental, left, width } = this.memoizedGetMidiInfo(midi);
 
       for (let i = 0; i < groupedNotes[midi].length; i++) {
         const note = groupedNotes[midi][i];
-        const top = (note.time + delay - timeElapsed) * TRACK_PLAYING_SPEED;
-        const height = note.duration * TRACK_PLAYING_SPEED;
+        const top = (note.time + delay - timeElapsed) * WATERFALL_VISUALIZER_SCALE;
+        const height = note.duration * WATERFALL_VISUALIZER_SCALE;
 
         // These are past notes which have been shown.
-        if (top + height < 0) {
+        if (top + height < -WATERFALL_VISUALIZER_OVERSCAN_BUFFER) {
           continue;
         }
 
         // This is assuming that the notes in the midi are sorted by their time
         // in increasing order. In case one note is out of bound, all the following
         // will be. We skip all the future notes.
-        if (top > canvasHeight) {
+        if (top > canvasHeight + WATERFALL_VISUALIZER_OVERSCAN_BUFFER) {
           break;
         }
 
@@ -296,6 +296,7 @@ export class Visualizer {
   };
 
   setRange = (range: Range) => {
+    this.memoizedGetMidiInfo.cache.clear();
     this.range = range;
   };
 }

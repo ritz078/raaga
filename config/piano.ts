@@ -1,7 +1,8 @@
 import { Range } from "@utils/typings/Visualizer";
 import { Theme } from "@utils/typings/Theme";
 
-export const TRACK_PLAYING_SPEED = 100;
+export const WATERFALL_VISUALIZER_SCALE = 80;
+export const WATERFALL_VISUALIZER_OVERSCAN_BUFFER = 20;
 export const HORIZONTAL_GAP_BETWEEN_NOTES = 2;
 export const MS_PER_SECOND = 10;
 export const PIANO_HEIGHT = 210;

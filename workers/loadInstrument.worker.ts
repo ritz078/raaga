@@ -4,7 +4,6 @@ import {
   getInstrumentIdByValue,
   instruments
 } from "midi-instruments";
-import * as Comlink from "comlink";
 
 const DRUMS_NAME = "drumsBeats";
 
@@ -97,4 +96,15 @@ async function loadInstruments(instrumentIds: number[], drums?: boolean) {
   return midiFontData;
 }
 
-Comlink.expose(loadInstruments);
+self.onmessage = async ev => {
+  const {
+    id,
+    message: { instrumentIds, drums }
+  } = ev.data;
+
+  self.postMessage({
+    id,
+    message: await loadInstruments(instrumentIds, drums)
+  });
+};
+
