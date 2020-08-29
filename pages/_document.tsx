@@ -18,7 +18,6 @@ export default class MyDocument extends Document<{}> {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Voces"
           />
-          <link rel="manifest" href="/manifest.webmanifest"/>
           <link
             rel="shortcut icon"
             type="image/png"
