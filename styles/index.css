@@ -2,6 +2,7 @@
 @import "~tailwindcss/components.css";
 @import "~tailwindcss/utilities.css";
 @import "~nprogress/nprogress.css";
+@import '~simplebar-react/dist/simplebar.min.css';
 
 @import "./variables.css";
 @import "./mixins.css";
@@ -56,4 +57,8 @@
 
 .staff-visualizer g[stroke="rgb(37,243,33)"] path {
   opacity: 1 !important;
+}
+
+.simplebar-content {
+  width: fit-content;
 }

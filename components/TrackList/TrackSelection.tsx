@@ -2,13 +2,15 @@ import InstrumentCard from "@components/TrackList/InstrumentCard";
 import * as React from "react";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
-import { Icon } from "@components/Icon";
 import { Button } from "@components/Button";
 import Switch from "react-switch";
 import { MidiSettings } from "@components/TrackList/TrackList";
 import StartAudioContext from "startaudiocontext";
 import Tone from "tone";
 import { Midi } from "@utils/Midi/Midi";
+import { mdiClose } from "@mdi/js";
+import Icon from "@mdi/react";
+import SimpleBar from "simplebar-react";
 
 const switchProps = {
   onColor: "#86d3ff",
@@ -87,13 +89,14 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
           </div>
         </div>
         <Icon
-          name="close"
-          size={16}
+          path={mdiClose}
+          size={1}
+          color={"#fff"}
           onClick={onClose}
           className="absolute cursor-pointer top-0 right-0 m-5"
         />
       </div>
-      <div className="ts-content">
+      <SimpleBar className="ts-content">
         <div className="ts-section-title">
           <span className="text-base text-white">Tracks</span>
           <Switch
@@ -105,19 +108,19 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
 
         <div className="flex flex-row flex-wrap">
           {midi?.tracks?.map((track, i) => {
-              const isSelectedTrack = selectedTrackIndex === i;
-              return (
-                <InstrumentCard
-                  disabled={!playBackgroundTracks && !isSelectedTrack}
-                  onClick={() => setSelectedTrackIndex(i)}
-                  isSelected={isSelectedTrack}
-                  key={i}
-                  instrumentName={
-                    (track.instrument && track.instrument.name) || "Unknown"
-                  }
-                />
-              );
-            })}
+            const isSelectedTrack = selectedTrackIndex === i;
+            return (
+              <InstrumentCard
+                disabled={!playBackgroundTracks && !isSelectedTrack}
+                onClick={() => setSelectedTrackIndex(i)}
+                isSelected={isSelectedTrack}
+                key={i}
+                instrumentName={
+                  (track.instrument && track.instrument.name) || "Unknown"
+                }
+              />
+            );
+          })}
         </div>
 
         {midi && !!beats?.length && (
@@ -143,7 +146,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
             </div>
           </>
         )}
-      </div>
+      </SimpleBar>
 
       <div
         ref={startAudiContextRef}

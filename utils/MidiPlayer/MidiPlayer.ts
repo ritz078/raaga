@@ -220,11 +220,6 @@ export class MidiPlayer {
         }
 
         if (note.event === EVENT_TYPE.NOTE_STOP && notesPlaying.has(note.id)) {
-          console.log(
-            Tone.Frequency(note.pitch, "midi").toNote(),
-            note,
-            notesPlaying
-          );
           notesPlaying.delete(note.id);
           cb(
             this.getPitchPlaying(notesPlaying, note.startTime),

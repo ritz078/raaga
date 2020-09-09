@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { Button } from "@components/Button";
 import { ModeToggle } from "@components/ModeToggle";
-import { Icon } from "@components/Icon";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import { TrackList, MidiSettings } from "@components/TrackList";
 import { ReactComponent as Logo } from "@assets/logo.svg";
 import { Midi } from "@utils/Midi/Midi";
+import Icon from "@mdi/react";
+import { mdiGithub } from "@mdi/js";
 
 interface GlobalHeaderProps {
   mode: VISUALIZER_MODE;
   onToggleMode: (mode: VISUALIZER_MODE) => void;
   onMidiAndTrackSelect: (midi: Midi, args: MidiSettings) => void;
   midiSettings: MidiSettings;
+  sampleMidis: { label: string; url: string }[];
 }
 
 const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   mode,
   onToggleMode,
   onMidiAndTrackSelect,
-  midiSettings
+  midiSettings,
+  sampleMidis
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState<Midi>();
@@ -45,7 +48,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
           target="_blank"
           href="https://github.com/ritz078/raaga"
         >
-          <Icon name="github" color={"#fff"} size={23} />
+          <Icon path={mdiGithub} color={"#fff"} size={1} />
         </a>
       </div>
 
@@ -56,6 +59,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
         onPlay={onSelect}
         onClose={() => toggleTrackSelectionModal(false)}
         setMidi={setLoadedMidi}
+        sampleMidis={sampleMidis}
       />
     </header>
   );
