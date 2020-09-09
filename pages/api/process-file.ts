@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
-import { MidiParser } from "@utils/MidiParser";
 import { execSync } from "child_process";
 import os from "os";
 import crypto from "crypto";
 import path from "path";
+import * as mm from "@magenta/music/node/core";
 
 const tmpDir = os.tmpdir?.();
 
@@ -38,11 +38,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const data = fs.readFileSync(file.path);
         const arrayBuffer = toArrayBuffer(data);
 
-        const midi = new MidiParser(arrayBuffer, file.name);
-        res.json({
-          midi: midi.parse(),
-          musicXml: null
-        });
+        const ns = mm.midiToSequenceProto(arrayBuffer)
+
+        res.json({ ...ns.toJSON(), collectionName: file.name });
       } else if (extension === ".xml") {
         const name =
           path.join(tmpDir, crypto.randomBytes(16).toString("hex")) + ".mid";
@@ -60,11 +58,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const data = fs.readFileSync(name);
         const arrayBuffer = toArrayBuffer(data);
-        const midi = new MidiParser(arrayBuffer, file.name);
-        res.json({
-          midi: midi.parse(),
-          musicXml: data.toString()
-        });
+
+        const ns = mm.midiToSequenceProto(arrayBuffer)
+
+        res.json({ ...ns.toJSON(), collectionName: file.name });
 
         fs.unlinkSync(name);
       } else {

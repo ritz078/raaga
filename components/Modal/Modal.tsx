@@ -28,7 +28,13 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
   useEffect(() => {
     document.body.appendChild(node);
 
-    return () => document.body.removeChild(node);
+    return () => {
+      try {
+        document?.body?.removeChild(node);
+      }catch (e) {
+        
+      }
+    }
   }, []);
 
   const overlayTransition = useTransition(visible, null, {

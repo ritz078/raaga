@@ -4,16 +4,17 @@ import sampleMidis from "../../midi.json";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
 import { getDetailsFromURL, getFileDetails } from "@utils/url";
+import { Midi } from "@utils/Midi/Midi";
 
-function Sidebar({ onMidiLoad }) {
+function Sidebar({ onLoad }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadFile = async e => {
     const file = e.target.files[0];
     Nprogress.start();
     try {
-      const { midi } = await getFileDetails(file);
-      onMidiLoad(midi);
+      const noteSequence = await getFileDetails(file);
+      onLoad(noteSequence);
     } catch (e) {
       Error.show(e.message);
     }
@@ -26,8 +27,8 @@ function Sidebar({ onMidiLoad }) {
   const selectSample = async ({ label, url }) => {
     Nprogress.start();
     try {
-      const { midi } = await getDetailsFromURL(url, label);
-      onMidiLoad(midi);
+      const noteSequence = await getDetailsFromURL(url, label);
+      onLoad(noteSequence);
     } catch (e) {
       Error.show(e.message);
     }
@@ -70,6 +71,10 @@ function Sidebar({ onMidiLoad }) {
       })}
     </div>
   );
+}
+
+interface IProps {
+  onLoad: (noteSequence: Midi) => void
 }
 
 export default memo(Sidebar);

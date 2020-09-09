@@ -2,19 +2,20 @@ import React, { memo, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { MidiSelect } from "@components/MidiSelect";
-import { IMidiJSON, INote } from "@typings/midi";
 import { Icon } from "@components/Icon";
 import cn from "@sindresorhus/class-names";
 import Settings from "@components/Settings/Settings";
 import { ReadModeControls } from "@components/ReadModeControls";
 import { WriteModeControls } from "@components/WriteModeControls";
 import { Theme } from "@utils/typings/Theme";
+import { Midi } from "@utils/Midi/Midi";
+import { INoteSequence } from "@magenta/music";
 
 type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
   React.ComponentProps<typeof WriteModeControls> & {
     mode: VISUALIZER_MODE;
-    notes?: INote[];
-    onTrackSelect?: (midi: IMidiJSON, i) => void;
+    notes?: INoteSequence["notes"];
+    onTrackSelect?: (midi: Midi, i) => void;
     midiDeviceId: string;
     onMidiDeviceChange: (midiDevice: string) => void;
     onThemeChange: (theme: Theme) => void;

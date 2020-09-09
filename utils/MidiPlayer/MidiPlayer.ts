@@ -12,17 +12,17 @@ import {
 } from "@utils/MidiPlayer/MidiPlayer.utils";
 import { Range } from "@utils/typings/Visualizer";
 import { getInstrumentIdByValue } from "midi-instruments";
-import { IMidiJSON } from "@typings/midi";
 import { MidiSettings } from "@components/TrackList";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 import { promisifyWorker } from "@utils/promisifyWorker";
+import { Midi } from "@utils/Midi/Midi";
 
 const loadInstrumentWorker = promisifyWorker(new LoadInstrumentWorker());
 
 export type IScheduleOptions = MidiSettings;
 
 type IEventCallback = (
-  notes: NoteWithIdAndEvent[],
+  notes: number[],
   trackIndex: number,
   isLastEvent?: boolean
 ) => void;
@@ -49,7 +49,7 @@ export interface Sampler {
 }
 
 export class MidiPlayer {
-  private midi: IMidiJSON;
+  private midi: Midi;
   private trackSamplers: Sampler[] = [];
   private drumSampler: Sampler;
   private trackPart = [];
@@ -75,7 +75,7 @@ export class MidiPlayer {
 
   private canvasProxy: any;
 
-  constructor(range: Range, midi?: IMidiJSON) {
+  constructor(range: Range, midi?: Midi) {
     this.range = range;
     this.midi = midi;
   }
@@ -84,7 +84,7 @@ export class MidiPlayer {
     this.canvasProxy = canvasProxy;
   };
 
-  public setMidi(midi: IMidiJSON) {
+  public setMidi(midi: Midi) {
     this.midi = midi;
   }
 
@@ -114,9 +114,8 @@ export class MidiPlayer {
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
 
-    const data: any = await loadInstrumentWorker({instrumentIds, drums});
+    const data: any = await loadInstrumentWorker({ instrumentIds, drums });
 
-    console.log(data)
     if (data.drums && !this.drumSampler) {
       this.drumSampler = await new Promise(resolve => {
         const sampler = new Tone.Sampler(data.drums, () => {
@@ -173,13 +172,24 @@ export class MidiPlayer {
     });
   };
 
+  private getPitchPlaying = (set: Set<string>, currentTime: number) =>
+    [...set]
+      // This filtering is just a sanity check. In case a note that should have stopped
+      // earlier than the start time of current time, we filter them out.
+      .filter(id => {
+        const x = id.split("_");
+        const endTime = +x[2];
+        return endTime >= currentTime;
+      })
+      .map(id => +id.split("_")[0]);
+
   /**
    * Play a single track of a MIDI.
    * @param currentTrackIndex
    * @param cb
    */
   private playTrack = (currentTrackIndex: number, cb: IEventCallback) => {
-    let notesPlaying = [];
+    let notesPlaying = new Set<string>();
     const track = this.midi.tracks[currentTrackIndex];
 
     const instrumentNumber = track.instrument.number;
@@ -188,24 +198,46 @@ export class MidiPlayer {
     // make sure that the instrument is not muted.
     sampler._volume.mute = false;
 
-    // set the volume to the tracks volume.
-    sampler.volume.value = track.volume;
-
     this.trackPart[instrumentNumber] = new Tone.Part(
       (time, note: NoteWithIdAndEvent) => {
         if (note.event === EVENT_TYPE.NOTE_START) {
-          sampler.triggerAttackRelease(note.name, note.duration, time);
+          const duration = note.endTime - note.startTime;
+          sampler.triggerAttackRelease(
+            Tone.Frequency(note.pitch, "midi").toNote(),
+            duration,
+            time
+          );
 
-          notesPlaying.push(note);
-          cb(notesPlaying, currentTrackIndex);
-        } else if (
-          note.event === EVENT_TYPE.NOTE_STOP &&
-          notesPlaying.find(_note => _note.id === note.id)
-        ) {
-          notesPlaying = notesPlaying.filter(_n => _n.id !== note.id);
-          cb(notesPlaying, currentTrackIndex);
-        } else if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
-          cb(notesPlaying, currentTrackIndex, true);
+          notesPlaying.add(note.id);
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex
+          );
+
+          Tone.Draw.schedule(() => {
+            this.midi.redrawStaff(note);
+          }, time);
+        }
+
+        if (note.event === EVENT_TYPE.NOTE_STOP && notesPlaying.has(note.id)) {
+          console.log(
+            Tone.Frequency(note.pitch, "midi").toNote(),
+            note,
+            notesPlaying
+          );
+          notesPlaying.delete(note.id);
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex
+          );
+        }
+
+        if (note.event === EVENT_TYPE.PLAYING_COMPLETE) {
+          cb(
+            this.getPitchPlaying(notesPlaying, note.startTime),
+            currentTrackIndex,
+            true
+          );
         }
       },
       getNotesWithNoteEndEvent(track.notes)
@@ -214,9 +246,10 @@ export class MidiPlayer {
 
   /**
    * Play a single beat from a MIDI
+   * @param _ beat IBeat
    * @param currentBeatIndex
    */
-  private playBeat = (currentBeatIndex: number) => {
+  private playBeat = (_, currentBeatIndex: number) => {
     const beat = this.midi.beats[currentBeatIndex];
     const beatInstrumentNumber = beat.instrument.number;
     this.drumPart[beatInstrumentNumber] = new Tone.Part(
@@ -227,8 +260,7 @@ export class MidiPlayer {
         );
       },
       beat.notes.map(_beat => ({
-        ..._beat,
-        note: Tone.Frequency(beatInstrumentNumber, "midi").toNote()
+        time: _beat.startTime
       }))
     ).start();
   };
@@ -238,7 +270,6 @@ export class MidiPlayer {
    */
   private startVisualizer = async () => {
     const mainTrack = this.midi.tracks[this.mainTrackIndex];
-
     await this.canvasProxy({
       track: mainTrack,
       range: this.range,
@@ -266,9 +297,7 @@ export class MidiPlayer {
       }
     });
 
-    this.midi.beats.forEach((_beat, currentBeatIndex) =>
-      this.playBeat(currentBeatIndex)
-    );
+    this.midi.beats.forEach(this.playBeat);
 
     if (!playBeats && this.drumSampler) {
       this.drumSampler._volume.mute = true;

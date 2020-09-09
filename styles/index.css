@@ -30,3 +30,30 @@
 .piano-wrapper {
   @apply flex justify-center relative items-center border-t border-black;
 }
+
+.staff-visualizer {
+  overflow-x: hidden !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #353535f0;
+  position: absolute !important;
+}
+
+.staff-visualizer > div {
+  overflow: hidden !important;
+  background-color: #1b1b1bf5;
+  margin: 15px 0;
+}
+
+.staff-visualizer rect {
+  fill:  #1c1c1c;
+}
+
+.staff-visualizer > svg {
+  background-color: #1c1c1c;
+}
+
+.staff-visualizer g[stroke="rgb(37,243,33)"] path {
+  opacity: 1 !important;
+}

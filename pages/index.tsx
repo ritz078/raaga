@@ -2,7 +2,7 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import { Error } from "@components/Error";
 import { Loader } from "@components/Loader";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
 const Loading = () => (
@@ -12,10 +12,13 @@ const Loading = () => (
 );
 
 const SoundPlayer: any = dynamic(
-  (() => import("@components/SoundPlayer")) as any,
+  (() => import("@components/SoundPlayer")),
   {
     ssr: false,
-    loading: () => <Loading />
+    loading: ({error}) => {
+      console.log(error)
+      return <Loading />
+    }
   }
 );
 
@@ -36,6 +39,7 @@ function Main() {
       setIs2dOffscreenCanvasSupported(support);
     })();
   }, []);
+
 
   useEffect(() => {
     const webMidi = require("webmidi");
@@ -62,4 +66,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default memo(Main);

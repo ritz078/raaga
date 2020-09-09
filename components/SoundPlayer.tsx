@@ -21,7 +21,6 @@ import {
   getDefaultRange,
   setDefaultRange
 } from "@config/piano";
-import { IMidiJSON } from "@typings/midi";
 import { GlobalHeader } from "@components/GlobalHeader";
 import { MidiSettings } from "@components/TrackList";
 import { NoteWithIdAndEvent } from "@utils/MidiPlayer/MidiPlayer.utils";
@@ -33,6 +32,7 @@ import { ThemeContext } from "@utils/ThemeContext";
 import CanvasWorker from "@workers/canvas.worker";
 import { controlVisualizer } from "@utils/visualizerControl";
 import { useKeyboardShortcuts } from "@utils/keyboardShortcuts";
+import { Midi } from "@utils/Midi/Midi";
 
 const canvasWorker: Worker = new CanvasWorker();
 const canvasProxy = (message, transfers) => {
@@ -49,10 +49,11 @@ const SoundPlayer: React.FunctionComponent<{
   const [isPlaying, setPlaying] = useState(false);
   const [mode, setMode] = useState<VISUALIZER_MODE>(VISUALIZER_MODE.WRITE);
   const [midiSettings, setMidiSettings] = useState<MidiSettings>(null);
-  const [loadedMidi, setMidi] = useState<IMidiJSON>(null);
+  const [loadedMidi, setMidi] = useState<Midi>(null);
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
+  const staffVisualiserRef = useRef<HTMLDivElement>(null);
 
   const canvasProxyRef = useRef<any>(
     offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
@@ -95,7 +96,7 @@ const SoundPlayer: React.FunctionComponent<{
 
       return keyboardRange;
     },
-    [keyboardRange]
+    [keyboardRange.first, keyboardRange.last]
   );
 
   const onNoteStart = useCallback(
@@ -139,7 +140,7 @@ const SoundPlayer: React.FunctionComponent<{
   }, [loadedMidi, midiSettings, setRange]);
 
   const onMidiAndTrackSelect = useCallback(
-    (midi: IMidiJSON, _midiSettings: MidiSettings) => {
+    (midi: Midi, _midiSettings: MidiSettings) => {
       (async () => {
         setLoading(true);
         await player.clear();
@@ -155,10 +156,15 @@ const SoundPlayer: React.FunctionComponent<{
         await player.loadInstruments();
         setLoading(false);
 
+        midi.staffVisualiser(
+          _midiSettings.selectedTrackIndex,
+          staffVisualiserRef.current
+        );
+
         await player.scheduleAndPlay(
           _midiSettings,
           (
-            notes: NoteWithIdAndEvent[],
+            midis: number[],
             trackIndex: number,
             isComplete?: boolean
           ) => {
@@ -170,13 +176,13 @@ const SoundPlayer: React.FunctionComponent<{
                 return;
               }
 
-              setActiveMidis(notes.map(note => note.midi));
+              setActiveMidis(midis);
             }
           }
         );
       })();
     },
-    [player]
+    [player, staffVisualiserRef, setActiveMidis]
   );
 
   const onTogglePlay = useCallback(() => {
@@ -187,7 +193,7 @@ const SoundPlayer: React.FunctionComponent<{
     }
 
     setPlaying(!isPlaying);
-  }, [isPlaying]);
+  }, [isPlaying, loadedMidi, midiSettings]);
 
   useLayoutEffect(() => {
     setActiveMidis([]);
@@ -266,12 +272,19 @@ const SoundPlayer: React.FunctionComponent<{
             isLoading={loading}
           />
 
-          <Visualizer
-            range={keyboardRange}
-            mode={mode}
-            canvasProxy={canvasProxyRef.current}
-            offScreenCanvasSupport={offScreenCanvasSupport}
-          />
+          <div className="flex flex-row relative flex-1 overflow-hidden">
+
+
+            <Visualizer
+              range={keyboardRange}
+              mode={mode}
+              canvasProxy={canvasProxyRef.current}
+              offScreenCanvasSupport={offScreenCanvasSupport}
+            />
+            {mode === VISUALIZER_MODE.READ && (
+              <div ref={staffVisualiserRef} className="staff-visualizer" />
+            )}
+          </div>
         </div>
         <div className="piano-wrapper" style={{ height: PIANO_HEIGHT }}>
           {loading && <Loader className="absolute z-10 h-4" />}

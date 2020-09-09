@@ -2,6 +2,7 @@
   "name": "raaga",
   "version": "1.0.0",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "predev": "yarn build:icons && yarn build:midi",
@@ -22,15 +23,14 @@
     ]
   },
   "dependencies": {
+    "@magenta/music": "^1.20.0",
     "@sindresorhus/class-names": "^1.1.0",
     "axios": "^0.19.2",
     "formidable": "^1.2.2",
-    "fuzzy-search": "^3.0.1",
+    "fuzzy-search": "^3.2.1",
     "idb-keyval": "^3.2.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "midi-instruments": "^1.1.4",
-    "midievents": "^2.0.0",
-    "midifile": "^2.0.0",
     "mitt": "^1.1.3",
     "next": "v9.5.2-canary.4",
     "nprogress": "^0.2.0",
@@ -46,7 +46,6 @@
     "react-switch": "^5.0.1",
     "startaudiocontext": "^1.2.1",
     "tone": "^13.8.25",
-    "utf-8": "^2.0.0",
     "verovio": "https://github.com/rism-ch/verovio",
     "webmidi": "^2.5.1"
   },

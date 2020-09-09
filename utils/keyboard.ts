@@ -1,8 +1,8 @@
 import { MidiNumbers, KeyboardShortcuts } from "piano-utils";
 import { range, findLast, find } from "lodash";
 import { Range } from "@utils/typings/Visualizer";
-import { INote } from "@typings/midi";
 import { MINIMUM_KEYS_IN_READ_MODE } from "@config/piano";
+import { INote } from "@utils/Midi/Midi";
 
 const pitchPositions = {
   C: 0,
@@ -20,7 +20,7 @@ const pitchPositions = {
 };
 
 export function getMidiRange(notes: INote[]) {
-  const midis = notes.map(note => note.midi);
+  const midis = notes.map(note => note.pitch);
   return [Math.min(...midis), Math.max(...midis)];
 }
 

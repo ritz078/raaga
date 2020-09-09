@@ -41,7 +41,7 @@
 }
 
 .ts-content {
-  @apply flex flex-col flex-1 overflow-y-scroll pr-4 pb-5 pl-5;
+  @apply flex flex-col flex-1 overflow-y-auto pr-4 pb-5 pl-5;
   background-color: #131313;
 }
 

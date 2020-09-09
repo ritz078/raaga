@@ -1,9 +1,9 @@
-import React, { ComponentProps, useEffect, useState } from "react";
+import React, { ComponentProps, useState } from "react";
 import Sidebar from "./Sidebar";
 import TrackSelection from "./TrackSelection";
 import { ReactComponent as ZeroState } from "@assets/images/zero-state.svg";
-import { IMidiJSON } from "@typings/midi";
 import { Modal } from "@components/Modal";
+import { Midi } from "@utils/Midi/Midi";
 
 export interface MidiSettings {
   selectedTrackIndex: number;
@@ -13,7 +13,7 @@ export interface MidiSettings {
 
 type TrackListProps = ComponentProps<typeof TrackSelection> & {
   visible: boolean;
-  setMidi?: (midi: IMidiJSON) => void;
+  setMidi?: (noteSequence: Midi) => void;
   hasFileLoad?: boolean;
 };
 
@@ -70,7 +70,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
       onCloseComplete={_onClose}
     >
       <div className="flex flex-row flex-1" style={{ width: 1018 }}>
-        {hasFileLoad && <Sidebar onMidiLoad={setMidi} />}
+        {hasFileLoad && <Sidebar onLoad={setMidi} />}
         <div className="flex flex-1 flex-col overflow-hidden">
           {!midi ? (
             <div className="tl-zero-state-illus-wrapper">
