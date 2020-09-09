@@ -1,0 +1,10 @@
+diff --git a/node_modules/@mdi/react/dist/IconProps.d.ts b/node_modules/@mdi/react/dist/IconProps.d.ts
+index 9c4523d..924da6a 100644
+--- a/node_modules/@mdi/react/dist/IconProps.d.ts
++++ b/node_modules/@mdi/react/dist/IconProps.d.ts
+@@ -15,4 +15,5 @@ export interface IconProps extends HTMLProps {
+     spin?: boolean | number;
+     style?: CSSProperties;
+     inStack?: boolean;
++    onClick?: () => void;
+ }

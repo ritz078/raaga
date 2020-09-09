@@ -41,7 +41,8 @@ const canvasProxy = (message, transfers) => {
 
 const SoundPlayer: React.FunctionComponent<{
   offScreenCanvasSupport: OFFSCREEN_2D_CANVAS_SUPPORT;
-}> = ({ offScreenCanvasSupport }) => {
+  sampleMidis: { label: string; url: string }[];
+}> = ({ offScreenCanvasSupport, sampleMidis }) => {
   const [instrument, setInstrument] = useState(instruments[0].value);
   const [loading, setLoading] = useState(false);
   const [activeMidis, setActiveMidis] = useState<number[]>([]);
@@ -163,11 +164,7 @@ const SoundPlayer: React.FunctionComponent<{
 
         await player.scheduleAndPlay(
           _midiSettings,
-          (
-            midis: number[],
-            trackIndex: number,
-            isComplete?: boolean
-          ) => {
+          (midis: number[], trackIndex: number, isComplete?: boolean) => {
             if (trackIndex === _midiSettings.selectedTrackIndex) {
               if (isComplete) {
                 player.clear();
@@ -253,6 +250,7 @@ const SoundPlayer: React.FunctionComponent<{
             mode={mode}
             onToggleMode={setMode}
             onMidiAndTrackSelect={onMidiAndTrackSelect}
+            sampleMidis={sampleMidis}
           />
 
           <Header
@@ -273,8 +271,6 @@ const SoundPlayer: React.FunctionComponent<{
           />
 
           <div className="flex flex-row relative flex-1 overflow-hidden">
-
-
             <Visualizer
               range={keyboardRange}
               mode={mode}

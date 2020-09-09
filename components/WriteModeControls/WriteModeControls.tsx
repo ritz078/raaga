@@ -6,6 +6,8 @@ import { getInstrumentByValue, instruments } from "midi-instruments";
 import cn from "@sindresorhus/class-names";
 import FuzzySearch from "fuzzy-search";
 import { Range } from "@utils/typings/Visualizer";
+import Icon from "@mdi/react";
+import { mdiMenuSwap } from "@mdi/js";
 
 interface WriteModeControlsProps {
   onRangeChange: (range: number[]) => void;
@@ -45,7 +47,10 @@ const _WriteModeControls: React.FunctionComponent<WriteModeControlsProps> = ({
         contentClassName={"instrument-selector"}
         label={() => (
           <Button className="h-8">
-            {getInstrumentByValue(instrument).name}
+            <>
+              {getInstrumentByValue(instrument).name}{" "}
+              <Icon path={mdiMenuSwap} color="#fff" size={0.8} />
+            </>
           </Button>
         )}
       >

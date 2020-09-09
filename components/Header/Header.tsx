@@ -2,7 +2,6 @@ import React, { memo, useState } from "react";
 import { VISUALIZER_MODE } from "@enums/visualizerMessages";
 import Tone from "tone";
 import { MidiSelect } from "@components/MidiSelect";
-import { Icon } from "@components/Icon";
 import cn from "@sindresorhus/class-names";
 import Settings from "@components/Settings/Settings";
 import { ReadModeControls } from "@components/ReadModeControls";
@@ -10,6 +9,8 @@ import { WriteModeControls } from "@components/WriteModeControls";
 import { Theme } from "@utils/typings/Theme";
 import { Midi } from "@utils/Midi/Midi";
 import { INoteSequence } from "@magenta/music";
+import Icon from "@mdi/react";
+import { mdiVolumeHigh, mdiVolumeOff } from "@mdi/js";
 
 type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
   React.ComponentProps<typeof WriteModeControls> & {
@@ -45,7 +46,7 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
     toggleMute(!mute);
   };
 
-  const volumeName = mute ? "volume-off" : "volume";
+  const volumeName = mute ? mdiVolumeOff : mdiVolumeHigh;
 
   return (
     <div className="header">
@@ -76,11 +77,11 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
 
       <div className="flex flex-row justify-between items-center">
         <Icon
-          name={volumeName}
+          path={volumeName}
           color={"#fff"}
           onClick={_toggleMute}
-          size={18}
           className="mx-4 cursor-pointer"
+          size={1}
         />
 
         <MidiSelect

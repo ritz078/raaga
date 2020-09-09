@@ -1,12 +1,13 @@
 import React, { useRef, memo } from "react";
 import { Button } from "@components/Button";
-import sampleMidis from "../../midi.json";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
 import { getDetailsFromURL, getFileDetails } from "@utils/url";
 import { Midi } from "@utils/Midi/Midi";
+import Icon from "@mdi/react";
+import { mdiFileUpload } from "@mdi/js";
 
-function Sidebar({ onLoad }: IProps) {
+function Sidebar({ onLoad, sampleMidis }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadFile = async e => {
@@ -38,14 +39,11 @@ function Sidebar({ onLoad }: IProps) {
   return (
     <div className="tl-sidebar">
       <label htmlFor="upload-midi">
-        <Button
-          icon="browse"
-          className="h-10 text-13"
-          iconProps={{
-            size: 15
-          }}
-        >
-          Load MIDI or MusicXML
+        <Button className="h-10 text-13 w-full">
+          <>
+            <Icon path={mdiFileUpload} className="mr-2" size={0.7} />
+            Load MIDI or MusicXML
+          </>
         </Button>
       </label>
       <input
@@ -74,7 +72,8 @@ function Sidebar({ onLoad }: IProps) {
 }
 
 interface IProps {
-  onLoad: (noteSequence: Midi) => void
+  onLoad: (noteSequence: Midi) => void;
+  sampleMidis: { label: string; url: string }[];
 }
 
 export default memo(Sidebar);

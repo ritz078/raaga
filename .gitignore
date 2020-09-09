@@ -3,7 +3,4 @@ node_modules
 yarn-error.log
 .next
 out
-now-secrets.json
-midi.json
-song.json
 public/bin
