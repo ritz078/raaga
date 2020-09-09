@@ -43,6 +43,7 @@
     "react-range": "^1.6.7",
     "react-spring": "9.0.0-beta.34",
     "react-switch": "^5.0.1",
+    "simplebar-react": "^3.0.0-beta.5",
     "startaudiocontext": "^1.2.1",
     "tone": "^13.8.25",
     "verovio": "https://github.com/rism-ch/verovio",

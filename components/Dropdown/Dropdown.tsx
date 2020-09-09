@@ -2,6 +2,7 @@ import React, { FunctionComponent, memo, useRef, useState } from "react";
 import { useTransition, animated } from "react-spring";
 import { useOnClickOutside } from "@hooks/useOnClickOutside";
 import cn from "@sindresorhus/class-names";
+import SimpleBar from "simplebar-react";
 
 interface DropdownProps {
   label: (isOpen: boolean) => React.ReactNode;
@@ -41,15 +42,13 @@ const _Dropdown: FunctionComponent<DropdownProps> = ({
             <animated.div
               style={props as any}
               key={key}
-              className={cn(
-                "dropdown-content",
-                {
-                  right: position === "right"
-                },
-                contentClassName
-              )}
+              className={contentClassName}
             >
-              {children(() => setVisible(false))}
+              <SimpleBar className={cn("dropdown-content", {
+                right: position === "right"
+              })}>
+                {children(() => setVisible(false))}
+              </SimpleBar>
             </animated.div>
           )
       )}

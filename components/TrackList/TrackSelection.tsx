@@ -10,6 +10,7 @@ import Tone from "tone";
 import { Midi } from "@utils/Midi/Midi";
 import { mdiClose } from "@mdi/js";
 import Icon from "@mdi/react";
+import SimpleBar from "simplebar-react";
 
 const switchProps = {
   onColor: "#86d3ff",
@@ -95,7 +96,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
           className="absolute cursor-pointer top-0 right-0 m-5"
         />
       </div>
-      <div className="ts-content">
+      <SimpleBar className="ts-content">
         <div className="ts-section-title">
           <span className="text-base text-white">Tracks</span>
           <Switch
@@ -145,7 +146,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
             </div>
           </>
         )}
-      </div>
+      </SimpleBar>
 
       <div
         ref={startAudiContextRef}
