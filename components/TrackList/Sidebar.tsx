@@ -5,6 +5,8 @@ import Nprogress from "nprogress";
 import { Error } from "@components/Error";
 import { getDetailsFromURL, getFileDetails } from "@utils/url";
 import { Midi } from "@utils/Midi/Midi";
+import Icon from "@mdi/react";
+import { mdiFileUpload } from "@mdi/js";
 
 function Sidebar({ onLoad }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,14 +40,11 @@ function Sidebar({ onLoad }: IProps) {
   return (
     <div className="tl-sidebar">
       <label htmlFor="upload-midi">
-        <Button
-          icon="browse"
-          className="h-10 text-13"
-          iconProps={{
-            size: 15
-          }}
-        >
-          Load MIDI or MusicXML
+        <Button className="h-10 text-13 w-full">
+          <>
+            <Icon path={mdiFileUpload} className="mr-2" size={0.7} />
+            Load MIDI or MusicXML
+          </>
         </Button>
       </label>
       <input
@@ -74,7 +73,7 @@ function Sidebar({ onLoad }: IProps) {
 }
 
 interface IProps {
-  onLoad: (noteSequence: Midi) => void
+  onLoad: (noteSequence: Midi) => void;
 }
 
 export default memo(Sidebar);

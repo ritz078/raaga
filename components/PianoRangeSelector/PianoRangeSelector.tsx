@@ -2,11 +2,12 @@ import React, { FunctionComponent, memo, useState } from "react";
 import cn from "@sindresorhus/class-names";
 import { Button } from "@components/Button";
 import { MidiNumbers } from "piano-utils";
-import { Icon } from "@components/Icon";
 import { RANGE_PRESETS } from "@config/piano";
 import { Range } from "@utils/typings/Visualizer";
 import { Dropdown } from "@components/Dropdown";
 import { getTrackBackground, Range as RangeSlider } from "react-range";
+import { mdiMinus } from "@mdi/js";
+import Icon from "@mdi/react";
 
 interface PianoRangeSelectorProps {
   range: Range;
@@ -46,7 +47,7 @@ const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
           <Button className="h-6">
             <>
               {MidiNumbers.getAttributes(range.first).note}
-              <Icon name="minus" color="#fff" size={8} className="mx-2" />
+              <Icon path={mdiMinus} color="#fff" size={0.5} className="mx-2" />
               {MidiNumbers.getAttributes(range.last).note}
             </>
           </Button>

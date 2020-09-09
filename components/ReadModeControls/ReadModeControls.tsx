@@ -1,5 +1,4 @@
 import React, { FunctionComponent, memo, useContext } from "react";
-import { Icon } from "@components/Icon";
 import { ProgressBar } from "@components/ProgressBar";
 import { PlaybackSpeed } from "@components/PlaybackSpeed";
 import { Button } from "@components/Button";
@@ -7,6 +6,8 @@ import { Dropdown } from "@components/Dropdown";
 import { MidiSettings } from "@components/TrackList";
 import { PlayerContext } from "@utils/PlayerContext";
 import { Midi } from "@utils/Midi/Midi";
+import { mdiInstrumentTriangle, mdiPause, mdiPiano, mdiPlay } from "@mdi/js";
+import Icon from "@mdi/react";
 
 export enum TOGGLE_BACKGROUND_TYPE {
   TRACKS = 1,
@@ -31,7 +32,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
   if (!midiSettings) return;
 
   const player = useContext(PlayerContext);
-  const playName = isPlaying ? "pause" : "play";
+  const playName = isPlaying ? mdiPause : mdiPlay;
 
   const { playBeats, playBackgroundTracks } = midiSettings;
 
@@ -59,9 +60,9 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
 
       <div className="player-wrapper">
         <Icon
-          name={playName}
+          path={playName}
           color="#fff"
-          size={13}
+          size={1}
           className="cursor-pointer"
           onClick={onTogglePlay}
         />
@@ -84,7 +85,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
                 close();
               }}
             >
-              <Icon name="drum" size={12} className="mr-2" />
+              <Icon path={mdiInstrumentTriangle} size={0.8} className="mr-2" />
               {playBeats ? "Mute" : "Play"} Background Beats/Percussion
             </div>
             <div
@@ -94,7 +95,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
                 close();
               }}
             >
-              <Icon name="piano" size={12} className="mr-2" />
+              <Icon path={mdiPiano} size={0.8} className="mr-2" />
               {playBackgroundTracks ? "Mute" : "Play"} Background Tracks
             </div>
           </div>

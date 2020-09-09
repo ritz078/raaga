@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@components/Button";
-import { Icon } from "@components/Icon";
 import { PlayerContext } from "@utils/PlayerContext";
+import Icon from "@mdi/react";
+import { mdiMinus, mdiPlus } from "@mdi/js";
 
 const _PlaybackSpeed = function() {
   const [speed, setSpeed] = useState(1);
@@ -27,13 +28,13 @@ const _PlaybackSpeed = function() {
     <div className="playback-speed-wrapper">
       <div className="text-gray-500 text-xs mr-4">Speed</div>
       <Button onClick={decrease} className="playback-speed-btn">
-        <Icon name="minus" size={10} color="#fff" />
+        <Icon path={mdiMinus} size={1} color="#fff" />
       </Button>
       <span className="block text-xs text-center w-12">
         {Math.round(speed * 100)}%
       </span>
       <Button onClick={increase} className="playback-speed-btn">
-        <Icon name="plus" size={10} color="#fff" />
+        <Icon path={mdiPlus} size={1} color="#fff" />
       </Button>
     </div>
   );

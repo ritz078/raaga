@@ -1,10 +1,11 @@
 import React, { memo, useState, useContext, FunctionComponent } from "react";
-import { Icon } from "@components/Icon";
 import { Modal } from "@components/Modal";
 import { ChromePicker } from "react-color";
 import { Dropdown } from "@components/Dropdown";
 import { Theme } from "@utils/typings/Theme";
 import { ThemeContext } from "@utils/ThemeContext";
+import Icon from "@mdi/react";
+import { mdiCog } from "@mdi/js";
 
 interface SettingsProps {
   onThemeChange: (theme: Theme) => void;
@@ -16,9 +17,9 @@ const _Settings: FunctionComponent<SettingsProps> = ({ onThemeChange }) => {
   return (
     <div>
       <Icon
-        name="settings"
+        path={mdiCog}
         color={"#fff"}
-        size={18}
+        size={1}
         className="mx-4 cursor-pointer"
         onClick={() => setVisibility(!visible)}
       />
