@@ -13,8 +13,8 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   className
 }) => {
   return (
-    <button className={cn("button", className)} onClick={onClick}>
+    <div className={cn("button", className)} onClick={onClick}>
       {children}
-    </button>
+    </div>
   );
 };
