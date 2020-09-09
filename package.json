@@ -5,14 +5,12 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "predev": "yarn build:midi",
     "build:verovio": "./scripts/build-verovio.sh",
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx' '**/*.css'",
-    "build:midi": "node ./scripts/generateMidiMeta.js",
     "test:e2e": "yarn run cypress open",
     "build": "chmod +x ./build.sh && ./build.sh",
-    "postinstall": "patch-package && yarn build:midi",
+    "postinstall": "patch-package",
     "test:e2e:ci": "cypress run --record"
   },
   "lint-staged": {

@@ -4,6 +4,8 @@ import { Error } from "@components/Error";
 import { Loader } from "@components/Loader";
 import { memo, useEffect, useState } from "react";
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
+import fs from "fs";
+import path from "path";
 
 const Loading = () => (
   <div className="h-screen w-screen flex flex-1 items-center justify-center">
@@ -11,18 +13,14 @@ const Loading = () => (
   </div>
 );
 
-const SoundPlayer: any = dynamic(
-  (() => import("@components/SoundPlayer")),
-  {
-    ssr: false,
-    loading: ({error}) => {
-      console.log(error)
-      return <Loading />
-    }
-  }
-);
+const SoundPlayer: any = dynamic(() => import("@components/SoundPlayer"), {
+  ssr: false,
+  loading: () => <Loading/>
+});
 
-function Main() {
+function Main({ sampleMidis }) {
+  console.log(sampleMidis)
+
   const [
     is2dOffscreenCanvasSupported,
     setIs2dOffscreenCanvasSupported
@@ -40,7 +38,6 @@ function Main() {
     })();
   }, []);
 
-
   useEffect(() => {
     const webMidi = require("webmidi");
     webMidi.enable(err => {
@@ -55,6 +52,7 @@ function Main() {
         {is2dOffscreenCanvasSupported !==
           OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING && webMidiEnabled !== null ? (
           <SoundPlayer
+            sampleMidis={sampleMidis}
             webMidiEnabled={webMidiEnabled}
             offScreenCanvasSupport={is2dOffscreenCanvasSupported}
           />
@@ -64,6 +62,22 @@ function Main() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const files = fs.readdirSync(
+    path.resolve("./public/static/midi")
+  );
+
+  return {
+    props: {
+      sampleMidis: files.map(file => ({
+        url: `/static/midi/${file}`,
+        label: file.replace(".mid", "")
+      }))
+    }
+
+  };
 }
 
 export default memo(Main);

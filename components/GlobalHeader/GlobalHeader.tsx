@@ -13,13 +13,15 @@ interface GlobalHeaderProps {
   onToggleMode: (mode: VISUALIZER_MODE) => void;
   onMidiAndTrackSelect: (midi: Midi, args: MidiSettings) => void;
   midiSettings: MidiSettings;
+  sampleMidis: { label: string; url: string }[];
 }
 
 const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
   mode,
   onToggleMode,
   onMidiAndTrackSelect,
-  midiSettings
+  midiSettings,
+  sampleMidis
 }) => {
   const [showTrackSelectionModal, toggleTrackSelectionModal] = useState(false);
   const [loadedMidi, setLoadedMidi] = useState<Midi>();
@@ -57,6 +59,7 @@ const _GlobalHeader: React.FunctionComponent<GlobalHeaderProps> = ({
         onPlay={onSelect}
         onClose={() => toggleTrackSelectionModal(false)}
         setMidi={setLoadedMidi}
+        sampleMidis={sampleMidis}
       />
     </header>
   );

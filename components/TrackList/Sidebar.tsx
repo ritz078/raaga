@@ -1,6 +1,5 @@
 import React, { useRef, memo } from "react";
 import { Button } from "@components/Button";
-import sampleMidis from "../../midi.json";
 import Nprogress from "nprogress";
 import { Error } from "@components/Error";
 import { getDetailsFromURL, getFileDetails } from "@utils/url";
@@ -8,7 +7,7 @@ import { Midi } from "@utils/Midi/Midi";
 import Icon from "@mdi/react";
 import { mdiFileUpload } from "@mdi/js";
 
-function Sidebar({ onLoad }: IProps) {
+function Sidebar({ onLoad, sampleMidis }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadFile = async e => {
@@ -74,6 +73,7 @@ function Sidebar({ onLoad }: IProps) {
 
 interface IProps {
   onLoad: (noteSequence: Midi) => void;
+  sampleMidis: { label: string; url: string }[];
 }
 
 export default memo(Sidebar);

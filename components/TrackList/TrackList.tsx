@@ -15,6 +15,7 @@ type TrackListProps = ComponentProps<typeof TrackSelection> & {
   visible: boolean;
   setMidi?: (noteSequence: Midi) => void;
   hasFileLoad?: boolean;
+  sampleMidis: { label: string; url: string }[];
 };
 
 const TrackList_: React.FunctionComponent<TrackListProps> = ({
@@ -24,7 +25,8 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
   midi,
   setMidi,
   hasFileLoad = true,
-  initialMidiSettings
+  initialMidiSettings,
+  sampleMidis
 }) => {
   /**
    * This part is mainly written so that `onPlay` is called after the modal has
@@ -70,7 +72,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
       onCloseComplete={_onClose}
     >
       <div className="flex flex-row flex-1" style={{ width: 1018 }}>
-        {hasFileLoad && <Sidebar onLoad={setMidi} />}
+        {hasFileLoad && <Sidebar onLoad={setMidi} sampleMidis={sampleMidis} />}
         <div className="flex flex-1 flex-col overflow-hidden">
           {!midi ? (
             <div className="tl-zero-state-illus-wrapper">
