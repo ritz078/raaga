@@ -77,9 +77,9 @@ const _PianoRangeSelector: FunctionComponent<PianoRangeSelectorProps> = ({
                       <div className="flex items-center">
                         {MidiNumbers.getAttributes(first).note}
                         <Icon
-                          name="minus"
+                          path={mdiMinus}
                           color="#fff"
-                          size={8}
+                          size={1}
                           className="mx-1"
                         />
                         {MidiNumbers.getAttributes(last).note}

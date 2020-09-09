@@ -19,8 +19,6 @@ const SoundPlayer: any = dynamic(() => import("@components/SoundPlayer"), {
 });
 
 function Main({ sampleMidis }) {
-  console.log(sampleMidis)
-
   const [
     is2dOffscreenCanvasSupported,
     setIs2dOffscreenCanvasSupported
