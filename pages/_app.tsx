@@ -12,12 +12,6 @@ if (IN_BROWSER) {
 
 NProgress.configure({ showSpinner: false });
 
-let reactGa;
-if (IN_BROWSER && !IS_DEV) {
-  reactGa = require("react-ga");
-  reactGa.initialize("UA-60624235-9");
-}
-
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
@@ -29,6 +23,7 @@ export default class MyApp extends App {
             name="description"
             content="A platform to play and learn piano with your own pace."
           />
+          <script async src="https://unpkg.com/thesemetrics@latest"/>
         </Head>
         <Component {...pageProps} />
       </>

@@ -39,14 +39,13 @@
     "react": "^16.13.1",
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
-    "react-ga": "^2.7.0",
     "react-range": "^1.6.7",
     "react-spring": "9.0.0-beta.34",
     "react-switch": "^5.0.1",
     "simplebar-react": "^3.0.0-beta.5",
     "startaudiocontext": "^1.2.1",
     "tone": "^13.8.25",
-    "verovio": "https://github.com/rism-ch/verovio",
+    "verovio": "git+https://github.com/rism-ch/verovio#9184dedc9434c4985468e739c79e110bd7633718",
     "webmidi": "^2.5.1"
   },
   "devDependencies": {
