@@ -11,6 +11,7 @@ import { Midi } from "@utils/Midi/Midi";
 import { INoteSequence } from "@magenta/music";
 import Icon from "@mdi/react";
 import { mdiVolumeHigh, mdiVolumeOff } from "@mdi/js";
+import { VolumeSlider } from "@components/Header/VolumeSlider";
 
 type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
   React.ComponentProps<typeof WriteModeControls> & {
@@ -20,6 +21,8 @@ type HeaderProps = React.ComponentProps<typeof ReadModeControls> &
     midiDeviceId: string;
     onMidiDeviceChange: (midiDevice: string) => void;
     onThemeChange: (theme: Theme) => void;
+    onVolumeChange: (volume: number) => void;
+    volume: number;
     isLoading: boolean;
   };
 
@@ -36,6 +39,8 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
   onRangeChange,
   onMidiDeviceChange,
   onThemeChange,
+  onVolumeChange,
+  volume,
   midiSettings,
   isLoading
 }) => {
@@ -76,13 +81,22 @@ const _Header: React.FunctionComponent<HeaderProps> = ({
       </div>
 
       <div className="flex flex-row justify-between items-center">
-        <Icon
-          path={volumeName}
-          color={"#fff"}
-          onClick={_toggleMute}
-          className="mx-4 cursor-pointer"
-          size={1}
-        />
+        <div className="flex flex-row mx-1 items-center">
+          <Icon
+            path={volumeName}
+            color={"#fff"}
+            onClick={_toggleMute}
+            className="cursor-pointer"
+            size={1}
+          />
+          <div className="px-4">
+            <VolumeSlider
+              disabled={mute}
+              onVolumeChange={onVolumeChange}
+              volume={volume}
+            />
+          </div>
+        </div>
 
         <MidiSelect
           onMidiDeviceChange={onMidiDeviceChange}

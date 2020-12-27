@@ -54,6 +54,7 @@ const SoundPlayer: React.FunctionComponent<{
   const [midiDevice, setSelectedMidiDevice] = useState(null);
   const [activeInstrumentMidis, setActiveInstrumentMidis] = useState([]);
   const [theme, setTheme] = useState(DEFAULT_THEME);
+  const [volume, setVolume] = useState(0); // Unit is dB, which is logarithmic. 0 means no changes. -10/+10 is about half/twice as loud.
   const staffVisualiserRef = useRef<HTMLDivElement>(null);
 
   const canvasProxyRef = useRef<any>(
@@ -72,13 +73,14 @@ const SoundPlayer: React.FunctionComponent<{
       (async () => {
         setLoading(true);
         await player.loadInstruments({
-          instrumentIds: [getInstrumentIdByValue(_instrument)]
+          instrumentIds: [getInstrumentIdByValue(_instrument)],
+          volume
         });
         setInstrument(_instrument);
         setLoading(false);
       })();
     },
-    [player]
+    [player, volume]
   );
 
   const setRange = useCallback(
@@ -154,7 +156,7 @@ const SoundPlayer: React.FunctionComponent<{
 
         player.setMidi(midi);
 
-        await player.loadInstruments();
+        await player.loadInstruments({ volume });
         setLoading(false);
 
         midi.staffVisualiser(
@@ -179,7 +181,7 @@ const SoundPlayer: React.FunctionComponent<{
         );
       })();
     },
-    [player, staffVisualiserRef, setActiveMidis]
+    [player, staffVisualiserRef, setActiveMidis, volume]
   );
 
   const onTogglePlay = useCallback(() => {
@@ -241,6 +243,14 @@ const SoundPlayer: React.FunctionComponent<{
     [player]
   );
 
+  const handleVolumeChange = useCallback(
+    volume => {
+      player.setVolume(volume);
+      setVolume(volume);
+    },
+    [player]
+  );
+
   return (
     <PlayerContext.Provider value={player}>
       <ThemeContext.Provider value={theme}>
@@ -267,6 +277,8 @@ const SoundPlayer: React.FunctionComponent<{
             midiSettings={midiSettings}
             onMidiDeviceChange={setSelectedMidiDevice}
             onThemeChange={setTheme}
+            volume={volume}
+            onVolumeChange={handleVolumeChange}
             isLoading={loading}
           />
 
