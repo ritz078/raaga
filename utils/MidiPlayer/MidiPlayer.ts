@@ -329,7 +329,7 @@ export class MidiPlayer {
     this.drumSampler._volume.mute = !this.drumSampler._volume.mute;
   };
 
-  public toggleTracksMute = () => {
+  public toggleTracksVolume = () => {
     const { tracks } = this.midi;
 
     const mainTrackInstrumentIndex =
