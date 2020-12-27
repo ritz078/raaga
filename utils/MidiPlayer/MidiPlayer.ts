@@ -59,11 +59,14 @@ export class MidiPlayer {
   private is2dOffscreenCanvasSupported =
     OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING;
 
-  static getTrackSampler = audio =>
+  static getTrackSampler = (audio, volume) =>
     new Promise(resolve => {
-      const sampler = new Tone.Sampler(audio, () => {
-        sampler.connect(Tone.Master);
-        resolve(sampler);
+      const sampler = new Tone.Sampler(audio, {
+        onload: () => {
+          sampler.connect(Tone.Master);
+          resolve(sampler);
+        },
+        volume
       });
     });
 
@@ -104,6 +107,7 @@ export class MidiPlayer {
   public loadInstruments = async (options?: {
     instrumentIds?: string[];
     drums?: boolean;
+    volume?: number;
   }) => {
     const { instrumentIds, drums } = {
       instrumentIds:
@@ -130,7 +134,10 @@ export class MidiPlayer {
       trackInstrumentIds.map(
         instrumentId =>
           this.trackSamplers[instrumentId] ||
-          MidiPlayer.getTrackSampler(data.tracks[instrumentId])
+          MidiPlayer.getTrackSampler(
+            data.tracks[instrumentId],
+            options?.volume || 0
+          )
       )
     );
 
@@ -338,6 +345,12 @@ export class MidiPlayer {
           instrumentIndex
         ]._volume.mute;
       }
+    });
+  };
+
+  public setVolume = (volumeValue: number) => {
+    Object.values(this.trackSamplers).forEach(sampler => {
+      sampler.volume.value = volumeValue;
     });
   };
 
