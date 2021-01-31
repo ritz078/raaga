@@ -30,15 +30,17 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://riteshkr.com"><img src="https://avatars3.githubusercontent.com/u/5389035?v=4" width="100px;" alt=""/><br /><sub><b>Ritesh Kumar</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=ritz078" title="Code">💻</a> <a href="#design-ritz078" title="Design">🎨</a> <a href="#ideas-ritz078" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/ritz078/raaga/pulls?q=is%3Apr+reviewed-by%3Aritz078" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://www.majidhajian.com"><img src="https://avatars2.githubusercontent.com/u/1325451?v=4" width="100px;" alt=""/><br /><sub><b>Majid Hajian</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=mhadaily" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/prateekbh"><img src="https://avatars2.githubusercontent.com/u/5960497?v=4" width="100px;" alt=""/><br /><sub><b>Prateek Bhatnagar</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=prateekbh" title="Code">💻</a></td>
-    <td align="center"><a href="https://jackhsu.dev"><img src="https://avatars1.githubusercontent.com/u/5341184?v=4" width="100px;" alt=""/><br /><sub><b>Jack Hsu</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=jackhsu978" title="Tests">⚠️</a> <a href="https://github.com/ritz078/raaga/commits?author=jackhsu978" title="Code">💻</a></td>
+    <td align="center"><a href="https://riteshkr.com"><img src="https://avatars3.githubusercontent.com/u/5389035?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ritesh Kumar</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=ritz078" title="Code">💻</a> <a href="#design-ritz078" title="Design">🎨</a> <a href="#ideas-ritz078" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/ritz078/raaga/pulls?q=is%3Apr+reviewed-by%3Aritz078" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://www.majidhajian.com"><img src="https://avatars2.githubusercontent.com/u/1325451?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Majid Hajian</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=mhadaily" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/prateekbh"><img src="https://avatars2.githubusercontent.com/u/5960497?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Prateek Bhatnagar</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=prateekbh" title="Code">💻</a></td>
+    <td align="center"><a href="https://jackhsu.dev"><img src="https://avatars1.githubusercontent.com/u/5341184?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jack Hsu</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=jackhsu978" title="Tests">⚠️</a> <a href="https://github.com/ritz078/raaga/commits?author=jackhsu978" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/agent515"><img src="https://avatars.githubusercontent.com/u/46898603?v=4?s=100" width="100px;" alt=""/><br /><sub><b>agent515</b></sub></a><br /><a href="https://github.com/ritz078/raaga/commits?author=agent515" title="Code">💻</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
