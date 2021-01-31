@@ -55,7 +55,7 @@ const _WriteModeControls: React.FunctionComponent<WriteModeControlsProps> = ({
         )}
       >
         {close => (
-          <div className="py-2" style={{ width: 180 }}>
+          <div className="py-2" style={{ width: 180, maxHeight: 300 }}>
             <input
               onChange={onSearchChange}
               type="text"
