@@ -1,10 +1,15 @@
 import axios, { CancelTokenSource } from "axios";
 import { Midi } from "@utils/Midi/Midi";
+import { parseMp3 } from "@utils/mp3Parser";
 
 let getFileDetailsToken: CancelTokenSource;
 export async function getFileDetails(file: File): Promise<Midi> {
   if (getFileDetailsToken) {
     getFileDetailsToken.cancel();
+  }
+
+  if (file.name.endsWith(".mp3")) {
+    return parseMp3(file)
   }
 
   getFileDetailsToken = axios.CancelToken.source();
