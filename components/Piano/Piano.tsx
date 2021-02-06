@@ -96,6 +96,8 @@ const _Piano: FunctionComponent<PianoProps> = ({
             onMouseUp={() => onMouseUp(midi)}
             onMouseEnter={isMousePressed ? () => play(midi) : undefined}
             onMouseLeave={() => stop(midi)}
+            onTouchStart={()=>onMouseDown(midi)}
+            onTouchEnd={()=>onMouseUp(midi)}
             className={className}
             key={midi}
             style={style}
