@@ -12,7 +12,8 @@ import {
   HORIZONTAL_GAP_BETWEEN_NOTES,
   MS_PER_SECOND,
   WATERFALL_VISUALIZER_SCALE,
-  RADIUS, WATERFALL_VISUALIZER_OVERSCAN_BUFFER
+  RADIUS,
+  WATERFALL_VISUALIZER_OVERSCAN_BUFFER
 } from "@config/piano";
 import { Theme } from "@utils/typings/Theme";
 import { INote, ITrackSequence } from "@utils/Midi/Midi";
@@ -149,7 +150,7 @@ export class Visualizer {
     return { left, width, isAccidental };
   };
 
-  private memoizedGetMidiInfo = memoize(this.getMidiInfo)
+  private memoizedGetMidiInfo = memoize(this.getMidiInfo);
 
   private getVerticalCoordinatesInWriteMode = (
     note: INote
@@ -161,7 +162,8 @@ export class Visualizer {
     const duration = note.endTime - note.startTime;
 
     const top =
-      (note.startTime - nowInSeconds()) * WATERFALL_VISUALIZER_SCALE + canvasHeight;
+      (note.startTime - nowInSeconds()) * WATERFALL_VISUALIZER_SCALE +
+      canvasHeight;
     const height =
       (duration || Number.MAX_SAFE_INTEGER / WATERFALL_VISUALIZER_SCALE) *
       WATERFALL_VISUALIZER_SCALE;

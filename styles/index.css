@@ -2,7 +2,7 @@
 @import "~tailwindcss/components.css";
 @import "~tailwindcss/utilities.css";
 @import "~nprogress/nprogress.css";
-@import '~simplebar-react/dist/simplebar.min.css';
+@import "~simplebar-react/dist/simplebar.min.css";
 
 @import "./variables.css";
 @import "./mixins.css";
@@ -48,7 +48,7 @@
 }
 
 .staff-visualizer rect {
-  fill:  #1c1c1c;
+  fill: #1c1c1c;
 }
 
 .staff-visualizer > svg {

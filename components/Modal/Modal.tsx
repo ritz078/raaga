@@ -31,10 +31,8 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
     return () => {
       try {
         document?.body?.removeChild(node);
-      }catch (e) {
-        
-      }
-    }
+      } catch (e) {}
+    };
   }, []);
 
   const overlayTransition = useTransition(visible, null, {

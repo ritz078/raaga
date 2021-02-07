@@ -45,7 +45,7 @@ export async function getDetailsFromURL(
     getDetailsForFileToken = null;
     return new Midi(data);
   } catch (e) {
-    console.log(e)
+    console.log(e);
     throw new Error(e.response?.data);
   }
 }

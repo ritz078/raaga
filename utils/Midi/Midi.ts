@@ -72,23 +72,19 @@ export class Midi extends NoteSequence {
   }
 
   staffVisualiser(trackIndex: number, element: HTMLDivElement) {
-    this.sv = new mm.StaffSVGVisualizer(
-      this.toJSON(),
-      element,
-      {
-        scrollType: ScrollType.PAGE,
-        instruments: [this.tracks[trackIndex].instrument.number],
-        noteHeight: 9,
-        noteRGB: "255,255,255",
-        activeNoteRGB: "37,243,33",
-        noteSpacing: 15
-      }
-    );
+    this.sv = new mm.StaffSVGVisualizer(this.toJSON(), element, {
+      scrollType: ScrollType.PAGE,
+      instruments: [this.tracks[trackIndex].instrument.number],
+      noteHeight: 9,
+      noteRGB: "255,255,255",
+      activeNoteRGB: "37,243,33",
+      noteSpacing: 15
+    });
 
-    return this.sv
+    return this.sv;
   }
 
   redrawStaff(note: INote) {
-    this.sv?.redraw(note, true)
+    this.sv?.redraw(note, true);
   }
 }

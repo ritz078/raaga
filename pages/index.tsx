@@ -15,7 +15,7 @@ const Loading = () => (
 
 const SoundPlayer: any = dynamic(() => import("@components/SoundPlayer"), {
   ssr: false,
-  loading: () => <Loading/>
+  loading: () => <Loading />
 });
 
 function Main({ sampleMidis }) {
@@ -63,9 +63,7 @@ function Main({ sampleMidis }) {
 }
 
 export async function getStaticProps() {
-  const files = fs.readdirSync(
-    path.resolve("./public/static/midi")
-  );
+  const files = fs.readdirSync(path.resolve("./public/static/midi"));
 
   return {
     props: {
@@ -74,7 +72,6 @@ export async function getStaticProps() {
         label: file.replace(".mid", "")
       }))
     }
-
   };
 }
 

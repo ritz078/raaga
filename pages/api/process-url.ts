@@ -13,7 +13,7 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
     });
     const ns = await mm.midiToSequenceProto(data);
 
-    res.json({...ns.toJSON(), collectionName: name});
+    res.json({ ...ns.toJSON(), collectionName: name });
   } catch (e) {
     res.status(400).send(e.message);
   }
