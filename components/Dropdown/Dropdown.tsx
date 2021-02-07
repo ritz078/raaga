@@ -44,9 +44,11 @@ const _Dropdown: FunctionComponent<DropdownProps> = ({
               key={key}
               className={contentClassName}
             >
-              <SimpleBar className={cn("dropdown-content", {
-                right: position === "right"
-              })}>
+              <SimpleBar
+                className={cn("dropdown-content", {
+                  right: position === "right"
+                })}
+              >
                 {children(() => setVisible(false))}
               </SimpleBar>
             </animated.div>

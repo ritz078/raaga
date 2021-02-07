@@ -17,7 +17,9 @@
     "./assets/**/*.svg": [
       "imagemin-lint-staged",
       "yarn build:icons"
-    ]
+    ],
+    "*.{js,json,jsx,ts,tsx,md,html,css}": "prettier --write",
+    "*.{png,jpeg,jpg,gif}": "imagemin-lint-staged"
   },
   "dependencies": {
     "@magenta/music": "^1.20.0",

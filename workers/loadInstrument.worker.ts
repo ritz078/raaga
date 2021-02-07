@@ -107,4 +107,3 @@ self.onmessage = async ev => {
     message: await loadInstruments(instrumentIds, drums)
   });
 };
-

@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const data = fs.readFileSync(file.path);
         const arrayBuffer = toArrayBuffer(data);
 
-        const ns = mm.midiToSequenceProto(arrayBuffer)
+        const ns = mm.midiToSequenceProto(arrayBuffer);
 
         res.json({ ...ns.toJSON(), collectionName: file.name });
       } else if (extension === ".xml") {
@@ -59,7 +59,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const data = fs.readFileSync(name);
         const arrayBuffer = toArrayBuffer(data);
 
-        const ns = mm.midiToSequenceProto(arrayBuffer)
+        const ns = mm.midiToSequenceProto(arrayBuffer);
 
         res.json({ ...ns.toJSON(), collectionName: file.name });
 
