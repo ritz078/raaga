@@ -17,8 +17,8 @@
     "./assets/**/*.svg": [
       "imagemin-lint-staged",
       "yarn build:icons"
-],
-    "*.{js,jsx,ts,tsx,md,html,css}": "prettier --write",
+    ],
+    "*.{js,json,jsx,ts,tsx,md,html,css}": "prettier --write",
     "*.{png,jpeg,jpg,gif}": "imagemin-lint-staged"
   },
   "dependencies": {
