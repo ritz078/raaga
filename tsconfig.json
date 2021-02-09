@@ -12,7 +12,7 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "@src/*": ["./src/*"],
       "@components/*": ["./components/*"],
