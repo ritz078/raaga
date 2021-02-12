@@ -3,5 +3,5 @@ node_modules
 yarn-error.log
 .next
 out
-public/bin
+public/bin/*
 .vercel

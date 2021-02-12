@@ -1,8 +1,8 @@
-@import "~tailwindcss/base.css";
-@import "~tailwindcss/components.css";
-@import "~tailwindcss/utilities.css";
-@import "~nprogress/nprogress.css";
-@import "~simplebar-react/dist/simplebar.min.css";
+@import "tailwindcss/base.css";
+@import "tailwindcss/components.css";
+@import "tailwindcss/utilities.css";
+@import "nprogress/nprogress.css";
+@import "simplebar-react/dist/simplebar.min.css";
 
 @import "./variables.css";
 @import "./mixins.css";

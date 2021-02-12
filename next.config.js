@@ -1,9 +1,8 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
-const withCSS = require("@zeit/next-css");
 const webpack = require("webpack");
 
 module.exports = phase => {
-  return (withCSS({
+  return {
     experimental: {
       optimizeFonts: phase !== PHASE_DEVELOPMENT_SERVER
     },
@@ -21,7 +20,7 @@ module.exports = phase => {
           test: /\.worker\.ts/,
           use: {
             loader: "worker-loader",
-            options: { inline: 'fallback' }
+            options: { inline: "fallback" }
           }
         },
         {
@@ -55,5 +54,5 @@ module.exports = phase => {
 
       return config;
     }
-  }));
+  };
 };
