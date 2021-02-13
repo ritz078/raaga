@@ -9,7 +9,7 @@
     "start": "next start",
     "format": "prettier --write '**/*.ts' '**/*.tsx' '**/*.css'",
     "test:e2e": "yarn run cypress open",
-    "build": "./build.sh",
+    "build": "chmod +x ./build.sh && ./build.sh",
     "postinstall": "patch-package",
     "test:e2e:ci": "cypress run --record"
   },
