@@ -63,7 +63,7 @@ function Main({ sampleMidis }) {
 }
 
 export async function getStaticProps() {
-  const files = fs.readdirSync(path.resolve("./src/public/static/midi"));
+  const files = fs.readdirSync(path.resolve("./public/static/midi"));
 
   return {
     props: {
