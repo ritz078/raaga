@@ -53,11 +53,8 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
 
   useEffect(() => {
     if (!initialMidiSettings) return;
-    const {
-      selectedTrackIndex,
-      playBeats,
-      playBackgroundTracks
-    } = initialMidiSettings;
+    const { selectedTrackIndex, playBeats, playBackgroundTracks } =
+      initialMidiSettings;
     setSelectedTrackIndex(selectedTrackIndex);
     setPlayBeats(playBeats);
     setPlayBackgroundTracks(playBackgroundTracks);
@@ -101,7 +98,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
           <span className="text-base text-white">Tracks</span>
           <Switch
             checked={playBackgroundTracks}
-            onChange={checked => setPlayBackgroundTracks(checked)}
+            onChange={(checked) => setPlayBackgroundTracks(checked)}
             {...switchProps}
           />
         </div>
@@ -129,7 +126,7 @@ const TrackSelection: React.FunctionComponent<TrackSelectionProps> = ({
               <span className="text-base text-white">Beats</span>
               <Switch
                 checked={playBeats}
-                onChange={checked => setPlayBeats(checked)}
+                onChange={(checked) => setPlayBeats(checked)}
                 {...switchProps}
               />
             </div>

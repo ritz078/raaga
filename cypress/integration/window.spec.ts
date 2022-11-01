@@ -11,9 +11,7 @@ context("Window", () => {
   });
 
   it("cy.document() - get the document object", () => {
-    cy.document()
-      .should("have.property", "charset")
-      .and("eq", "UTF-8");
+    cy.document().should("have.property", "charset").and("eq", "UTF-8");
   });
 
   it("cy.title() - get the title", () => {

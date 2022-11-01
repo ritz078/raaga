@@ -33,7 +33,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   });
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       const canvas: any =
         offScreenCanvasSupport === OFFSCREEN_2D_CANVAS_SUPPORT.SUPPORTED
           ? canvasRef.current.transferControlToOffscreen()
@@ -60,7 +60,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
   }, []);
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       await canvasProxy({
         message: VISUALIZER_MESSAGES.UPDATE_DIMENSIONS,
         dimensions
@@ -92,7 +92,7 @@ const _Visualizer: FunctionComponent<VisualizerProps> = ({
         />
 
         <div className="text-white flex flex-1 absolute flex-row inset-0">
-          {getNaturalKeysInRange(range).map(x => (
+          {getNaturalKeysInRange(range).map((x) => (
             <div className="vis-note-section" key={x} />
           ))}
         </div>

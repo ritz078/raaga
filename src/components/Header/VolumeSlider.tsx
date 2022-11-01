@@ -22,7 +22,7 @@ export const VolumeSlider: FunctionComponent<VolumeSliderProps> = ({
       max={VOLUME_MAX}
       values={[volume]}
       disabled={disabled}
-      onChange={values => onVolumeChange(values[0])}
+      onChange={(values) => onVolumeChange(values[0])}
       renderTrack={({ props, children }) => (
         <div
           onMouseDown={props.onMouseDown as any}

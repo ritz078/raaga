@@ -1,6 +1,6 @@
 import { OFFSCREEN_2D_CANVAS_SUPPORT } from "@enums/offscreen2dCanvasSupport";
 
-self.onmessage = ev => {
+self.onmessage = (ev) => {
   const { id, message: canvas } = ev.data;
 
   try {

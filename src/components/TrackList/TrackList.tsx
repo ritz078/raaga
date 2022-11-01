@@ -50,9 +50,8 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
    * Status:
    * Under Investigation/Benchmarking - not yet confirmed.
    */
-  const [midiSettings, setMidiSettings] = useState<MidiSettings>(
-    initialMidiSettings
-  );
+  const [midiSettings, setMidiSettings] =
+    useState<MidiSettings>(initialMidiSettings);
 
   const [closeRequestedForPlay, setCloseRequestedForPlay] = useState(false);
 
@@ -87,7 +86,7 @@ const TrackList_: React.FunctionComponent<TrackListProps> = ({
           ) : (
             <TrackSelection
               initialMidiSettings={midiSettings}
-              onPlay={trackSelectionInfo => {
+              onPlay={(trackSelectionInfo) => {
                 setMidiSettings(trackSelectionInfo);
                 setCloseRequestedForPlay(true);
                 onClose();

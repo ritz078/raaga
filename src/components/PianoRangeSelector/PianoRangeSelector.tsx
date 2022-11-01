@@ -14,7 +14,7 @@ interface PianoRangeSelectorProps {
   onRangeChange: (range: number[]) => void;
 }
 
-const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map(midi => {
+const naturalKeys = MidiNumbers.NATURAL_MIDI_NUMBERS.map((midi) => {
   const { note } = MidiNumbers.getAttributes(midi);
   return {
     label: note,

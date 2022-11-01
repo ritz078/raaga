@@ -51,7 +51,7 @@ const _MidiSelect = ({ onMidiDeviceChange, midiDeviceId }) => {
         </>
       )}
     >
-      {close => (
+      {(close) => (
         <div style={{ width: 180 }}>
           {inputMidis.length ? (
             inputMidis.map(({ name, id }) => {

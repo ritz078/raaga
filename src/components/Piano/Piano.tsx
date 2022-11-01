@@ -65,7 +65,7 @@ const _Piano: FunctionComponent<PianoProps> = ({
         className
       )}
     >
-      {midis.map(midi => {
+      {midis.map((midi) => {
         const { isAccidental } = MidiNumbers.getAttributes(midi);
         const naturalKeyWidth = getNaturalKeyWidthRatio(range) * 100;
         const left = getRelativeKeyPosition(midi, range) * naturalKeyWidth;

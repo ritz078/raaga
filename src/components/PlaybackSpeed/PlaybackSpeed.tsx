@@ -4,7 +4,7 @@ import { PlayerContext } from "@utils/PlayerContext";
 import Icon from "@mdi/react";
 import { mdiMinus, mdiPlus } from "@mdi/js";
 
-const _PlaybackSpeed = function() {
+const _PlaybackSpeed = function () {
   const [speed, setSpeed] = useState(1);
   const player = useContext(PlayerContext);
 

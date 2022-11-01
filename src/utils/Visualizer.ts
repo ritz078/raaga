@@ -184,7 +184,7 @@ export class Visualizer {
     this.clearCanvas();
     const { midiNumbers, groupedNotes } = this.getTrackInfo();
 
-    midiNumbers.forEach(midi => {
+    midiNumbers.forEach((midi) => {
       if (!groupedNotes[midi]) return;
       const { isAccidental, left, width } = this.memoizedGetMidiInfo(midi);
 
@@ -193,10 +193,9 @@ export class Visualizer {
         const { top, height } = this.getVerticalCoordinatesInWriteMode(note);
 
         if (top + height < 0) {
-          this.notes = this.notes.filter(_note => {
-            const { top, height } = this.getVerticalCoordinatesInWriteMode(
-              _note
-            );
+          this.notes = this.notes.filter((_note) => {
+            const { top, height } =
+              this.getVerticalCoordinatesInWriteMode(_note);
             return top + height >= 0;
           });
           continue;
@@ -231,7 +230,7 @@ export class Visualizer {
 
   public play = (track: ITrackSequence, delay = 0) => {
     this.cleanup();
-    this.clock.start(track.totalTime + delay, progress => {
+    this.clock.start(track.totalTime + delay, (progress) => {
       this.renderNotesInReadMode(track, progress, delay);
     });
   };
@@ -244,15 +243,15 @@ export class Visualizer {
     this.clock.toggle();
   };
 
-  public addNote = pitch => {
+  public addNote = (pitch) => {
     this.notes.push({
       pitch,
       startTime: nowInSeconds()
     });
   };
 
-  public endNote = midi => {
-    const note = this.notes.find(note => {
+  public endNote = (midi) => {
+    const note = this.notes.find((note) => {
       const duration = note.endTime - note.startTime;
       return note.pitch === midi && !duration;
     });
@@ -275,7 +274,7 @@ export class Visualizer {
 
     const canvasHeight = this.ctx.canvas.height;
 
-    midiNumbers.forEach(midi => {
+    midiNumbers.forEach((midi) => {
       if (!groupedNotes[midi]) return;
       const { isAccidental, left, width } = this.memoizedGetMidiInfo(midi);
 

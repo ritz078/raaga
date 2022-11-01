@@ -16,7 +16,7 @@ interface WriteModeControlsProps {
   range: Range;
 }
 
-const instrumentOptions = Object.keys(instruments).map(id => {
+const instrumentOptions = Object.keys(instruments).map((id) => {
   const { name, value } = instruments[id];
   return {
     label: name,
@@ -54,7 +54,7 @@ const _WriteModeControls: React.FunctionComponent<WriteModeControlsProps> = ({
           </Button>
         )}
       >
-        {close => (
+        {(close) => (
           <div className="py-2" style={{ width: 180, maxHeight: 300 }}>
             <input
               onChange={onSearchChange}
