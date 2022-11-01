@@ -60,7 +60,7 @@ export class MidiPlayer {
     OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING;
 
   static getTrackSampler = (audio, volume) =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
       const sampler = new Tone.Sampler(audio, {
         onload: () => {
           sampler.connect(Tone.Master);
@@ -113,7 +113,7 @@ export class MidiPlayer {
       instrumentIds:
         options?.instrumentIds ||
         this.midi.tracks
-          .map(track => track.instrument && track.instrument.number)
+          .map((track) => track.instrument && track.instrument.number)
           .filter(Boolean),
       drums: options ? options.drums : this.midi.beats && this.midi.beats.length
     };
@@ -121,7 +121,7 @@ export class MidiPlayer {
     const data: any = await loadInstrumentWorker({ instrumentIds, drums });
 
     if (data.drums && !this.drumSampler) {
-      this.drumSampler = await new Promise(resolve => {
+      this.drumSampler = await new Promise((resolve) => {
         const sampler = new Tone.Sampler(data.drums, () => {
           sampler.connect(Tone.Master);
           resolve(sampler);
@@ -132,7 +132,7 @@ export class MidiPlayer {
     const trackInstrumentIds = Object.keys(data.tracks);
     const samplers = await Promise.all(
       trackInstrumentIds.map(
-        instrumentId =>
+        (instrumentId) =>
           this.trackSamplers[instrumentId] ||
           MidiPlayer.getTrackSampler(
             data.tracks[instrumentId],
@@ -183,12 +183,12 @@ export class MidiPlayer {
     [...set]
       // This filtering is just a sanity check. In case a note that should have stopped
       // earlier than the start time of current time, we filter them out.
-      .filter(id => {
+      .filter((id) => {
         const x = id.split("_");
         const endTime = +x[2];
         return endTime >= currentTime;
       })
-      .map(id => +id.split("_")[0]);
+      .map((id) => +id.split("_")[0]);
 
   /**
    * Play a single track of a MIDI.
@@ -255,13 +255,13 @@ export class MidiPlayer {
     const beat = this.midi.beats[currentBeatIndex];
     const beatInstrumentNumber = beat.instrument.number;
     this.drumPart[beatInstrumentNumber] = new Tone.Part(
-      time => {
+      (time) => {
         this.drumSampler.triggerAttack(
           Tone.Frequency(beatInstrumentNumber, "midi").toNote(),
           time
         );
       },
-      beat.notes.map(_beat => ({
+      beat.notes.map((_beat) => ({
         time: _beat.startTime
       }))
     ).start();
@@ -341,15 +341,14 @@ export class MidiPlayer {
         instrumentIndex !== mainTrackInstrumentIndex
       ) {
         // TODO: Don't mute a sampler. Mute a track. In case of multiple tracks this causes issue.
-        this.trackSamplers[instrumentIndex]._volume.mute = !this.trackSamplers[
-          instrumentIndex
-        ]._volume.mute;
+        this.trackSamplers[instrumentIndex]._volume.mute =
+          !this.trackSamplers[instrumentIndex]._volume.mute;
       }
     });
   };
 
   public setVolume = (volumeValue: number) => {
-    Object.values(this.trackSamplers).forEach(sampler => {
+    Object.values(this.trackSamplers).forEach((sampler) => {
       sampler.volume.value = volumeValue;
     });
   };
@@ -366,7 +365,7 @@ export class MidiPlayer {
       message: VISUALIZER_MESSAGES.STOP_TRACK
     });
 
-    [...this.trackPart, ...this.drumPart].filter(Boolean).forEach(part => {
+    [...this.trackPart, ...this.drumPart].filter(Boolean).forEach((part) => {
       part.dispose();
     });
 

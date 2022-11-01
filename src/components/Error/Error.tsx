@@ -15,7 +15,7 @@ export function Error() {
       setShow(false);
     };
 
-    const showToast = text => {
+    const showToast = (text) => {
       setText(text);
       setShow(true);
 

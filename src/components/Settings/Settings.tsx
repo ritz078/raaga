@@ -49,7 +49,7 @@ const _Settings: FunctionComponent<SettingsProps> = ({ onThemeChange }) => {
                   <ChromePicker
                     color={theme[colorName]}
                     disableAlpha
-                    onChange={color =>
+                    onChange={(color) =>
                       onThemeChange({
                         ...theme,
                         [colorName]: color.hex

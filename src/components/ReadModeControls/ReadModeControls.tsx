@@ -76,7 +76,7 @@ const _ReadModeControls: FunctionComponent<ReadModeControlsProps> = ({
         contentClassName="instrument-selector"
         label={() => <Button className="h-8 mr-3">Background Sounds</Button>}
       >
-        {close => (
+        {(close) => (
           <div className="py-1 w-64">
             <div
               className="instrument-list"

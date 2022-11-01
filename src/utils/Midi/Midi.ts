@@ -31,7 +31,7 @@ export class Midi extends NoteSequence {
     const _beats = groupBy(drums, "pitch");
     const _tracks = groupBy(instruments, "instrument");
 
-    const tracks = Object.keys(_tracks).map(instrumentId => {
+    const tracks = Object.keys(_tracks).map((instrumentId) => {
       const instrument = getInstrumentById(instrumentId);
       return {
         instrument: {
@@ -43,7 +43,7 @@ export class Midi extends NoteSequence {
       };
     });
 
-    const beats = Object.keys(_beats).map(drum => {
+    const beats = Object.keys(_beats).map((drum) => {
       const instrumentName = drumNames[drum];
 
       return {

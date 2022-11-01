@@ -5,8 +5,8 @@ export function promisifyWorker(worker: Worker) {
 
     worker.postMessage({ id, message }, transferable);
 
-    return new Promise(resolve => {
-      worker.onmessage = ev => {
+    return new Promise((resolve) => {
+      worker.onmessage = (ev) => {
         const _id = ev.data.id;
         if (id === _id) {
           resolve(ev.data.message);

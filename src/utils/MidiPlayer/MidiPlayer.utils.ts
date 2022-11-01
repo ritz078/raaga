@@ -15,7 +15,7 @@ export type NoteWithIdAndEvent = INote & {
 export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
   let _notes: NoteWithIdAndEvent[] = [];
 
-  notes.forEach(note => {
+  notes.forEach((note) => {
     if (note.startTime === note.endTime) return;
 
     const id = `${note.pitch}_${note.startTime}_${note.endTime}`;
@@ -37,7 +37,7 @@ export function getNotesWithNoteEndEvent(notes: INote[]): NoteWithIdAndEvent[] {
 
   _notes.sort((a, b) => b.time - a.time);
 
-  _notes.find(note => note.event === EVENT_TYPE.NOTE_STOP).event =
+  _notes.find((note) => note.event === EVENT_TYPE.NOTE_STOP).event =
     EVENT_TYPE.PLAYING_COMPLETE;
 
   return _notes;
