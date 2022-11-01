@@ -51,7 +51,7 @@ const _Modal: React.FunctionComponent<ModalProps> = ({
     config: {
       duration: 200
     },
-    onDestroyed: isDestroyed => isDestroyed && onCloseComplete()
+    onDestroyed: (isDestroyed) => isDestroyed && onCloseComplete()
   });
 
   useOnClickOutside(ref, onCloseRequest);

@@ -20,7 +20,7 @@ const pitchPositions = {
 };
 
 export function getMidiRange(notes: INote[]) {
-  const midis = notes.map(note => note.pitch);
+  const midis = notes.map((note) => note.pitch);
   return [Math.min(...midis), Math.max(...midis)];
 }
 
@@ -34,7 +34,7 @@ export function getAllMidiNumbersInRange(_range: Range): number[] {
 
 export function getNaturalKeysInRange(range: Range) {
   return getAllMidiNumbersInRange(range).filter(
-    midi => !MidiNumbers.getAttributes(midi).isAccidental
+    (midi) => !MidiNumbers.getAttributes(midi).isAccidental
   );
 }
 
@@ -68,13 +68,13 @@ export function getPianoRangeAndShortcuts(range: number[], autoSet = true) {
   let _last = last;
 
   if (autoSet) {
-    _first = findLast(naturalMidiNumbers, midi => midi < first);
+    _first = findLast(naturalMidiNumbers, (midi) => midi < first);
     _last =
       last - first > MINIMUM_KEYS_IN_READ_MODE
-        ? find(naturalMidiNumbers, midi => midi > last)
+        ? find(naturalMidiNumbers, (midi) => midi > last)
         : find(
             naturalMidiNumbers,
-            midi => midi > first + MINIMUM_KEYS_IN_READ_MODE
+            (midi) => midi > first + MINIMUM_KEYS_IN_READ_MODE
           );
   }
 

@@ -19,15 +19,13 @@ const SoundPlayer: any = dynamic(() => import("@components/SoundPlayer"), {
 });
 
 function Main({ sampleMidis }) {
-  const [
-    is2dOffscreenCanvasSupported,
-    setIs2dOffscreenCanvasSupported
-  ] = useState(OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING);
+  const [is2dOffscreenCanvasSupported, setIs2dOffscreenCanvasSupported] =
+    useState(OFFSCREEN_2D_CANVAS_SUPPORT.DETERMINING);
 
   const [webMidiEnabled, setWebMidiEnabled] = useState(null);
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       const {
         checkSupportFor2dOffscreenCanvas
       } = require("@utils/isOffscreenCanvasSupported");
@@ -38,7 +36,7 @@ function Main({ sampleMidis }) {
 
   useEffect(() => {
     const webMidi = require("webmidi");
-    webMidi.enable(err => {
+    webMidi.enable((err) => {
       setWebMidiEnabled(!err && webMidi.enabled);
     });
   }, []);
@@ -67,7 +65,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      sampleMidis: files.map(file => ({
+      sampleMidis: files.map((file) => ({
         url: `/static/midi/${file}`,
         label: file.replace(".mid", "")
       }))

@@ -84,7 +84,7 @@ const loadSoundFont = async (
 };
 
 async function loadInstruments(instrumentIds: number[], drums?: boolean) {
-  const promises = instrumentIds.map(instrumentId => {
+  const promises = instrumentIds.map((instrumentId) => {
     const { value } = getInstrumentById(instrumentId.toString(10));
 
     return loadSoundFont(value);
@@ -96,7 +96,7 @@ async function loadInstruments(instrumentIds: number[], drums?: boolean) {
   return midiFontData;
 }
 
-self.onmessage = async ev => {
+self.onmessage = async (ev) => {
   const {
     id,
     message: { instrumentIds, drums }

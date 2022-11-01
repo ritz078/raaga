@@ -10,7 +10,7 @@ import { mdiFileUpload } from "@mdi/js";
 function Sidebar({ onLoad, sampleMidis }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const loadFile = async e => {
+  const loadFile = async (e) => {
     const file = e.target.files[0];
     Nprogress.start();
     try {
@@ -56,7 +56,7 @@ function Sidebar({ onLoad, sampleMidis }: IProps) {
         accept=".mid, .midi, .xml"
       />
       <div className="text-sm text-white pt-4 pb-1">Samples</div>
-      {sampleMidis.map(sampleMidi => {
+      {sampleMidis.map((sampleMidi) => {
         return (
           <div
             key={sampleMidi.label}

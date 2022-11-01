@@ -84,7 +84,7 @@ const SoundPlayer: React.FunctionComponent<{
   );
 
   const setRange = useCallback(
-    notes => {
+    (notes) => {
       // change piano range.
       const requiredRange = getMidiRange(notes);
 
@@ -106,9 +106,9 @@ const SoundPlayer: React.FunctionComponent<{
     (midi, velocity = 1, isFromMidiDevice = false) => {
       player.playNote(midi, instrument, velocity);
       if (mode === VISUALIZER_MODE.WRITE || !isFromMidiDevice) {
-        setActiveMidis(_activeMidis => _activeMidis.concat(midi));
+        setActiveMidis((_activeMidis) => _activeMidis.concat(midi));
       } else {
-        setActiveInstrumentMidis(_activeMidis => _activeMidis.concat(midi));
+        setActiveInstrumentMidis((_activeMidis) => _activeMidis.concat(midi));
       }
     },
     [instrument, mode, player]
@@ -118,12 +118,12 @@ const SoundPlayer: React.FunctionComponent<{
     (midi, isFromMidiDevice = false) => {
       player.stopNote(midi, instrument);
       if (mode === VISUALIZER_MODE.WRITE || !isFromMidiDevice) {
-        setActiveMidis(_activeMidis =>
-          _activeMidis.filter(activeMidi => activeMidi !== midi)
+        setActiveMidis((_activeMidis) =>
+          _activeMidis.filter((activeMidi) => activeMidi !== midi)
         );
       } else {
-        setActiveInstrumentMidis(_activeMidis =>
-          _activeMidis.filter(x => x !== midi)
+        setActiveInstrumentMidis((_activeMidis) =>
+          _activeMidis.filter((x) => x !== midi)
         );
       }
     },
@@ -209,11 +209,11 @@ const SoundPlayer: React.FunctionComponent<{
   useEffect(() => player.setRange(keyboardRange), [keyboardRange]);
 
   useEffect(() => {
-    const _onNoteStart = e => {
+    const _onNoteStart = (e) => {
       onNoteStart(e.note.number, e.velocity, true);
     };
 
-    const _onNoteStop = e => {
+    const _onNoteStop = (e) => {
       onNoteStop(e.note.number, true);
     };
 
@@ -234,7 +234,7 @@ const SoundPlayer: React.FunctionComponent<{
   }, [midiDevice, onNoteStart, onNoteStop]);
 
   const handleRangeChange = useCallback(
-    _range => {
+    (_range) => {
       const { range } = getPianoRangeAndShortcuts(_range, false);
       setDefaultRange(range);
       player.setRange(range);
@@ -244,7 +244,7 @@ const SoundPlayer: React.FunctionComponent<{
   );
 
   const handleVolumeChange = useCallback(
-    volume => {
+    (volume) => {
       player.setVolume(volume);
       setVolume(volume);
     },
