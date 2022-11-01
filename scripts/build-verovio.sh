@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -x
-
 ROOT_DIR="$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")"
 cd "${ROOT_DIR}node_modules/verovio/tools" || exit
 yum install cmake gcc gcc-c++ make || apt-get install build-essential
